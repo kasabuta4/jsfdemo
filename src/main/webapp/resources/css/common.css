@@ -1,0 +1,31 @@
+.number {
+    text-align: end;
+}
+
+body {
+    background-color: honeydew;
+}
+
+table {
+    border-collapse : collapse;
+}
+
+table > thead {
+    background-color: palegreen;
+}
+
+table > tbody > tr:nth-child(even) {
+    background-color: lavender;
+}
+
+table th, table td  {
+    border-color: black;
+    border-style: solid;
+    border-width: thin;
+    padding-left: 1em;
+    padding-right: 1em;
+}
+
+table > colgroup.heading {
+    background-color: wheat;
+}
