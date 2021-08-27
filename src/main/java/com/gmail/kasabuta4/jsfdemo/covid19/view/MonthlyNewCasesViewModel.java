@@ -17,9 +17,9 @@ public class MonthlyNewCasesViewModel implements Serializable {
 
   private static final long serialVersionUID = 1L;
 
-  @Inject Conversation conversation;
+  @Inject transient Conversation conversation;
 
-  @Inject MonthlyNewCasesService service;
+  @Inject transient MonthlyNewCasesService service;
 
   @Valid private SearchCondition searchCondition = new SearchCondition();
 
