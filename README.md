@@ -11,3 +11,5 @@
 http://localhost:8080/jsfdemo/index.xhtml
 ### 検索画面
 http://localhost:8080/jsfdemo/covid19/search.xhtml
+### 複合ビューの検索画面
+http://localhost:8080/jsfdemo/compsiteview/search.xhtml
