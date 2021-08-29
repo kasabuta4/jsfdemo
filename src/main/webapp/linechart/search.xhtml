@@ -1,0 +1,27 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+
+<ui:composition template="/template/template.xhtml"
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://xmlns.jcp.org/jsf/html"
+        xmlns:jsf="http://xmlns.jcp.org/jsf"
+        xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <ui:define name="title">
+        <title>Covid-19 Newly Confirmed Cases Monthly - Search</title>
+    </ui:define>
+    <ui:define name="body">
+        <h1>Covid-19 Newly Confirmed Cases Monthly - Search</h1>
+        <h:form id="search">
+            <p>
+                <label>表示期間</label>
+                <input type="month" jsf:id="fromYearMonth" value="#{monthlyNewCases.searchCondition.from}" />
+                〜
+                <input type="month" jsf:id="toYearMonth" value="#{monthlyNewCases.searchCondition.to}" />
+                <h:message for="fromYearMonth" />
+                <h:message for="toYearMonth" />
+            </p>
+            <p>
+                <h:commandButton id="showLineChart" value="Show LineChart" action="#{monthlyNewCases.showLineChart}" />
+            </p>
+        </h:form>
+    </ui:define>
+</ui:composition>
