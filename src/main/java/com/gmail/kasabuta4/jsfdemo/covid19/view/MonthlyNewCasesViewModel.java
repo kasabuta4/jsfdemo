@@ -4,12 +4,16 @@ import static com.gmail.kasabuta4.jsfdemo.common.jsf.navigation.RedirectUtil.red
 
 import com.gmail.kasabuta4.jsfdemo.covid19.application.MonthlyNewCasesService;
 import com.gmail.kasabuta4.jsfdemo.covid19.application.MonthlyNewCasesSummary;
+import java.io.IOException;
 import java.io.Serializable;
 import javax.enterprise.context.Conversation;
 import javax.enterprise.context.ConversationScoped;
+import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.primefaces.model.charts.line.LineChartModel;
 
 @Named("monthlyNewCases")
@@ -38,6 +42,22 @@ public class MonthlyNewCasesViewModel implements Serializable {
     if (conversation.isTransient()) conversation.begin();
     doShowLineChart();
     return redirectTo("result");
+  }
+
+  public void outputExcel() {
+    summary = service.search(searchCondition.getFrom(), searchCondition.getTo());
+    Workbook wb = new WorkBookBuilder(summary).build();
+    FacesContext context = FacesContext.getCurrentInstance();
+    HttpServletResponse res = (HttpServletResponse) context.getExternalContext().getResponse();
+    res.setContentType(
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet; charset=utf-8");
+    res.setHeader("Content-Disposition", "attachment; filename=\"MonthlyNewCases.xlsx\"");
+    try {
+      wb.write(res.getOutputStream());
+    } catch (IOException ex) {
+      // TODO
+    }
+    FacesContext.getCurrentInstance().responseComplete();
   }
 
   public String exit() {
