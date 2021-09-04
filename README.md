@@ -15,6 +15,8 @@ http://localhost:8080/jsfdemo/covid19/search.xhtml
 http://localhost:8080/jsfdemo/compsiteview/search.xhtml
 ### テンプレート利用の検索画面
 http://localhost:8080/jsfdemo/templating/search.xhtml
+### フレーム利用の検索画面
+http://localhost:8080/jsfdemo/frame/search.xhtml
 ### ラインチャートの検索画面
 http://localhost:8080/jsfdemo/linechart/search.xhtml
 ### Excel出力の検索画面

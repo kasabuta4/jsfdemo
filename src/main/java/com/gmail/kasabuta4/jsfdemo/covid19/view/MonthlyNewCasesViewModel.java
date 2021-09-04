@@ -85,4 +85,8 @@ public class MonthlyNewCasesViewModel implements Serializable {
   public LineChartModel getLineChartModel() {
     return lineChartModel;
   }
+
+  public String getConversationId() {
+    return conversation.getId();
+  }
 }
