@@ -70,8 +70,7 @@ public class MonthlyNewCasesSummary implements Serializable {
       map.put(prefecture, yearMonthMap);
     }
 
-    cases
-        .stream()
+    cases.stream()
         .forEach(
             c -> {
               map.get(c.getPrefecture()).put(c.getYearMonth(), c.getCases());
