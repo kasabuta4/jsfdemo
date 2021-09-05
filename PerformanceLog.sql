@@ -1,0 +1,12 @@
+CREATE TABLE PerformanceLog(
+    id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    remoteAddress VARCHAR(39) NOT NULL,
+    remoteHost VARCHAR(255) NOT NULL,
+    remoteUser VARCHAR(255) NOT NULL,
+    requestURI VARCHAR(2048) NOT NULL,
+    responseStatus INTEGER NOT NULL,
+    processStarted TIMESTAMP NOT NULL,
+    processFinished TIMESTAMP NOT NULL,
+    recorded TIMESTAMP NOT NULL WITH DEFAULT CURRENT TIMESTAMP,
+    version INTEGER NOT NULL
+);
