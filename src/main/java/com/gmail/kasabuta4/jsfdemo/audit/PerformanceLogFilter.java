@@ -1,10 +1,13 @@
 package com.gmail.kasabuta4.jsfdemo.audit;
 
+import com.gmail.kasabuta4.jsfdemo.config.jms.PerformanceLogQueue;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.regex.Pattern;
 import javax.inject.Inject;
+import javax.jms.Destination;
+import javax.jms.JMSContext;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -16,9 +19,11 @@ import javax.servlet.http.HttpServletResponse;
 
 public class PerformanceLogFilter implements Filter {
 
-  @Inject PerformanceLogDao dao;
-
   private Pattern FACES_RESOURCE_REQUEST_PATTERN = Pattern.compile("javax.faces.resource");
+
+  @Inject JMSContext jmsContext;
+
+  @Inject @PerformanceLogQueue Destination performanceLogQueue;
 
   public PerformanceLogFilter() {}
 
@@ -49,7 +54,7 @@ public class PerformanceLogFilter implements Filter {
       log.setResponseStatus(((HttpServletResponse) response).getStatus());
       log.setProcessStarted(processStarted);
       log.setProcessFinished(processFinished);
-      dao.save(log);
+      jmsContext.createProducer().send(performanceLogQueue, log);
     }
   }
 }

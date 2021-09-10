@@ -63,4 +63,10 @@
     <security-role>
         <role-name>ADMIN</role-name>
     </security-role>
+    <jms-destination>
+        <name>java:app/jms/PerformanceLogQueue</name>
+        <interface-name>javax.jms.Queue</interface-name>
+        <resource-adapter>jmsra</resource-adapter>
+        <destination-name>PerformanceLogQueue</destination-name>
+    </jms-destination>
 </web-app>
