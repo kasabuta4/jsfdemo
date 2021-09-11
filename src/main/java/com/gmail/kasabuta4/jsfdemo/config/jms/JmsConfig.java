@@ -8,10 +8,10 @@ import javax.jms.Destination;
 @Dependent
 public class JmsConfig {
 
-  @Resource(lookup = "java:app/jms/PerformanceLogQueue")
+  @Resource(lookup = "java:app/jms/WebProfileQueue")
   @Produces
-  @PerformanceLogQueue
-  private Destination performanceLogQueue;
+  @WebProfileQueue
+  private Destination webProfileQueue;
 
   @Resource(lookup = "java:app/jms/DataAccessProfileQueue")
   @Produces

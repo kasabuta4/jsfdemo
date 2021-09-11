@@ -9,11 +9,11 @@
 <!--リクエストのIPアドレスやユーザ、処理開始・終了時刻等をPerformanceLogテーブルに出力するフィルタ
     有効化する前にPerformanceLogテーブルを生成する必要あり
     <filter>
-        <filter-name>PerformanceLogFilter</filter-name>
-        <filter-class>com.gmail.kasabuta4.jsfdemo.common.profile.web.PerformanceLogFilter</filter-class>
+        <filter-name>WebProfileFilter</filter-name>
+        <filter-class>com.gmail.kasabuta4.jsfdemo.common.profile.web.WebProfileFilter</filter-class>
     </filter>
     <filter-mapping>
-        <filter-name>PerformanceLogFilter</filter-name>
+        <filter-name>WebProfileFilter</filter-name>
         <servlet-name>Faces Servlet</servlet-name>
     </filter-mapping>
 -->
@@ -64,10 +64,10 @@
         <role-name>ADMIN</role-name>
     </security-role>
     <jms-destination>
-        <name>java:app/jms/PerformanceLogQueue</name>
+        <name>java:app/jms/WebProfileQueue</name>
         <interface-name>javax.jms.Queue</interface-name>
         <resource-adapter>jmsra</resource-adapter>
-        <destination-name>PerformanceLogQueue</destination-name>
+        <destination-name>WebProfileQueue</destination-name>
     </jms-destination>
     <jms-destination>
         <name>java:app/jms/DataAccessProfileQueue</name>

@@ -1,6 +1,6 @@
 package com.gmail.kasabuta4.jsfdemo.common.profile.web;
 
-import com.gmail.kasabuta4.jsfdemo.config.jms.PerformanceLogQueue;
+import com.gmail.kasabuta4.jsfdemo.config.jms.WebProfileQueue;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.time.Instant;
@@ -17,15 +17,15 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class PerformanceLogFilter implements Filter {
+public class WebProfileFilter implements Filter {
 
   private Pattern FACES_RESOURCE_REQUEST_PATTERN = Pattern.compile("javax.faces.resource");
 
   @Inject JMSContext jmsContext;
 
-  @Inject @PerformanceLogQueue Destination performanceLogQueue;
+  @Inject @WebProfileQueue Destination webProfileQueue;
 
-  public PerformanceLogFilter() {}
+  public WebProfileFilter() {}
 
   @Override
   public void init(FilterConfig filterConfig) {}
@@ -46,15 +46,15 @@ public class PerformanceLogFilter implements Filter {
     if (!FACES_RESOURCE_REQUEST_PATTERN.matcher(httpRequest.getRequestURI()).find()) {
       Timestamp processFinished = Timestamp.from(Instant.now());
 
-      PerformanceLog log = new PerformanceLog();
-      log.setRemoteAddress(httpRequest.getRemoteAddr());
-      log.setRemoteHost(httpRequest.getRemoteHost());
-      log.setRemoteUser(httpRequest.getRemoteUser());
-      log.setRequestURI(httpRequest.getRequestURI());
-      log.setResponseStatus(((HttpServletResponse) response).getStatus());
-      log.setProcessStarted(processStarted);
-      log.setProcessFinished(processFinished);
-      jmsContext.createProducer().send(performanceLogQueue, log);
+      WebProfile profile = new WebProfile();
+      profile.setRemoteAddress(httpRequest.getRemoteAddr());
+      profile.setRemoteHost(httpRequest.getRemoteHost());
+      profile.setRemoteUser(httpRequest.getRemoteUser());
+      profile.setRequestURI(httpRequest.getRequestURI());
+      profile.setResponseStatus(((HttpServletResponse) response).getStatus());
+      profile.setProcessStarted(processStarted);
+      profile.setProcessFinished(processFinished);
+      jmsContext.createProducer().send(webProfileQueue, profile);
     }
   }
 }

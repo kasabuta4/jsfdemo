@@ -11,7 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.Version;
 
 @Entity
-public class PerformanceLog implements Serializable {
+public class WebProfile implements Serializable {
 
   private static final long serialVersionUID = 1L;
 
@@ -32,15 +32,15 @@ public class PerformanceLog implements Serializable {
 
   @Version private int version;
 
-  public PerformanceLog() {}
+  public WebProfile() {}
 
   @Override
   public boolean equals(Object obj) {
     if (this == obj) return true;
     if (obj == null) return false;
-    if (!(obj instanceof PerformanceLog)) return false;
+    if (!(obj instanceof WebProfile)) return false;
 
-    final PerformanceLog other = (PerformanceLog) obj;
+    final WebProfile other = (WebProfile) obj;
     return this.id == other.id;
   }
 
@@ -51,7 +51,7 @@ public class PerformanceLog implements Serializable {
 
   @Override
   public String toString() {
-    return "PerformanceLog{"
+    return "WebProfile{"
         + "id="
         + id
         + ", remoteAddress="

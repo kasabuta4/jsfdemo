@@ -16,20 +16,20 @@ import javax.jms.MessageListener;
           propertyValue = "javax.jms.Queue"),
       @ActivationConfigProperty(
           propertyName = "destinationLookup",
-          propertyValue = "java:app/jms/PerformanceLogQueue"),
+          propertyValue = "java:app/jms/WebProfileQueue"),
     })
-public class PerformanceLogger implements MessageListener {
+public class WebProfileLogger implements MessageListener {
 
-  @Inject private PerformanceLogDao dao;
+  @Inject private WebProfileDao dao;
 
   @Inject private Logger logger;
 
   @Override
   public void onMessage(Message message) {
     try {
-      dao.save(message.getBody(PerformanceLog.class));
+      dao.save(message.getBody(WebProfile.class));
     } catch (JMSException e) {
-      logger.log(Level.SEVERE, "fail reading PerformanceLog Message", e);
+      logger.log(Level.SEVERE, "fail reading Profile Message", e);
     }
   }
 }

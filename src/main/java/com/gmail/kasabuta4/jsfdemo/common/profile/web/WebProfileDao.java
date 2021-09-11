@@ -7,12 +7,12 @@ import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 
 @ApplicationScoped
-public class PerformanceLogDao {
+public class WebProfileDao {
 
   @Inject @JsfDemoDB private EntityManager em;
 
   @Transactional
-  public void save(PerformanceLog log) {
+  public void save(WebProfile log) {
     em.persist(log);
   }
 }
