@@ -6,8 +6,8 @@
         <param-name>javax.faces.PROJECT_STAGE</param-name>
         <param-value>Development</param-value>
     </context-param>
-<!--リクエストのIPアドレスやユーザ、処理開始・終了時刻等をPerformanceLogテーブルに出力するフィルタ
-    有効化する前にPerformanceLogテーブルを生成する必要あり
+<!--リクエストのIPアドレスやユーザ、処理開始・終了時刻等をWebProfileテーブルに出力するフィルタ
+    有効化する前にWebProfileテーブルを生成する必要あり
     <filter>
         <filter-name>WebProfileFilter</filter-name>
         <filter-class>com.gmail.kasabuta4.jsfdemo.common.profile.web.WebProfileFilter</filter-class>
