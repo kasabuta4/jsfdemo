@@ -3,6 +3,7 @@ package com.gmail.kasabuta4.jsfdemo.covid19.dao;
 import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE;
 import static java.util.stream.Collectors.toList;
 
+import com.gmail.kasabuta4.jsfdemo.common.profile.dataaccess.ProfilingDataAccess;
 import com.gmail.kasabuta4.jsfdemo.config.db.JsfDemoDB;
 import com.gmail.kasabuta4.jsfdemo.covid19.domain.MonthlyNewCases;
 import java.time.YearMonth;
@@ -38,6 +39,7 @@ public class MonthlyNewCasesDAO {
 
   @Inject @JsfDemoDB EntityManager em;
 
+  @ProfilingDataAccess
   public List<MonthlyNewCases> getCases(YearMonth from, YearMonth to) {
 
     Stream<Object[]> stream =

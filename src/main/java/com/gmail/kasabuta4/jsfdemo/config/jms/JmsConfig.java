@@ -13,5 +13,10 @@ public class JmsConfig {
   @PerformanceLogQueue
   private Destination performanceLogQueue;
 
+  @Resource(lookup = "java:app/jms/DataAccessProfileQueue")
+  @Produces
+  @DataAccessProfileQueue
+  private Destination dataAccessProfileQueue;
+
   JmsConfig() {}
 }
