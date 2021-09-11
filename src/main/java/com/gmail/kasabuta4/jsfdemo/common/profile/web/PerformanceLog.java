@@ -1,4 +1,4 @@
-package com.gmail.kasabuta4.jsfdemo.audit;
+package com.gmail.kasabuta4.jsfdemo.common.profile.web;
 
 import static javax.persistence.GenerationType.IDENTITY;
 

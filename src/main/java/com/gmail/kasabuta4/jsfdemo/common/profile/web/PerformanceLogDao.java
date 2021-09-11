@@ -1,4 +1,4 @@
-package com.gmail.kasabuta4.jsfdemo.audit;
+package com.gmail.kasabuta4.jsfdemo.common.profile.web;
 
 import com.gmail.kasabuta4.jsfdemo.config.db.JsfDemoDB;
 import javax.enterprise.context.ApplicationScoped;

@@ -1,4 +1,4 @@
-package com.gmail.kasabuta4.jsfdemo.audit;
+package com.gmail.kasabuta4.jsfdemo.common.profile.web;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;

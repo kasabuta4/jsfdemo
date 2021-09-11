@@ -10,7 +10,7 @@
     有効化する前にPerformanceLogテーブルを生成する必要あり
     <filter>
         <filter-name>PerformanceLogFilter</filter-name>
-        <filter-class>com.gmail.kasabuta4.jsfdemo.audit.PerformanceLogFilter</filter-class>
+        <filter-class>com.gmail.kasabuta4.jsfdemo.common.profile.web.PerformanceLogFilter</filter-class>
     </filter>
     <filter-mapping>
         <filter-name>PerformanceLogFilter</filter-name>
