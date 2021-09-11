@@ -1,13 +1,10 @@
 package com.gmail.kasabuta4.jsfdemo.common.profile.web;
 
-import java.util.logging.Level;
+import com.gmail.kasabuta4.jsfdemo.common.profile.ProfileLogger;
 import java.util.logging.Logger;
 import javax.ejb.ActivationConfigProperty;
 import javax.ejb.MessageDriven;
 import javax.inject.Inject;
-import javax.jms.JMSException;
-import javax.jms.Message;
-import javax.jms.MessageListener;
 
 @MessageDriven(
     activationConfig = {
@@ -18,18 +15,26 @@ import javax.jms.MessageListener;
           propertyName = "destinationLookup",
           propertyValue = "java:app/jms/WebProfileQueue"),
     })
-public class WebProfileLogger implements MessageListener {
+public class WebProfileLogger extends ProfileLogger<WebProfile, WebProfileDao> {
 
-  @Inject private WebProfileDao dao;
+  @Inject private WebProfileDao profileDao;
 
   @Inject private Logger logger;
 
+  public WebProfileLogger() {}
+
   @Override
-  public void onMessage(Message message) {
-    try {
-      dao.save(message.getBody(WebProfile.class));
-    } catch (JMSException e) {
-      logger.log(Level.SEVERE, "fail reading Profile Message", e);
-    }
+  protected WebProfileDao getProfileDao() {
+    return profileDao;
+  }
+
+  @Override
+  protected Class<WebProfile> getProfileClass() {
+    return WebProfile.class;
+  }
+
+  @Override
+  protected Logger getLogger() {
+    return logger;
   }
 }

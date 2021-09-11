@@ -1,36 +1,18 @@
 package com.gmail.kasabuta4.jsfdemo.common.profile.web;
 
-import static javax.persistence.GenerationType.IDENTITY;
-
-import java.io.Serializable;
-import java.sql.Timestamp;
-import javax.persistence.Column;
+import com.gmail.kasabuta4.jsfdemo.common.profile.Profile;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Version;
 
 @Entity
-public class WebProfile implements Serializable {
+public class WebProfile extends Profile {
 
   private static final long serialVersionUID = 1L;
-
-  @Id
-  @GeneratedValue(strategy = IDENTITY)
-  private long id;
 
   private String remoteAddress;
   private String remoteHost;
   private String remoteUser;
   private String requestURI;
   private int responseStatus;
-  private Timestamp processStarted;
-  private Timestamp processFinished;
-
-  @Column(insertable = false)
-  private Timestamp recorded;
-
-  @Version private int version;
 
   public WebProfile() {}
 
@@ -75,14 +57,6 @@ public class WebProfile implements Serializable {
         + '}';
   }
 
-  public long getId() {
-    return id;
-  }
-
-  public void setId(long id) {
-    this.id = id;
-  }
-
   public String getRemoteAddress() {
     return remoteAddress;
   }
@@ -121,37 +95,5 @@ public class WebProfile implements Serializable {
 
   public void setResponseStatus(int responseStatus) {
     this.responseStatus = responseStatus;
-  }
-
-  public Timestamp getProcessStarted() {
-    return processStarted;
-  }
-
-  public void setProcessStarted(Timestamp processStarted) {
-    this.processStarted = processStarted;
-  }
-
-  public Timestamp getProcessFinished() {
-    return processFinished;
-  }
-
-  public void setProcessFinished(Timestamp processFinished) {
-    this.processFinished = processFinished;
-  }
-
-  public Timestamp getRecorded() {
-    return recorded;
-  }
-
-  public void setRecorded(Timestamp recorded) {
-    this.recorded = recorded;
-  }
-
-  public int getVersion() {
-    return version;
-  }
-
-  public void setVersion(int version) {
-    this.version = version;
   }
 }

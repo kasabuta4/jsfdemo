@@ -1,34 +1,15 @@
 package com.gmail.kasabuta4.jsfdemo.common.profile.dataaccess;
 
-import static javax.persistence.GenerationType.IDENTITY;
-
-import java.io.Serializable;
-import java.sql.Timestamp;
-import javax.persistence.Column;
+import com.gmail.kasabuta4.jsfdemo.common.profile.Profile;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Version;
 
 @Entity
-public class DataAccessProfile implements Serializable {
+public class DataAccessProfile extends Profile {
 
   private static final long serialVersionUID = 1L;
 
-  @Id
-  @GeneratedValue(strategy = IDENTITY)
-  private long id;
-
   private String targetClass;
   private String targetMethod;
-
-  private Timestamp processStarted;
-  private Timestamp processFinished;
-
-  @Column(insertable = false)
-  private Timestamp recorded;
-
-  @Version private int version;
 
   public DataAccessProfile() {}
 
@@ -67,14 +48,6 @@ public class DataAccessProfile implements Serializable {
         + '}';
   }
 
-  public long getId() {
-    return id;
-  }
-
-  public void setId(long id) {
-    this.id = id;
-  }
-
   public String getTargetClass() {
     return targetClass;
   }
@@ -89,37 +62,5 @@ public class DataAccessProfile implements Serializable {
 
   public void setTargetMethod(String targetMethod) {
     this.targetMethod = targetMethod;
-  }
-
-  public Timestamp getProcessStarted() {
-    return processStarted;
-  }
-
-  public void setProcessStarted(Timestamp processStarted) {
-    this.processStarted = processStarted;
-  }
-
-  public Timestamp getProcessFinished() {
-    return processFinished;
-  }
-
-  public void setProcessFinished(Timestamp processFinished) {
-    this.processFinished = processFinished;
-  }
-
-  public Timestamp getRecorded() {
-    return recorded;
-  }
-
-  public void setRecorded(Timestamp recorded) {
-    this.recorded = recorded;
-  }
-
-  public int getVersion() {
-    return version;
-  }
-
-  public void setVersion(int version) {
-    this.version = version;
   }
 }

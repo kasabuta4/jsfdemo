@@ -1,13 +1,10 @@
 package com.gmail.kasabuta4.jsfdemo.common.profile.dataaccess;
 
-import java.util.logging.Level;
+import com.gmail.kasabuta4.jsfdemo.common.profile.ProfileLogger;
 import java.util.logging.Logger;
 import javax.ejb.ActivationConfigProperty;
 import javax.ejb.MessageDriven;
 import javax.inject.Inject;
-import javax.jms.JMSException;
-import javax.jms.Message;
-import javax.jms.MessageListener;
 
 @MessageDriven(
     activationConfig = {
@@ -18,18 +15,27 @@ import javax.jms.MessageListener;
           propertyName = "destinationLookup",
           propertyValue = "java:app/jms/DataAccessProfileQueue"),
     })
-public class DataAccessProfileLogger implements MessageListener {
+public class DataAccessProfileLogger
+    extends ProfileLogger<DataAccessProfile, DataAccessProfileDao> {
 
-  @Inject private DataAccessProfileDao dao;
+  @Inject private DataAccessProfileDao profileDao;
 
   @Inject private Logger logger;
 
+  public DataAccessProfileLogger() {}
+
   @Override
-  public void onMessage(Message message) {
-    try {
-      dao.save(message.getBody(DataAccessProfile.class));
-    } catch (JMSException e) {
-      logger.log(Level.SEVERE, "fail reading Profile Message", e);
-    }
+  protected DataAccessProfileDao getProfileDao() {
+    return profileDao;
+  }
+
+  @Override
+  protected Class<DataAccessProfile> getProfileClass() {
+    return DataAccessProfile.class;
+  }
+
+  @Override
+  protected Logger getLogger() {
+    return logger;
   }
 }
