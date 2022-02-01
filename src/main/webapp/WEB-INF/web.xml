@@ -12,11 +12,21 @@
         <filter-name>WebProfileFilter</filter-name>
         <filter-class>com.gmail.kasabuta4.jsfdemo.common.profile.web.WebProfileFilter</filter-class>
     </filter>
+-->
+    <filter>
+        <filter-name>Basic Authentication Filter</filter-name>
+        <filter-class>com.gmail.kasabuta4.jsfdemo.common.authentication.BasicAuthenticationFilter</filter-class>
+    </filter>
+<!--
     <filter-mapping>
         <filter-name>WebProfileFilter</filter-name>
         <servlet-name>Faces Servlet</servlet-name>
     </filter-mapping>
 -->
+    <filter-mapping>
+        <filter-name>Basic Authentication Filter</filter-name>
+        <servlet-name>Faces Servlet</servlet-name>
+    </filter-mapping>
     <servlet>
         <servlet-name>Faces Servlet</servlet-name>
         <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
@@ -34,35 +44,11 @@
     <welcome-file-list>
         <welcome-file>index.xhtml</welcome-file>
     </welcome-file-list>
-    <security-constraint>
-        <web-resource-collection>
-            <web-resource-name>for_users</web-resource-name>
-            <url-pattern>/covid19/*</url-pattern>
-        </web-resource-collection>
-        <auth-constraint>
-            <role-name>USER</role-name>
-        </auth-constraint>
-    </security-constraint>
-    <security-constraint>
-        <web-resource-collection>
-            <web-resource-name>for_all</web-resource-name>
-            <url-pattern>/index.xhtml</url-pattern>
-        </web-resource-collection>
-        <auth-constraint>
-            <role-name>USER</role-name>
-            <role-name>ADMIN</role-name>
-        </auth-constraint>
-    </security-constraint>
-    <login-config>
-        <auth-method>BASIC</auth-method>
-        <realm-name>jsfdemorealm</realm-name>
-    </login-config>
-    <security-role>
-        <role-name>USER</role-name>
-    </security-role>
-    <security-role>
-        <role-name>ADMIN</role-name>
-    </security-role>
+    <env-entry>
+        <env-entry-name>realm</env-entry-name>
+        <env-entry-type>java.lang.String</env-entry-type>
+        <env-entry-value>jsfdemorealm</env-entry-value>
+    </env-entry>
     <jms-destination>
         <name>java:app/jms/WebProfileQueue</name>
         <interface-name>javax.jms.Queue</interface-name>
