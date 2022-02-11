@@ -8,16 +8,16 @@
 
 ## デモアプリケーションへのアクセス
 ### トップメニュー
-http://localhost:8080/jsfdemo/index.xhtml
+http://localhost:8080/jsfdemo/faces/index.xhtml
 ### 検索画面
-http://localhost:8080/jsfdemo/covid19/search.xhtml
+http://localhost:8080/jsfdemo/faces/covid19/search.xhtml
 ### 複合ビューの検索画面
-http://localhost:8080/jsfdemo/compsiteview/search.xhtml
+http://localhost:8080/jsfdemo/faces/compsiteview/search.xhtml
 ### テンプレート利用の検索画面
-http://localhost:8080/jsfdemo/templating/search.xhtml
+http://localhost:8080/jsfdemo/faces/templating/search.xhtml
 ### フレーム利用の検索画面
-http://localhost:8080/jsfdemo/frame/search.xhtml
+http://localhost:8080/jsfdemo/faces/frame/search.xhtml
 ### ラインチャートの検索画面
-http://localhost:8080/jsfdemo/linechart/search.xhtml
+http://localhost:8080/jsfdemo/faces/linechart/search.xhtml
 ### Excel出力の検索画面
-http://localhost:8080/jsfdemo/excel/search.xhtml
+http://localhost:8080/jsfdemo/faces/excel/search.xhtml

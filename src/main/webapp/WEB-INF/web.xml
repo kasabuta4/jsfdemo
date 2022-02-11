@@ -17,6 +17,14 @@
         <filter-name>Basic Authentication Filter</filter-name>
         <filter-class>com.gmail.kasabuta4.jsfdemo.common.authentication.BasicAuthenticationFilter</filter-class>
     </filter>
+    <filter>
+        <filter-name>Force To Password Change Filter</filter-name>
+        <filter-class>com.gmail.kasabuta4.jsfdemo.common.authentication.ForceToChangePasswordFilter</filter-class>
+        <init-param>
+            <param-name>change-password-page-uri</param-name>
+            <param-value>/faces/user/change_password.xhtml</param-value>
+        </init-param>
+    </filter>
 <!--
     <filter-mapping>
         <filter-name>WebProfileFilter</filter-name>
@@ -25,7 +33,11 @@
 -->
     <filter-mapping>
         <filter-name>Basic Authentication Filter</filter-name>
-        <servlet-name>Faces Servlet</servlet-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>Force To Password Change Filter</filter-name>
+        <url-pattern>/*</url-pattern>
     </filter-mapping>
     <servlet>
         <servlet-name>Faces Servlet</servlet-name>
@@ -34,7 +46,7 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>Faces Servlet</servlet-name>
-        <url-pattern>*.xhtml</url-pattern>
+        <url-pattern>/faces/*</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

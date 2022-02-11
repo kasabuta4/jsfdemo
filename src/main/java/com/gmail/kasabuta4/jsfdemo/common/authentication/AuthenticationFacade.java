@@ -20,7 +20,7 @@ public class AuthenticationFacade {
         user.resetLoginFailure();
         em.flush();
       }
-      return user.createBasicPrincipal();
+      return new BasicPrincipal(user);
     } else {
       user.countUpLoginFailure();
       em.flush();

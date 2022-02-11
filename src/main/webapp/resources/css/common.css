@@ -29,3 +29,24 @@ table th, table td  {
 table > colgroup.heading {
     background-color: wheat;
 }
+
+div.toolbar-root {
+    margin: 0;
+    padding: 0; 
+    display: flex;
+    justify-content: space-between;
+}
+
+div.toolbar-reccomendChangePassword {
+    background-color: lightblue;
+}
+
+div.toolbar-normal {
+    background-color: lightpink;
+}
+
+span.toolbar-status span.toolbar-clock,
+span.toolbar-status span.toolbar-userid {
+    margin-left: 1ex;
+    margin-rignt: 1ex;
+}

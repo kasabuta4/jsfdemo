@@ -166,10 +166,6 @@ public class JsfDemoUser implements Serializable {
     return LocalDate.now().isAfter(expiration);
   }
 
-  public BasicPrincipal createBasicPrincipal() {
-    return new BasicPrincipal(name, fullname, group, expiration);
-  }
-
   public String getName() {
     return name;
   }
@@ -180,5 +176,9 @@ public class JsfDemoUser implements Serializable {
 
   public String getGroup() {
     return group;
+  }
+
+  public LocalDate getExpiration() {
+    return expiration;
   }
 }

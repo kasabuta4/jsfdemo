@@ -1,20 +1,25 @@
 package com.gmail.kasabuta4.jsfdemo.common.authentication;
 
+import static java.time.temporal.ChronoUnit.DAYS;
+
 import java.security.Principal;
 import java.time.LocalDate;
 
 public class BasicPrincipal implements Principal {
+
+  private static final int DAYS_FORCE_TO_CHANGE_PASSWORD = 14;
+  private static final int DAYS_RECOMMEND_TO_CHANGE_PASSWORD = 28;
 
   private final String name;
   private final String fullname;
   private final String group;
   private final LocalDate expiration;
 
-  public BasicPrincipal(String name, String fullname, String group, LocalDate expiration) {
-    this.name = name;
-    this.fullname = fullname;
-    this.group = group;
-    this.expiration = expiration;
+  public BasicPrincipal(JsfDemoUser user) {
+    this.name = user.getName();
+    this.fullname = user.getFullname();
+    this.group = user.getGroup();
+    this.expiration = user.getExpiration();
   }
 
   @Override
@@ -53,5 +58,21 @@ public class BasicPrincipal implements Principal {
 
   public LocalDate getExpiration() {
     return expiration;
+  }
+
+  private int getRemainingDaysUntilExpiration() {
+    return (int) DAYS.between(LocalDate.now(), expiration);
+  }
+
+  public int getRemainingDaysUntilForceToChangePassword() {
+    return (int) getRemainingDaysUntilExpiration() - DAYS_FORCE_TO_CHANGE_PASSWORD;
+  }
+
+  public boolean isForceToChangePassword() {
+    return getRemainingDaysUntilExpiration() <= DAYS_FORCE_TO_CHANGE_PASSWORD;
+  }
+
+  public boolean isReccomendToChangePassword() {
+    return getRemainingDaysUntilExpiration() <= DAYS_RECOMMEND_TO_CHANGE_PASSWORD;
   }
 }
