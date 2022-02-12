@@ -60,6 +60,10 @@ public class BasicPrincipal implements Principal {
     return expiration;
   }
 
+  public String getGroup() {
+    return group;
+  }
+
   private int getRemainingDaysUntilExpiration() {
     return (int) DAYS.between(LocalDate.now(), expiration);
   }

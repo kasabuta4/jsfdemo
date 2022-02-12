@@ -18,6 +18,34 @@
         <filter-class>com.gmail.kasabuta4.jsfdemo.common.authentication.BasicAuthenticationFilter</filter-class>
     </filter>
     <filter>
+        <filter-name>Authorization Filter</filter-name>
+        <filter-class>com.gmail.kasabuta4.jsfdemo.common.authentication.AuthorizationFilter</filter-class>
+        <init-param>
+            <param-name>resources-to-all</param-name>
+            <param-value>
+                /faces/javax.faces.resource/,
+                /faces/user/
+            </param-value>
+        </init-param>
+        <init-param>
+            <param-name>resources-for-user</param-name>
+            <param-value>
+                /faces/compsiteview/,
+                /faces/covid19/,
+                /faces/excel/,
+                /faces/frame/,
+                /faces/linechart/,
+                /faces/templating/
+            </param-value>
+        </init-param>
+        <init-param>
+            <param-name>resources-for-admin</param-name>
+            <param-value>
+                /faces/admin/
+            </param-value>
+        </init-param>
+    </filter>
+    <filter>
         <filter-name>Force To Password Change Filter</filter-name>
         <filter-class>com.gmail.kasabuta4.jsfdemo.common.authentication.ForceToChangePasswordFilter</filter-class>
         <init-param>
@@ -33,6 +61,10 @@
 -->
     <filter-mapping>
         <filter-name>Basic Authentication Filter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>Authorization Filter</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
     <filter-mapping>
