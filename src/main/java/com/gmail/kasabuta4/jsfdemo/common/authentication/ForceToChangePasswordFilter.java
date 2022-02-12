@@ -13,22 +13,26 @@ public class ForceToChangePasswordFilter extends HttpFilter {
 
   private static final String INIT_PARAMETER_NAME_CHANGE_PASSWORD_PAGE_URI =
       "change-password-page-uri";
+  private static final String INIT_PARAMETER_NAME_FACES_RESOURCE_REQUEST_URI =
+      "faces-resource-request-uri";
   private static final Pattern LEADNING_WS_PATTERN = Pattern.compile("^\\s+");
   private static final Pattern TRAILING_WS_PATTERN = Pattern.compile("\\s+$");
 
   private String changePasswordPageURI;
+  private Pattern facesRresourceRequestURIPattern;
 
   @Override
   public void init(FilterConfig config) throws ServletException {
     super.init(config);
     initChangePasswordPageURI(config);
+    initFacesResourceRequestURIPattern(config);
   }
 
   @Override
   public void doFilter(HttpServletRequest req, HttpServletResponse res, FilterChain chain)
       throws IOException, ServletException {
     BasicPrincipal principal = (BasicPrincipal) req.getUserPrincipal();
-    if (principal.isForceToChangePassword() && !isGoingToChangePasswordPage(req)) {
+    if (principal.isForceToChangePassword() && !excludesFiltering(req)) {
       res.sendRedirect(changePasswordPageURI);
     } else {
       chain.doFilter(req, res);
@@ -41,11 +45,19 @@ public class ForceToChangePasswordFilter extends HttpFilter {
             + trim(config.getInitParameter(INIT_PARAMETER_NAME_CHANGE_PASSWORD_PAGE_URI));
   }
 
-  private boolean isGoingToChangePasswordPage(HttpServletRequest req) {
-    return changePasswordPageURI.equals(req.getRequestURI());
+  private void initFacesResourceRequestURIPattern(FilterConfig config) {
+    String facesRresourceRequestURI =
+        config.getServletContext().getContextPath()
+            + trim(config.getInitParameter(INIT_PARAMETER_NAME_FACES_RESOURCE_REQUEST_URI));
+    facesRresourceRequestURIPattern = Pattern.compile(facesRresourceRequestURI, Pattern.LITERAL);
   }
 
-  private String trim(String url) {
+  private boolean excludesFiltering(HttpServletRequest req) {
+    return changePasswordPageURI.equals(req.getRequestURI())
+        || facesRresourceRequestURIPattern.matcher(req.getRequestURI()).lookingAt();
+  }
+
+  private static String trim(String url) {
     String leadingTrimmed = LEADNING_WS_PATTERN.matcher(url).replaceAll("");
     return TRAILING_WS_PATTERN.matcher(leadingTrimmed).replaceAll("");
   }

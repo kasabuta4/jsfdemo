@@ -1,4 +1,4 @@
-package com.gmail.kasabuta4.jsfdemo.common.authentication;
+package com.gmail.kasabuta4.jsfdemo.user.entity;
 
 import static java.nio.charset.StandardCharsets.US_ASCII;
 
@@ -12,6 +12,7 @@ import java.util.Base64;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+import java.util.regex.Pattern;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -94,7 +95,13 @@ public class JsfDemoUser implements Serializable {
         && differentFromRecentPasswords(hashPassword(newPassword));
   }
 
-  public void changePassword(String newPassword) {
+  public void changePassword(String newPassword) throws IllegalPasswordException {
+    if (!PasswordComplexityPolicy.isComplexEnough(newPassword))
+      throw new PasswordTooSimpleException();
+    if (!differentFromRecentPasswords(hashPassword(newPassword)))
+      throw new RecentlyUsedPasswordException();
+    if (includesUserIdInPassword(newPassword)) throw new PasswordIncludingUserIdException();
+
     shiftPassword(hashPassword(newPassword));
     doResetLoginFailure();
     updateExpiration();
@@ -116,6 +123,12 @@ public class JsfDemoUser implements Serializable {
     Set<String> passwordHistory =
         new HashSet<>(Arrays.asList(password, passwordHistory1, passwordHistory2));
     return !passwordHistory.contains(hashedNewPassword);
+  }
+
+  private boolean includesUserIdInPassword(String newPassword) {
+    return Pattern.compile(name, Pattern.LITERAL + Pattern.CASE_INSENSITIVE)
+        .matcher(newPassword)
+        .find();
   }
 
   private static String hashPassword(String password) {

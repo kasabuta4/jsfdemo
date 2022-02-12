@@ -1,4 +1,4 @@
-package com.gmail.kasabuta4.jsfdemo.common.authentication;
+package com.gmail.kasabuta4.jsfdemo.user.entity;
 
 import java.util.regex.Pattern;
 

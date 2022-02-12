@@ -39,10 +39,12 @@ asadmin undeploy jsfdemo
 ### [作成](https://glassfish.org/docs/latest/reference-manual/create-jdbc-connection-pool.html)
 ```Shell
 asadmin create-jdbc-connection-pool --datasourceclassname org.apache.derby.jdbc.ClientXADataSource --restype javax.sql.XADataSource --property serverName=localhost:portNumber=1527:databaseName=jsfdemodb:user=APP:password=APP jsfdemodbpool
+asadmin create-jdbc-connection-pool --datasourceclassname org.apache.derby.jdbc.BasicClientConnectionPoolDataSource40 --restype javax.sql.ConnectionPoolDataSource --property serverName=localhost:portNumber=1527:databaseName=jsfdemodb:user=APP:password=APP jsfdemodbpool2
 ```
 ### [接続テスト](https://glassfish.org/docs/latest/reference-manual/ping-connection-pool.html)
 ```Shell
 asadmin ping-connection-pool jsfdemodbpool
+asadmin ping-connection-pool jsfdemodbpool2
 ```
 ### [確認](https://glassfish.org/docs/latest/reference-manual/list-jdbc-connection-pools.html)
 ```Shell
@@ -51,12 +53,14 @@ asadmin list-jdbc-connection-pools
 ### [削除](https://glassfish.org/docs/latest/reference-manual/delete-jdbc-connection-pool.html)
 ```Shell
 asadmin delete-jdbc-connection-pool jsfdemodbpool
+asadmin delete-jdbc-connection-pool jsfdemodbpool2
 ```
 
 ## [JDBCリソースの作成、確認、削除](https://glassfish.org/docs/latest/administration-guide/jdbc.html#GSADG00746)
 ### [作成](https://glassfish.org/docs/latest/reference-manual/create-jdbc-resource.html)
 ```Shell
 asadmin create-jdbc-resource --connectionpoolid jsfdemodbpool jdbc/jsfdemodbpool
+asadmin create-jdbc-resource --connectionpoolid jsfdemodbpool2 jdbc/jsfdemodbpool2
 ```
 ### [確認](https://glassfish.org/docs/latest/reference-manual/list-jdbc-resources.html)
 ```Shell
@@ -65,6 +69,7 @@ asadmin list-jdbc-resources
 ### [削除](https://glassfish.org/docs/latest/reference-manual/delete-jdbc-resource.html)
 ```Shell
 asadmin delete-jdbc-resource jdbc/jsfdemodbpool
+asadmin delete-jdbc-resource jdbc/jsfdemodbpool2
 ```
 
 ## [セキュリティレルムの作成、確認、削除](https://glassfish.org/docs/latest/security-guide/user-security.html#GSSCG00036)

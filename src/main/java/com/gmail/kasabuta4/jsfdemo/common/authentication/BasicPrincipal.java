@@ -2,6 +2,7 @@ package com.gmail.kasabuta4.jsfdemo.common.authentication;
 
 import static java.time.temporal.ChronoUnit.DAYS;
 
+import com.gmail.kasabuta4.jsfdemo.user.entity.JsfDemoUser;
 import java.security.Principal;
 import java.time.LocalDate;
 
