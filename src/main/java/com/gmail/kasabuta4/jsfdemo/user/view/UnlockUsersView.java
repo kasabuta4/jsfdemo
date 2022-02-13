@@ -3,6 +3,7 @@ package com.gmail.kasabuta4.jsfdemo.user.view;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 
+import com.gmail.kasabuta4.jsfdemo.common.jsf.message.FacesMessageProducer;
 import com.gmail.kasabuta4.jsfdemo.user.entity.UserManagementException;
 import com.gmail.kasabuta4.jsfdemo.user.facade.UserManagementFacade;
 import com.gmail.kasabuta4.jsfdemo.user.facade.UserProfileDto;
@@ -13,7 +14,6 @@ import java.util.Map.Entry;
 import java.util.Set;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.RequestScoped;
-import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -42,7 +42,7 @@ public class UnlockUsersView {
       updateLockedUsers();
       updateStatus();
     } catch (UserManagementException ex) {
-      FacesContext.getCurrentInstance().addMessage(null, createFacesMessage(ex));
+      FacesContext.getCurrentInstance().addMessage(null, FacesMessageProducer.error(ex));
     }
   }
 
@@ -68,10 +68,6 @@ public class UnlockUsersView {
         lockedUsers.stream()
             .filter(user -> namesToUnlockSet.contains(user.getName()))
             .collect(toList());
-  }
-
-  private static FacesMessage createFacesMessage(UserManagementException ex) {
-    return new FacesMessage(FacesMessage.SEVERITY_ERROR, ex.getMessage(), ex.getMessage());
   }
 
   public List<UserProfileDto> getLockedUsers() {
