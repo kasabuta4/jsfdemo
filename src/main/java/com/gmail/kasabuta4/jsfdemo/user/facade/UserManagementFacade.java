@@ -6,7 +6,6 @@ import static java.util.stream.Collectors.toList;
 import com.gmail.kasabuta4.jsfdemo.config.db.JsfDemoDB;
 import com.gmail.kasabuta4.jsfdemo.user.entity.JsfDemoUser;
 import com.gmail.kasabuta4.jsfdemo.user.entity.UserException;
-import com.gmail.kasabuta4.jsfdemo.user.entity.WrongPasswordException;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -40,7 +39,7 @@ public class UserManagementFacade {
           logger.log(Level.SEVERE, pex.getMessage(), pex);
         }
       }
-      throw new DupulicateUserIdException();
+      throw UserException.alreadyExits();
     } finally {
       em.close();
     }
@@ -48,7 +47,7 @@ public class UserManagementFacade {
 
   public void changePassword(ChangePasswordModel model) throws UserException {
     if (!model.matchesConfirmationPasswrod()) {
-      throw new ConfirmationPasswordNotMatchException();
+      throw UserException.passwordConfirmationFailure();
     }
 
     EntityManager em = emf.createEntityManager();
@@ -58,11 +57,11 @@ public class UserManagementFacade {
         JsfDemoUser user = em.find(JsfDemoUser.class, model.getName());
 
         if (user == null) {
-          throw new UserNotFoundException();
+          throw UserException.notFound();
         }
 
         if (!user.verifyPassword(model.getCurrentPassword())) {
-          throw new WrongPasswordException();
+          throw UserException.wrongPassword();
         }
 
         user.changePassword(model.getNewPassword());
@@ -89,7 +88,7 @@ public class UserManagementFacade {
             logger.log(Level.SEVERE, pex.getMessage(), pex);
           }
         }
-        throw new UserException(UserException.PASSWORD_CHANGE_FAILURE_MESSAGE, rex);
+        throw UserException.passwordChangeFailure(rex);
       } catch (PersistenceException pex) {
         logger.log(Level.SEVERE, pex.getMessage(), pex);
         if (em.getTransaction().isActive()) {
@@ -98,7 +97,7 @@ public class UserManagementFacade {
           } catch (PersistenceException repeated) {
           }
         }
-        throw new UserException(UserException.PASSWORD_CHANGE_FAILURE_MESSAGE, pex);
+        throw UserException.passwordChangeFailure(pex);
       }
     } finally {
       em.close();
@@ -152,7 +151,7 @@ public class UserManagementFacade {
             logger.log(Level.SEVERE, pex.getMessage(), pex);
           }
         }
-        throw new UnlockFailureException();
+        throw UserException.unlockConflicted();
       } catch (PersistenceException pex) {
         logger.log(Level.SEVERE, pex.getMessage(), pex);
         if (em.getTransaction().isActive()) {
@@ -161,7 +160,7 @@ public class UserManagementFacade {
           } catch (PersistenceException ignore) {
           }
         }
-        throw new UserException(UserException.UNLOCK_USERS_FAILURE_MESSAGE, pex);
+        throw UserException.unlockUsersFailure(pex);
       }
     } finally {
       em.close();

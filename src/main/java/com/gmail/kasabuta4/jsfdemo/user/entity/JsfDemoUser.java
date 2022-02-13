@@ -107,12 +107,12 @@ public class JsfDemoUser implements Serializable {
         && differentFromRecentPasswords(hashPassword(newPassword));
   }
 
-  public void changePassword(String newPassword) throws IllegalPasswordException {
+  public void changePassword(String newPassword) throws UserException {
     if (!PasswordComplexityPolicy.isComplexEnough(newPassword))
-      throw new PasswordTooSimpleException();
+      throw UserException.passwordTooSimple();
     if (!differentFromRecentPasswords(hashPassword(newPassword)))
-      throw new RecentlyUsedPasswordException();
-    if (includesUserIdInPassword(newPassword)) throw new PasswordIncludingUserIdException();
+      throw UserException.recentlyUsedPassword();
+    if (includesUserIdInPassword(newPassword)) throw UserException.includesUserId();
 
     shiftPassword(hashPassword(newPassword));
     doResetLoginFailure();
