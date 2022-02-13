@@ -39,16 +39,20 @@ public class AuthenticationFacade {
         }
         em.getTransaction().commit();
       } catch (RollbackException rex) {
-        try {
-          em.getTransaction().rollback();
-        } catch (PersistenceException pex) {
-          logger.log(Level.SEVERE, pex.getMessage(), pex);
+        if(em.getTransaction().isActive()) {
+          try {
+            em.getTransaction().rollback();
+          } catch (PersistenceException pex) {
+            logger.log(Level.SEVERE, pex.getMessage(), pex);
+          }
         }
       } catch (PersistenceException pex) {
         logger.log(Level.SEVERE, pex.getMessage(), pex);
-        try {
-          em.getTransaction().rollback();
-        } catch (PersistenceException reex) {
+        if(em.getTransaction().isActive()) {
+          try {
+            em.getTransaction().rollback();
+          } catch (PersistenceException reex) {
+          }
         }
       }
     } finally {

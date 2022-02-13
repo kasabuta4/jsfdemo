@@ -5,7 +5,7 @@ import java.util.regex.Pattern;
 public class PasswordComplexityPolicy {
 
   private static final int MIN_PASSWORD_LENGTH = 8;
-  private static final int MIN_CHARACTER_TYPES_IN_USE = 4;
+  private static final int MIN_CHARACTER_TYPES_IN_USE = 3;
 
   private static final Pattern ILLEGAL_PASSWORD_CHARACTER_PATTERN =
       Pattern.compile("[^\\p{Upper}\\p{Lower}\\p{Digit}\\p{Punct}]");
