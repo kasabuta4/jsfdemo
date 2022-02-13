@@ -3,7 +3,7 @@ package com.gmail.kasabuta4.jsfdemo.user.view;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 
-import com.gmail.kasabuta4.jsfdemo.user.entity.UserException;
+import com.gmail.kasabuta4.jsfdemo.user.entity.UserManagementException;
 import com.gmail.kasabuta4.jsfdemo.user.facade.AddUserModel;
 import com.gmail.kasabuta4.jsfdemo.user.facade.UserManagementFacade;
 import java.util.HashSet;
@@ -41,7 +41,7 @@ public class UnlockUsersView {
       updateUnlockedUsers(selected);
       updateLockedUsers();
       updateStatus();
-    } catch (UserException ex) {
+    } catch (UserManagementException ex) {
       FacesContext.getCurrentInstance().addMessage(null, createFacesMessage(ex));
     }
   }
@@ -70,7 +70,7 @@ public class UnlockUsersView {
             .collect(toList());
   }
 
-  private static FacesMessage createFacesMessage(UserException ex) {
+  private static FacesMessage createFacesMessage(UserManagementException ex) {
     return new FacesMessage(FacesMessage.SEVERITY_ERROR, ex.getMessage(), ex.getMessage());
   }
 

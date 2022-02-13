@@ -1,7 +1,7 @@
 package com.gmail.kasabuta4.jsfdemo.user.view;
 
 import com.gmail.kasabuta4.jsfdemo.user.entity.JsfDemoGroup;
-import com.gmail.kasabuta4.jsfdemo.user.entity.UserException;
+import com.gmail.kasabuta4.jsfdemo.user.entity.UserManagementException;
 import com.gmail.kasabuta4.jsfdemo.user.facade.AddUserModel;
 import com.gmail.kasabuta4.jsfdemo.user.facade.UserManagementFacade;
 import java.util.Map;
@@ -26,12 +26,12 @@ public class AddUserView {
       facade.addUser(form);
       result = form;
       form = new AddUserModel();
-    } catch (UserException ex) {
+    } catch (UserManagementException ex) {
       FacesContext.getCurrentInstance().addMessage(null, createFacesMessage(ex));
     }
   }
 
-  private static FacesMessage createFacesMessage(UserException ex) {
+  private static FacesMessage createFacesMessage(UserManagementException ex) {
     return new FacesMessage(FacesMessage.SEVERITY_ERROR, ex.getMessage(), ex.getMessage());
   }
 

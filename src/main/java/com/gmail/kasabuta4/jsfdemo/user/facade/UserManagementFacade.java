@@ -5,7 +5,7 @@ import static java.util.stream.Collectors.toList;
 
 import com.gmail.kasabuta4.jsfdemo.config.db.JsfDemoDB;
 import com.gmail.kasabuta4.jsfdemo.user.entity.JsfDemoUser;
-import com.gmail.kasabuta4.jsfdemo.user.entity.UserException;
+import com.gmail.kasabuta4.jsfdemo.user.entity.UserManagementException;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -24,7 +24,7 @@ public class UserManagementFacade {
   @Inject @JsfDemoDB EntityManagerFactory emf;
   @Inject Logger logger;
 
-  public void addUser(AddUserModel model) throws UserException {
+  public void addUser(AddUserModel model) throws UserManagementException {
     EntityManager em = emf.createEntityManager();
     try {
       em.getTransaction().begin();
@@ -39,15 +39,15 @@ public class UserManagementFacade {
           logger.log(Level.SEVERE, pex.getMessage(), pex);
         }
       }
-      throw UserException.alreadyExits();
+      throw UserManagementException.alreadyExits();
     } finally {
       em.close();
     }
   }
 
-  public void changePassword(ChangePasswordModel model) throws UserException {
+  public void changePassword(ChangePasswordModel model) throws UserManagementException {
     if (!model.matchesConfirmationPasswrod()) {
-      throw UserException.passwordConfirmationFailure();
+      throw UserManagementException.passwordConfirmationFailure();
     }
 
     EntityManager em = emf.createEntityManager();
@@ -57,17 +57,17 @@ public class UserManagementFacade {
         JsfDemoUser user = em.find(JsfDemoUser.class, model.getName());
 
         if (user == null) {
-          throw UserException.notFound();
+          throw UserManagementException.notFound();
         }
 
         if (!user.verifyPassword(model.getCurrentPassword())) {
-          throw UserException.wrongPassword();
+          throw UserManagementException.wrongPassword();
         }
 
         user.changePassword(model.getNewPassword());
         em.flush();
         em.getTransaction().commit();
-      } catch (UserException uex) {
+      } catch (UserManagementException uex) {
         try {
           em.getTransaction().commit();
         } catch (RollbackException rex) {
@@ -88,7 +88,7 @@ public class UserManagementFacade {
             logger.log(Level.SEVERE, pex.getMessage(), pex);
           }
         }
-        throw UserException.passwordChangeFailure(rex);
+        throw UserManagementException.passwordChangeFailure(rex);
       } catch (PersistenceException pex) {
         logger.log(Level.SEVERE, pex.getMessage(), pex);
         if (em.getTransaction().isActive()) {
@@ -97,7 +97,7 @@ public class UserManagementFacade {
           } catch (PersistenceException repeated) {
           }
         }
-        throw UserException.passwordChangeFailure(pex);
+        throw UserManagementException.passwordChangeFailure(pex);
       }
     } finally {
       em.close();
@@ -132,7 +132,7 @@ public class UserManagementFacade {
     }
   }
 
-  public void unlockUsers(List<String> list) throws UserException {
+  public void unlockUsers(List<String> list) throws UserManagementException {
     EntityManager em = emf.createEntityManager();
     try {
       em.getTransaction().begin();
@@ -151,7 +151,7 @@ public class UserManagementFacade {
             logger.log(Level.SEVERE, pex.getMessage(), pex);
           }
         }
-        throw UserException.unlockConflicted();
+        throw UserManagementException.unlockConflicted();
       } catch (PersistenceException pex) {
         logger.log(Level.SEVERE, pex.getMessage(), pex);
         if (em.getTransaction().isActive()) {
@@ -160,7 +160,7 @@ public class UserManagementFacade {
           } catch (PersistenceException ignore) {
           }
         }
-        throw UserException.unlockUsersFailure(pex);
+        throw UserManagementException.unlockUsersFailure(pex);
       }
     } finally {
       em.close();

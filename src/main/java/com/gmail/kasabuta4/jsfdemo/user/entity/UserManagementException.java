@@ -1,6 +1,6 @@
 package com.gmail.kasabuta4.jsfdemo.user.entity;
 
-public class UserException extends Exception {
+public class UserManagementException extends Exception {
 
   // Application Exception
   private static final String WRONG_PASSWORD_MESSAGE = "現在のパスワードが誤っています";
@@ -18,51 +18,51 @@ public class UserException extends Exception {
   private static final String PASSWORD_CHANGE_FAILURE_MESSAGE = "パスワード変更に失敗しました";
   private static final String UNLOCK_USERS_FAILURE_MESSAGE = "ロック解除に失敗しました";
 
-  private UserException(String message) {
+  private UserManagementException(String message) {
     super(message);
   }
 
-  private UserException(String message, Throwable cause) {
+  private UserManagementException(String message, Throwable cause) {
     super(message, cause);
   }
 
-  public static UserException wrongPassword() {
-    return new UserException(WRONG_PASSWORD_MESSAGE);
+  public static UserManagementException wrongPassword() {
+    return new UserManagementException(WRONG_PASSWORD_MESSAGE);
   }
 
-  public static UserException passwordTooSimple() {
-    return new UserException(PASSWORD_TOO_SIMPLE_MESSAGE);
+  public static UserManagementException passwordTooSimple() {
+    return new UserManagementException(PASSWORD_TOO_SIMPLE_MESSAGE);
   }
 
-  public static UserException recentlyUsedPassword() {
-    return new UserException(RECENTLY_USED_PASSWORD_MESSAGE);
+  public static UserManagementException recentlyUsedPassword() {
+    return new UserManagementException(RECENTLY_USED_PASSWORD_MESSAGE);
   }
 
-  public static UserException includesUserId() {
-    return new UserException(INCLUDES_USER_ID_MESSAGE);
+  public static UserManagementException includesUserId() {
+    return new UserManagementException(INCLUDES_USER_ID_MESSAGE);
   }
 
-  public static UserException passwordConfirmationFailure() {
-    return new UserException(PASSWORD_CONFIRMATION_FAILURE_MESSAGE);
+  public static UserManagementException passwordConfirmationFailure() {
+    return new UserManagementException(PASSWORD_CONFIRMATION_FAILURE_MESSAGE);
   }
 
-  public static UserException alreadyExits() {
-    return new UserException(ALREADY_EXISTS_MESSAGE);
+  public static UserManagementException alreadyExits() {
+    return new UserManagementException(ALREADY_EXISTS_MESSAGE);
   }
 
-  public static UserException notFound() {
-    return new UserException(NOT_FOUND_MESSAGE);
+  public static UserManagementException notFound() {
+    return new UserManagementException(NOT_FOUND_MESSAGE);
   }
 
-  public static UserException unlockConflicted() {
-    return new UserException(UNLOCK_CONFLICTED_MESSAGE);
+  public static UserManagementException unlockConflicted() {
+    return new UserManagementException(UNLOCK_CONFLICTED_MESSAGE);
   }
 
-  public static UserException passwordChangeFailure(Throwable cause) {
-    return new UserException(PASSWORD_CHANGE_FAILURE_MESSAGE, cause);
+  public static UserManagementException passwordChangeFailure(Throwable cause) {
+    return new UserManagementException(PASSWORD_CHANGE_FAILURE_MESSAGE, cause);
   }
 
-  public static UserException unlockUsersFailure(Throwable cause) {
-    return new UserException(UNLOCK_USERS_FAILURE_MESSAGE, cause);
+  public static UserManagementException unlockUsersFailure(Throwable cause) {
+    return new UserManagementException(UNLOCK_USERS_FAILURE_MESSAGE, cause);
   }
 }

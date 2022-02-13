@@ -1,6 +1,6 @@
 package com.gmail.kasabuta4.jsfdemo.user.view;
 
-import com.gmail.kasabuta4.jsfdemo.user.entity.UserException;
+import com.gmail.kasabuta4.jsfdemo.user.entity.UserManagementException;
 import com.gmail.kasabuta4.jsfdemo.user.facade.ChangePasswordModel;
 import com.gmail.kasabuta4.jsfdemo.user.facade.UserManagementFacade;
 import javax.enterprise.context.RequestScoped;
@@ -24,7 +24,7 @@ public class ChangePasswordView {
     try {
       facade.changePassword(model);
       done = true;
-    } catch (UserException ex) {
+    } catch (UserManagementException ex) {
       FacesContext.getCurrentInstance().addMessage(null, createFacesMessage(ex));
     }
     model.clear();
@@ -38,7 +38,7 @@ public class ChangePasswordView {
     return done;
   }
 
-  private static FacesMessage createFacesMessage(UserException ex) {
+  private static FacesMessage createFacesMessage(UserManagementException ex) {
     return new FacesMessage(FacesMessage.SEVERITY_ERROR, ex.getMessage(), ex.getMessage());
   }
 }
