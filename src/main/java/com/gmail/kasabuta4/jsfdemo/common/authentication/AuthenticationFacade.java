@@ -48,7 +48,8 @@ public class AuthenticationFacade {
         logger.log(Level.SEVERE, pex.getMessage(), pex);
         try {
           em.getTransaction().rollback();
-        } catch (PersistenceException reex) {}
+        } catch (PersistenceException reex) {
+        }
       }
     } finally {
       em.close();

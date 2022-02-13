@@ -1,0 +1,22 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+
+<ui:composition template="/template/template.xhtml"
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+        xmlns:navi="http://xmlns.jcp.org/jsf/composite/navigation">
+    <ui:define name="title">
+        <title>Covid-19 Newly Confirmed Cases Monthly - 新規ユーザー登録</title>
+    </ui:define>
+    <ui:define name="body">
+        <navi:toolbar id="toolbar" />
+        <div>
+            <h1>新規ユーザー登録</h1>
+            <ui:fragment id="result" rendered="#{not empty addUserView.result}">
+                <ui:include src="add_user_result.xhtml" />
+            </ui:fragment>
+            <ui:fragment id="form">
+                <ui:include src="add_user_form.xhtml" />
+            </ui:fragment>
+        </div>
+    </ui:define>
+</ui:composition>

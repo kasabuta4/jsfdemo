@@ -70,8 +70,8 @@ public class AuthorizationFilter extends HttpFilter {
 
   private boolean isAuthorized(HttpServletRequest req) {
     BasicPrincipal principal = (BasicPrincipal) req.getUserPrincipal();
-    return roleToResourceCollectionMap.getOrDefault(principal.getGroup().toLowerCase(), emptyList())
-        .stream()
+    return roleToResourceCollectionMap
+        .getOrDefault(principal.getGroup().name().toLowerCase(), emptyList()).stream()
         .anyMatch(pattern -> pattern.matcher(req.getRequestURI()).lookingAt());
   }
 

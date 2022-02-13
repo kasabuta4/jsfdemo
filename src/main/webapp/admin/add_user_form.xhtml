@@ -1,0 +1,43 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+
+<ui:component xmlns="http://www.w3.org/1999/xhtml"
+              xmlns:h="http://xmlns.jcp.org/jsf/html"
+              xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+              xmlns:f="http://xmlns.jcp.org/jsf/core"
+              xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
+    <h:form id="addUser">
+        <table>
+            <tbody>
+                <tr>
+                    <td><h:outputLabel id="nameLabel" for="name" value="name" /></td>
+                    <td>
+                        <h:inputText id="name" value="#{addUserView.form.name}"
+                                     maxlength="7" pt:minlength="7" size="7"
+                                     pt:required="required" pt:pattern="[A-Za-z0-9]*"/>
+                        <h:message id="nameMessage" for="name" />
+                    </td>
+                </tr>
+                <tr>
+                    <td><h:outputLabel id="fullnameLabel" for="fullname" value="fullname" /></td>
+                    <td>
+                        <h:inputText id="fullname" value="#{addUserView.form.fullname}"
+                                     maxlength="50" size="50" pt:required="required"/>
+                        <h:message id="fullnameMessage" for="fullname" />
+                    </td>
+                </tr>
+                <tr>
+                    <td><h:outputLabel id="groupLabel" for="group" value="group" /></td>
+                    <td>
+                        <h:selectOneRadio id="group" value="#{addUserView.form.group}"
+                                          pt:required="required">
+                            <f:selectItems value="#{addUserView.groups}" />
+                        </h:selectOneRadio>
+                        <h:message id="groupMessage" for="group" />
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h:messages id="globalMessage" globalOnly="true" />
+        <h:commandButton id="execute" value="実行" action="#{addUserView.addUser}"/>
+    </h:form>
+</ui:component>

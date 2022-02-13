@@ -16,6 +16,8 @@ import java.util.regex.Pattern;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Version;
@@ -39,8 +41,9 @@ public class JsfDemoUser implements Serializable {
   private String fullname;
 
   @Basic(optional = false)
+  @Enumerated(EnumType.STRING)
   @Column(name = "USER_GROUP")
-  private String group;
+  private JsfDemoGroup group;
 
   @Basic(optional = false)
   private String password;
@@ -64,7 +67,7 @@ public class JsfDemoUser implements Serializable {
 
   public JsfDemoUser() {}
 
-  public JsfDemoUser(String name, String fullname, String group) {
+  public JsfDemoUser(String name, String fullname, JsfDemoGroup group) {
     this.name = name;
     this.fullname = fullname;
     this.group = group;
@@ -187,7 +190,7 @@ public class JsfDemoUser implements Serializable {
     return fullname;
   }
 
-  public String getGroup() {
+  public JsfDemoGroup getGroup() {
     return group;
   }
 

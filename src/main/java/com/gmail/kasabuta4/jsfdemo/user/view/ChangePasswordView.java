@@ -1,8 +1,8 @@
 package com.gmail.kasabuta4.jsfdemo.user.view;
 
 import com.gmail.kasabuta4.jsfdemo.user.entity.UserException;
-import com.gmail.kasabuta4.jsfdemo.user.facade.UserManagementFacade;
 import com.gmail.kasabuta4.jsfdemo.user.facade.ChangePasswordModel;
+import com.gmail.kasabuta4.jsfdemo.user.facade.UserManagementFacade;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;

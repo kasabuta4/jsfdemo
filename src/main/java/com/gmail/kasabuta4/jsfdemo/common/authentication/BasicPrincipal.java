@@ -2,6 +2,7 @@ package com.gmail.kasabuta4.jsfdemo.common.authentication;
 
 import static java.time.temporal.ChronoUnit.DAYS;
 
+import com.gmail.kasabuta4.jsfdemo.user.entity.JsfDemoGroup;
 import com.gmail.kasabuta4.jsfdemo.user.entity.JsfDemoUser;
 import java.security.Principal;
 import java.time.LocalDate;
@@ -13,7 +14,7 @@ public class BasicPrincipal implements Principal {
 
   private final String name;
   private final String fullname;
-  private final String group;
+  private final JsfDemoGroup group;
   private final LocalDate expiration;
 
   public BasicPrincipal(JsfDemoUser user) {
@@ -50,7 +51,7 @@ public class BasicPrincipal implements Principal {
 
   public boolean isUserInRole(String role) {
     if (role == null) return false;
-    return role.equals(group);
+    return role.equalsIgnoreCase(group.name());
   }
 
   public String getFullname() {
@@ -61,7 +62,7 @@ public class BasicPrincipal implements Principal {
     return expiration;
   }
 
-  public String getGroup() {
+  public JsfDemoGroup getGroup() {
     return group;
   }
 

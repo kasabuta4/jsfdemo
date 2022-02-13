@@ -1,0 +1,24 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+
+<ui:component xmlns="http://www.w3.org/1999/xhtml"
+              xmlns:h="http://xmlns.jcp.org/jsf/html"
+              xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <p>以下のユーザーを登録しました。</p>
+    <table>
+        <tbody>
+            <tr>
+                <td>name</td>
+                <td><h:outputText id="nameResult" value="#{addUserView.result.name}"/></td>
+            </tr>
+            <tr>
+                <td>fullname</td>
+                <td><h:outputText id="fullnameResult" value="#{addUserView.result.fullname}"/></td>
+            </tr>
+            <tr>
+                <td>group</td>
+                <td><h:outputText id="groupResult" value="#{addUserView.result.group}"/></td>
+            </tr>
+        </tbody>
+    </table>
+    <p>続いて登録できます</p>
+</ui:component>
