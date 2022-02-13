@@ -30,7 +30,7 @@ public class UserManagementFacade {
       em.getTransaction().begin();
       em.persist(profile.toJsfDemoUser());
       em.getTransaction().commit();
-    } catch (EntityExistsException | RollbackException duplicateException) {
+    } catch (EntityExistsException | RollbackException ex) {
       if (em.getTransaction().isActive()) {
         try {
           em.getTransaction().rollback();
@@ -56,7 +56,7 @@ public class UserManagementFacade {
         JsfDemoUser user = em.find(JsfDemoUser.class, credential.getName());
 
         if (user == null) {
-          throw UserManagementException.notFound();
+          throw UserManagementException.passwordChangeNotFound();
         }
 
         if (!user.verifyPassword(credential.getCurrentPassword())) {
@@ -66,20 +66,20 @@ public class UserManagementFacade {
         user.changePassword(credential.getNewPassword());
         em.flush();
         em.getTransaction().commit();
-      } catch (UserManagementException uex) {
+      } catch (UserManagementException ex) {
         try {
           em.getTransaction().commit();
-        } catch (RollbackException rex) {
-          logger.log(Level.SEVERE, rex.getMessage(), rex);
+        } catch (RollbackException pex) {
+          logger.log(Level.SEVERE, pex.getMessage(), pex);
           if (em.getTransaction().isActive()) {
             try {
               em.getTransaction().rollback();
-            } catch (PersistenceException pex) {
+            } catch (PersistenceException ignore) {
             }
           }
         }
-        throw uex;
-      } catch (RollbackException rex) {
+        throw ex;
+      } catch (OptimisticLockException ex) {
         if (em.getTransaction().isActive()) {
           try {
             em.getTransaction().rollback();
@@ -87,13 +87,13 @@ public class UserManagementFacade {
             logger.log(Level.SEVERE, pex.getMessage(), pex);
           }
         }
-        throw UserManagementException.passwordChangeFailure(rex);
+        throw UserManagementException.passwordChangeConflicted();
       } catch (PersistenceException pex) {
         logger.log(Level.SEVERE, pex.getMessage(), pex);
         if (em.getTransaction().isActive()) {
           try {
             em.getTransaction().rollback();
-          } catch (PersistenceException repeated) {
+          } catch (PersistenceException ignore) {
           }
         }
         throw UserManagementException.passwordChangeFailure(pex);

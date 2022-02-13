@@ -11,7 +11,8 @@ public class UserManagementException extends Exception {
   private static final String PASSWORD_CONFIRMATION_FAILURE_MESSAGE =
       "変更後のパスワードと変更後のパスワードの確認が一致しません";
   private static final String ALREADY_EXISTS_MESSAGE = "同一の名前のユーザが既に登録されています";
-  private static final String NOT_FOUND_MESSAGE = "パスワードの変更ができませんでした";
+  private static final String PASSWORD_CHANGE_NOT_FOUND_MESSAGE = "削除されたため、パスワード変更に失敗しました";
+  private static final String PASSWORD_CHANGE_CONFLICTED_MESSAGE = "競合が発生したため、パスワード変更をやり直してください";
   private static final String UNLOCK_CONFLICTED_MESSAGE = "競合が発生したため、ロック解除をやり直してください";
 
   // for JPA Exception
@@ -50,8 +51,12 @@ public class UserManagementException extends Exception {
     return new UserManagementException(ALREADY_EXISTS_MESSAGE);
   }
 
-  public static UserManagementException notFound() {
-    return new UserManagementException(NOT_FOUND_MESSAGE);
+  public static UserManagementException passwordChangeNotFound() {
+    return new UserManagementException(PASSWORD_CHANGE_NOT_FOUND_MESSAGE);
+  }
+
+  public static UserManagementException passwordChangeConflicted() {
+    return new UserManagementException(PASSWORD_CHANGE_CONFLICTED_MESSAGE);
   }
 
   public static UserManagementException unlockConflicted() {

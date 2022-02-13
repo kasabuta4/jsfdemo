@@ -8,6 +8,7 @@ import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.OptimisticLockException;
 import javax.persistence.PersistenceException;
 import javax.persistence.RollbackException;
 
@@ -38,7 +39,7 @@ public class AuthenticationFacade {
           em.flush();
         }
         em.getTransaction().commit();
-      } catch (RollbackException rex) {
+      } catch (OptimisticLockException | RollbackException ex) {
         if (em.getTransaction().isActive()) {
           try {
             em.getTransaction().rollback();
