@@ -2,8 +2,8 @@ package com.gmail.kasabuta4.jsfdemo.user.view;
 
 import com.gmail.kasabuta4.jsfdemo.user.entity.JsfDemoGroup;
 import com.gmail.kasabuta4.jsfdemo.user.entity.UserManagementException;
-import com.gmail.kasabuta4.jsfdemo.user.facade.AddUserModel;
 import com.gmail.kasabuta4.jsfdemo.user.facade.UserManagementFacade;
+import com.gmail.kasabuta4.jsfdemo.user.facade.UserProfileDto;
 import java.util.Map;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
@@ -17,15 +17,15 @@ public class AddUserView {
 
   @Inject UserManagementFacade facade;
 
-  private AddUserModel form = new AddUserModel();
-  private AddUserModel result;
+  private UserProfileDto userToAdd = new UserProfileDto();
+  private UserProfileDto addedUser;
   private final Map<String, JsfDemoGroup> groups = JsfDemoGroup.LABEL_TO_VALUE_MAP;
 
   public void addUser() {
     try {
-      facade.addUser(form);
-      result = form;
-      form = new AddUserModel();
+      facade.addUser(userToAdd);
+      addedUser = userToAdd;
+      userToAdd = new UserProfileDto();
     } catch (UserManagementException ex) {
       FacesContext.getCurrentInstance().addMessage(null, createFacesMessage(ex));
     }
@@ -35,12 +35,12 @@ public class AddUserView {
     return new FacesMessage(FacesMessage.SEVERITY_ERROR, ex.getMessage(), ex.getMessage());
   }
 
-  public AddUserModel getForm() {
-    return form;
+  public UserProfileDto getUserToAdd() {
+    return userToAdd;
   }
 
-  public AddUserModel getResult() {
-    return result;
+  public UserProfileDto getAddedUser() {
+    return addedUser;
   }
 
   public Map<String, JsfDemoGroup> getGroups() {

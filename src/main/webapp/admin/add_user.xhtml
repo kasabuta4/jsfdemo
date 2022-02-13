@@ -11,7 +11,7 @@
         <navi:toolbar id="toolbar" />
         <div>
             <h1>新規ユーザー登録</h1>
-            <ui:fragment id="result" rendered="#{not empty addUserView.result}">
+            <ui:fragment id="result" rendered="#{not empty addUserView.addedUser}">
                 <ui:include src="add_user_result.xhtml" />
             </ui:fragment>
             <ui:fragment id="form">

@@ -1,7 +1,7 @@
 package com.gmail.kasabuta4.jsfdemo.user.view;
 
 import com.gmail.kasabuta4.jsfdemo.user.entity.UserManagementException;
-import com.gmail.kasabuta4.jsfdemo.user.facade.ChangePasswordModel;
+import com.gmail.kasabuta4.jsfdemo.user.facade.CredentialDto;
 import com.gmail.kasabuta4.jsfdemo.user.facade.UserManagementFacade;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
@@ -15,23 +15,23 @@ public class ChangePasswordView {
 
   @Inject UserManagementFacade facade;
 
-  private ChangePasswordModel model = new ChangePasswordModel();
+  private CredentialDto credential = new CredentialDto();
   private boolean done;
 
   public void changePassword() {
-    model.setName(
+    credential.setName(
         FacesContext.getCurrentInstance().getExternalContext().getUserPrincipal().getName());
     try {
-      facade.changePassword(model);
+      facade.changePassword(credential);
       done = true;
     } catch (UserManagementException ex) {
       FacesContext.getCurrentInstance().addMessage(null, createFacesMessage(ex));
     }
-    model.clear();
+    credential.clear();
   }
 
-  public ChangePasswordModel getModel() {
-    return model;
+  public CredentialDto getCredential() {
+    return credential;
   }
 
   public boolean isDone() {

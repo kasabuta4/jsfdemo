@@ -24,12 +24,11 @@ public class UserManagementFacade {
   @Inject @JsfDemoDB EntityManagerFactory emf;
   @Inject Logger logger;
 
-  public void addUser(AddUserModel model) throws UserManagementException {
+  public void addUser(UserProfileDto profile) throws UserManagementException {
     EntityManager em = emf.createEntityManager();
     try {
       em.getTransaction().begin();
-      JsfDemoUser user = new JsfDemoUser(model.getName(), model.getFullname(), model.getGroup());
-      em.persist(user);
+      em.persist(profile.toJsfDemoUser());
       em.getTransaction().commit();
     } catch (EntityExistsException | RollbackException duplicateException) {
       if (em.getTransaction().isActive()) {
@@ -45,8 +44,8 @@ public class UserManagementFacade {
     }
   }
 
-  public void changePassword(ChangePasswordModel model) throws UserManagementException {
-    if (!model.matchesConfirmationPasswrod()) {
+  public void changePassword(CredentialDto credential) throws UserManagementException {
+    if (!credential.matchesConfirmationPasswrod()) {
       throw UserManagementException.passwordConfirmationFailure();
     }
 
@@ -54,17 +53,17 @@ public class UserManagementFacade {
     try {
       em.getTransaction().begin();
       try {
-        JsfDemoUser user = em.find(JsfDemoUser.class, model.getName());
+        JsfDemoUser user = em.find(JsfDemoUser.class, credential.getName());
 
         if (user == null) {
           throw UserManagementException.notFound();
         }
 
-        if (!user.verifyPassword(model.getCurrentPassword())) {
+        if (!user.verifyPassword(credential.getCurrentPassword())) {
           throw UserManagementException.wrongPassword();
         }
 
-        user.changePassword(model.getNewPassword());
+        user.changePassword(credential.getNewPassword());
         em.flush();
         em.getTransaction().commit();
       } catch (UserManagementException uex) {
@@ -104,8 +103,8 @@ public class UserManagementFacade {
     }
   }
 
-  public List<AddUserModel> listLockedUsers() {
-    List<AddUserModel> result = emptyList();
+  public List<UserProfileDto> listLockedUsers() {
+    List<UserProfileDto> result = emptyList();
     EntityManager em = emf.createEntityManager();
     try {
       em.getTransaction().begin();
@@ -113,7 +112,7 @@ public class UserManagementFacade {
         result =
             em.createNamedQuery("listLockedUsers", JsfDemoUser.class)
                 .getResultStream()
-                .map(AddUserModel::fromJsfDemoUser)
+                .map(UserProfileDto::fromJsfDemoUser)
                 .collect(toList());
         em.getTransaction().commit();
       } catch (PersistenceException pex) {

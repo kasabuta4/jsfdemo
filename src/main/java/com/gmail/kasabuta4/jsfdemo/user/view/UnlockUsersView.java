@@ -4,8 +4,8 @@ import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 
 import com.gmail.kasabuta4.jsfdemo.user.entity.UserManagementException;
-import com.gmail.kasabuta4.jsfdemo.user.facade.AddUserModel;
 import com.gmail.kasabuta4.jsfdemo.user.facade.UserManagementFacade;
+import com.gmail.kasabuta4.jsfdemo.user.facade.UserProfileDto;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -24,8 +24,8 @@ public class UnlockUsersView {
 
   @Inject UserManagementFacade facade;
 
-  private List<AddUserModel> lockedUsers;
-  private List<AddUserModel> unlockedUsers;
+  private List<UserProfileDto> lockedUsers;
+  private List<UserProfileDto> unlockedUsers;
   private Map<String, Boolean> status;
 
   @PostConstruct
@@ -59,7 +59,7 @@ public class UnlockUsersView {
   }
 
   private void updateStatus() {
-    status = lockedUsers.stream().collect(toMap(AddUserModel::getName, user -> Boolean.FALSE));
+    status = lockedUsers.stream().collect(toMap(UserProfileDto::getName, user -> Boolean.FALSE));
   }
 
   private void updateUnlockedUsers(List<String> namesToUnlock) {
@@ -74,11 +74,11 @@ public class UnlockUsersView {
     return new FacesMessage(FacesMessage.SEVERITY_ERROR, ex.getMessage(), ex.getMessage());
   }
 
-  public List<AddUserModel> getLockedUsers() {
+  public List<UserProfileDto> getLockedUsers() {
     return lockedUsers;
   }
 
-  public List<AddUserModel> getUnlockedUsers() {
+  public List<UserProfileDto> getUnlockedUsers() {
     return unlockedUsers;
   }
 

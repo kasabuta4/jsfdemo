@@ -11,7 +11,7 @@
                 <tr>
                     <td><h:outputLabel id="nameLabel" for="name" value="name" /></td>
                     <td>
-                        <h:inputText id="name" value="#{addUserView.form.name}"
+                        <h:inputText id="name" value="#{addUserView.userToAdd.name}"
                                      maxlength="7" pt:minlength="7" size="7"
                                      pt:required="required" pt:pattern="[A-Za-z0-9]*"/>
                         <h:message id="nameMessage" for="name" />
@@ -20,7 +20,7 @@
                 <tr>
                     <td><h:outputLabel id="fullnameLabel" for="fullname" value="fullname" /></td>
                     <td>
-                        <h:inputText id="fullname" value="#{addUserView.form.fullname}"
+                        <h:inputText id="fullname" value="#{addUserView.userToAdd.fullname}"
                                      maxlength="50" size="50" pt:required="required"/>
                         <h:message id="fullnameMessage" for="fullname" />
                     </td>
@@ -28,7 +28,7 @@
                 <tr>
                     <td><h:outputLabel id="groupLabel" for="group" value="group" /></td>
                     <td>
-                        <h:selectOneRadio id="group" value="#{addUserView.form.group}"
+                        <h:selectOneRadio id="group" value="#{addUserView.userToAdd.group}"
                                           pt:required="required">
                             <f:selectItems value="#{addUserView.groups}" />
                         </h:selectOneRadio>

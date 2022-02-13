@@ -7,7 +7,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
-public class AddUserModel implements Serializable {
+public class UserProfileDto implements Serializable {
 
   private static final long serialVersionUID = 1L;
 
@@ -22,14 +22,18 @@ public class AddUserModel implements Serializable {
 
   @NotNull private JsfDemoGroup group;
 
-  public AddUserModel() {}
+  public UserProfileDto() {}
 
-  public static AddUserModel fromJsfDemoUser(JsfDemoUser user) {
-    AddUserModel model = new AddUserModel();
-    model.setName(user.getName());
-    model.setFullname(user.getFullname());
-    model.setGroup(user.getGroup());
-    return model;
+  public static UserProfileDto fromJsfDemoUser(JsfDemoUser user) {
+    UserProfileDto profile = new UserProfileDto();
+    profile.setName(user.getName());
+    profile.setFullname(user.getFullname());
+    profile.setGroup(user.getGroup());
+    return profile;
+  }
+
+  public JsfDemoUser toJsfDemoUser() {
+    return new JsfDemoUser(name, fullname, group);
   }
 
   public String getName() {
