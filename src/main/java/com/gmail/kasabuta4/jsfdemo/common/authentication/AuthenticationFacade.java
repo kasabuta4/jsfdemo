@@ -39,7 +39,7 @@ public class AuthenticationFacade {
         }
         em.getTransaction().commit();
       } catch (RollbackException rex) {
-        if(em.getTransaction().isActive()) {
+        if (em.getTransaction().isActive()) {
           try {
             em.getTransaction().rollback();
           } catch (PersistenceException pex) {
@@ -48,7 +48,7 @@ public class AuthenticationFacade {
         }
       } catch (PersistenceException pex) {
         logger.log(Level.SEVERE, pex.getMessage(), pex);
-        if(em.getTransaction().isActive()) {
+        if (em.getTransaction().isActive()) {
           try {
             em.getTransaction().rollback();
           } catch (PersistenceException reex) {

@@ -1,0 +1,25 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+
+<ui:component xmlns="http://www.w3.org/1999/xhtml"
+              xmlns:h="http://xmlns.jcp.org/jsf/html"
+              xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <p>以下のユーザーのロックを解除しました</p>
+    <table>
+        <thead>
+            <tr>
+                <th>name</th>
+                <th>fullname</th>
+                <th>group</th>
+            </tr>
+        </thead>
+        <tbody>
+            <ui:repeat id="unlocked" var="user" value="#{unlockUsersView.unlockedUsers}">
+                <tr>
+                    <td><h:outputText id="name" value="#{user.name}"/></td>
+                    <td><h:outputText id="fuluname" value="#{user.fullname}"/></td>
+                    <td><h:outputText id="group" value="#{user.group}"/></td>
+                </tr>
+            </ui:repeat>
+        </tbody>
+    </table>
+</ui:component>

@@ -19,11 +19,20 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Id;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
 @Entity
 @Table(name = "JSF_DEMO_USER")
+@NamedQuery(
+    name = "listLockedUsers",
+    query =
+        "SELECT user FROM JsfDemoUser user "
+            + "WHERE user.consecutiveLoginFailure >=4 OR user.expiration < CURRENT_DATE")
+@NamedQuery(
+    name = "listUnlockUsers",
+    query = "SELECT user FROM JsfDemoUser user WHERE user.name IN :unlockNameList")
 public class JsfDemoUser implements Serializable {
 
   private static final long serialVersionUID = 1L;

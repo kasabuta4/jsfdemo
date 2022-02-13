@@ -1,6 +1,7 @@
 package com.gmail.kasabuta4.jsfdemo.user.facade;
 
 import com.gmail.kasabuta4.jsfdemo.user.entity.JsfDemoGroup;
+import com.gmail.kasabuta4.jsfdemo.user.entity.JsfDemoUser;
 import java.io.Serializable;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -22,6 +23,14 @@ public class AddUserModel implements Serializable {
   @NotNull private JsfDemoGroup group;
 
   public AddUserModel() {}
+
+  public static AddUserModel fromJsfDemoUser(JsfDemoUser user) {
+    AddUserModel model = new AddUserModel();
+    model.setName(user.getName());
+    model.setFullname(user.getFullname());
+    model.setGroup(user.getGroup());
+    return model;
+  }
 
   public String getName() {
     return name;
