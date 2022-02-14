@@ -52,7 +52,7 @@ public class AuthenticationFacade {
         if (em.getTransaction().isActive()) {
           try {
             em.getTransaction().rollback();
-          } catch (PersistenceException reex) {
+          } catch (PersistenceException ignore) {
           }
         }
       }
