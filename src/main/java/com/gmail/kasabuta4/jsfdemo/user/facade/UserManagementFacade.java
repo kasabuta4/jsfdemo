@@ -111,7 +111,7 @@ public class UserManagementFacade {
       em.getTransaction().begin();
       try {
         result =
-            em.createNamedQuery("listLockedUsers", JsfDemoUser.class)
+            em.createNamedQuery(JsfDemoUser.LIST_ALL_LOCKED_QUERY_NAME, JsfDemoUser.class)
                 .getResultStream()
                 .map(UserProfileDto::fromJsfDemoUser)
                 .collect(toList());
@@ -140,7 +140,7 @@ public class UserManagementFacade {
       em.getTransaction().begin();
       try {
         List<JsfDemoUser> usersToUnlock =
-            em.createNamedQuery("searchUsersByNames", JsfDemoUser.class)
+            em.createNamedQuery(JsfDemoUser.SEARCH_BY_NAMES, JsfDemoUser.class)
                 .setParameter("names", userNames)
                 .getResultList();
         if (usersToUnlock.size() != userNames.size()) {
@@ -189,7 +189,7 @@ public class UserManagementFacade {
       em.getTransaction().begin();
       try {
         result =
-            em.createNamedQuery("listAllUsers", JsfDemoUser.class)
+            em.createNamedQuery(JsfDemoUser.LIST_ALL_QUERY_NAME, JsfDemoUser.class)
                 .getResultStream()
                 .map(UserProfileDto::fromJsfDemoUser)
                 .collect(toList());
@@ -217,7 +217,7 @@ public class UserManagementFacade {
       em.getTransaction().begin();
       try {
         List<JsfDemoUser> usersToDelete =
-            em.createNamedQuery("searchUsersByNames", JsfDemoUser.class)
+            em.createNamedQuery(JsfDemoUser.SEARCH_BY_NAMES, JsfDemoUser.class)
                 .setParameter("names", userNames)
                 .getResultList();
         if (usersToDelete.size() != userNames.size()) {

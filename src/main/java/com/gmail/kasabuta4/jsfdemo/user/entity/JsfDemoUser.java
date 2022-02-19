@@ -25,19 +25,27 @@ import javax.persistence.Version;
 
 @Entity
 @Table(name = "JSF_DEMO_USER")
-@NamedQuery(name = "listAllUsers", query = "SELECT user FROM JsfDemoUser user ORDER BY user.name")
 @NamedQuery(
-    name = "listLockedUsers",
+    name = JsfDemoUser.LIST_ALL_QUERY_NAME,
+    query = "SELECT user FROM JsfDemoUser user ORDER BY user.name")
+@NamedQuery(
+    name = JsfDemoUser.LIST_ALL_LOCKED_QUERY_NAME,
     query =
         "SELECT user FROM JsfDemoUser user "
             + "WHERE user.consecutiveLoginFailure >=4 OR user.expiration < CURRENT_DATE "
             + "ORDER BY user.name")
 @NamedQuery(
-    name = "searchUsersByNames",
+    name = JsfDemoUser.SEARCH_BY_NAMES,
     query = "SELECT user FROM JsfDemoUser user WHERE user.name IN :names ORDER BY user.name")
 public class JsfDemoUser implements Serializable {
 
   private static final long serialVersionUID = 1L;
+
+  private static final String QUERY_NAME_PREFIX =
+      "com.gmail.kasabuta4.jsfdemo.user.entity.JsfDemoUser.";
+  public static final String LIST_ALL_QUERY_NAME = QUERY_NAME_PREFIX + "listAll";
+  public static final String LIST_ALL_LOCKED_QUERY_NAME = QUERY_NAME_PREFIX + "listAllLocked";
+  public static final String SEARCH_BY_NAMES = QUERY_NAME_PREFIX + "searchByNames";
 
   private static final String INITIAL_PASSWORD = "Jsf2Demo#";
 
