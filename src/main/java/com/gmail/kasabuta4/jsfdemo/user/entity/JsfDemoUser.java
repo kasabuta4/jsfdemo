@@ -29,10 +29,11 @@ import javax.persistence.Version;
     name = "listLockedUsers",
     query =
         "SELECT user FROM JsfDemoUser user "
-            + "WHERE user.consecutiveLoginFailure >=4 OR user.expiration < CURRENT_DATE")
+            + "WHERE user.consecutiveLoginFailure >=4 OR user.expiration < CURRENT_DATE "
+            + "ORDER BY user.name")
 @NamedQuery(
     name = "listUsersByNames",
-    query = "SELECT user FROM JsfDemoUser user WHERE user.name IN :names")
+    query = "SELECT user FROM JsfDemoUser user WHERE user.name IN :names ORDER BY user.name")
 @NamedQuery(name = "allUsers", query = "SELECT user FROM JsfDemoUser user ORDER BY user.name")
 public class JsfDemoUser implements Serializable {
 
