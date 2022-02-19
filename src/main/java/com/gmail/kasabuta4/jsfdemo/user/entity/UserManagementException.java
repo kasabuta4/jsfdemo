@@ -13,6 +13,8 @@ public class UserManagementException extends Exception {
   private static final String ALREADY_EXISTS_MESSAGE = "同一の名前のユーザが既に登録されています";
   private static final String PASSWORD_CHANGE_NOT_FOUND_MESSAGE = "削除されたため、パスワード変更に失敗しました";
   private static final String PASSWORD_CHANGE_CONFLICTED_MESSAGE = "競合が発生したため、パスワード変更をやり直してください";
+  private static final String UNLOCK_NO_USER_MESSAGE = "ロック解除するユーザーを選択してください";
+  private static final String UNLOCK_DELETED_USER_MESSAGE = "一部のユーザーが削除されたため、ロック解除をやり直してください";
   private static final String UNLOCK_CONFLICTED_MESSAGE = "競合が発生したため、ロック解除をやり直してください";
   private static final String DELETE_NO_USER_MESSAGE = "削除するユーザーを選択してください";
   private static final String ALREADY_DELETED_MESSAGE = "一部のユーザが既に削除されたため、最初からやり直してください";
@@ -61,6 +63,14 @@ public class UserManagementException extends Exception {
 
   public static UserManagementException passwordChangeConflicted() {
     return new UserManagementException(PASSWORD_CHANGE_CONFLICTED_MESSAGE);
+  }
+
+  public static UserManagementException unlockNoUser() {
+    return new UserManagementException(UNLOCK_NO_USER_MESSAGE);
+  }
+
+  public static UserManagementException unlockDeletedUser() {
+    return new UserManagementException(UNLOCK_DELETED_USER_MESSAGE);
   }
 
   public static UserManagementException unlockConflicted() {

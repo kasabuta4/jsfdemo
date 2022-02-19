@@ -132,18 +132,33 @@ public class UserManagementFacade {
     }
   }
 
-  public void unlockUsers(List<String> list) throws UserManagementException {
+  public void unlockUsers(Collection<String> userNames) throws UserManagementException {
+    if (userNames.isEmpty()) throw UserManagementException.unlockNoUser();
+
     EntityManager em = emf.createEntityManager();
     try {
       em.getTransaction().begin();
       try {
-        em.createNamedQuery("searchUsersByNames", JsfDemoUser.class)
-            .setParameter("names", list)
-            .getResultStream()
-            .forEach(JsfDemoUser::unlock);
+        List<JsfDemoUser> usersToUnlock =
+            em.createNamedQuery("searchUsersByNames", JsfDemoUser.class)
+                .setParameter("names", userNames)
+                .getResultList();
+        if (usersToUnlock.size() != userNames.size()) {
+          throw UserManagementException.unlockDeletedUser();
+        }
+        usersToUnlock.stream().forEach(JsfDemoUser::unlock);
         em.flush();
         em.getTransaction().commit();
-      } catch (OptimisticLockException ex) {
+      } catch (UserManagementException uex) {
+        if (em.getTransaction().isActive()) {
+          try {
+            em.getTransaction().rollback();
+          } catch (PersistenceException pex) {
+            logger.log(Level.SEVERE, pex.getMessage(), pex);
+          }
+        }
+        throw uex;
+      } catch (OptimisticLockException | RollbackException rex) {
         if (em.getTransaction().isActive()) {
           try {
             em.getTransaction().rollback();

@@ -3,7 +3,11 @@
 <ui:composition template="/template/template.xhtml"
         xmlns="http://www.w3.org/1999/xhtml"
         xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+        xmlns:f="http://xmlns.jcp.org/jsf/core"
         xmlns:navi="http://xmlns.jcp.org/jsf/composite/navigation">
+    <f:metadata>
+        <f:viewAction action="#{unlockUsersView.listLockedUsers}" />
+    </f:metadata>
     <ui:define name="title">
         <title>Covid-19 Newly Confirmed Cases Monthly - ロック解除</title>
     </ui:define>
@@ -11,14 +15,14 @@
         <navi:toolbar id="toolbar" />
         <div>
             <h1>ロック解除</h1>
-            <ui:fragment id="result" rendered="#{not empty unlockUsersView.unlockedUsers}">
+            <ui:fragment id="select" rendered="#{unlockUsersView.selecting}">
+                <ui:include src="unlock_users_select.xhtml" />
+            </ui:fragment>
+            <ui:fragment id="confirm" rendered="#{unlockUsersView.confirming}">
+                <ui:include src="unlock_users_confirm.xhtml" />
+            </ui:fragment>
+            <ui:fragment id="result" rendered="#{unlockUsersView.unlocked}">
                 <ui:include src="unlock_users_result.xhtml" />
-            </ui:fragment>
-            <ui:fragment id="notFound" rendered="#{empty unlockUsersView.lockedUsers}">
-                <ui:include src="unlock_users_not_found.xhtml" />
-            </ui:fragment>
-            <ui:fragment id="form" rendered="#{not empty unlockUsersView.lockedUsers}">
-                <ui:include src="unlock_users_form.xhtml" />
             </ui:fragment>
         </div>
     </ui:define>

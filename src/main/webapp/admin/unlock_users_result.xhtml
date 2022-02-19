@@ -13,13 +13,16 @@
             </tr>
         </thead>
         <tbody>
-            <ui:repeat id="unlocked" var="user" value="#{unlockUsersView.unlockedUsers}">
+            <ui:repeat id="user" var="user" value="#{unlockUsersView.unlockedUsers}">
                 <tr>
-                    <td><h:outputText id="name" value="#{user.name}"/></td>
-                    <td><h:outputText id="fuluname" value="#{user.fullname}"/></td>
-                    <td><h:outputText id="group" value="#{user.group}"/></td>
+                    <td><h:outputText id="name" value="#{user.name}" /></td>
+                    <td><h:outputText id="fullname" value="#{user.fullname}" /></td>
+                    <td><h:outputText id="group" value="#{user.group}" /></td>
                 </tr>
             </ui:repeat>
         </tbody>
     </table>
+    <p>
+        <h:button id="goback" value="戻る" outcome="unlock_users.xhtml" />
+    </p>
 </ui:component>
