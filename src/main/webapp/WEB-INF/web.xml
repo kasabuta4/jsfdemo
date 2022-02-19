@@ -6,6 +6,10 @@
         <param-name>javax.faces.PROJECT_STAGE</param-name>
         <param-value>Development</param-value>
     </context-param>
+    <context-param>
+        <param-name>javax.faces.STATE_SAVING_METHOD</param-name>
+        <param-value>client</param-value>
+    </context-param>
 <!--リクエストのIPアドレスやユーザ、処理開始・終了時刻等をWebProfileテーブルに出力するフィルタ
     有効化する前にWebProfileテーブルを生成する必要あり
     <filter>

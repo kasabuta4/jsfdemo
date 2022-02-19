@@ -33,6 +33,7 @@ import javax.persistence.Version;
 @NamedQuery(
     name = "listUnlockUsers",
     query = "SELECT user FROM JsfDemoUser user WHERE user.name IN :unlockNameList")
+@NamedQuery(name = "allUsers", query = "SELECT user FROM JsfDemoUser user ORDER BY user.name")
 public class JsfDemoUser implements Serializable {
 
   private static final long serialVersionUID = 1L;

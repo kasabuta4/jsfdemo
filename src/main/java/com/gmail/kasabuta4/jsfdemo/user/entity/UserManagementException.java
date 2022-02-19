@@ -14,10 +14,14 @@ public class UserManagementException extends Exception {
   private static final String PASSWORD_CHANGE_NOT_FOUND_MESSAGE = "削除されたため、パスワード変更に失敗しました";
   private static final String PASSWORD_CHANGE_CONFLICTED_MESSAGE = "競合が発生したため、パスワード変更をやり直してください";
   private static final String UNLOCK_CONFLICTED_MESSAGE = "競合が発生したため、ロック解除をやり直してください";
+  private static final String DELETE_NO_USER_MESSAGE = "削除するユーザーを選択してください";
+  private static final String ALREADY_DELETED_MESSAGE = "一部のユーザが既に削除されたため、最初からやり直してください";
+  private static final String DELETE_CONFLICTED_MESSAGE = "競合が発生したため、最初からやり直してください";
 
   // for JPA Exception
   private static final String PASSWORD_CHANGE_FAILURE_MESSAGE = "パスワード変更に失敗しました";
   private static final String UNLOCK_USERS_FAILURE_MESSAGE = "ロック解除に失敗しました";
+  private static final String DELETE_USERS_FAILURE_MESSAGE = "ユーザ削除に失敗しました";
 
   private UserManagementException(String message) {
     super(message);
@@ -63,11 +67,27 @@ public class UserManagementException extends Exception {
     return new UserManagementException(UNLOCK_CONFLICTED_MESSAGE);
   }
 
+  public static UserManagementException deleteNoUser() {
+    return new UserManagementException(DELETE_NO_USER_MESSAGE);
+  }
+
+  public static UserManagementException alreadyDeleted() {
+    return new UserManagementException(ALREADY_DELETED_MESSAGE);
+  }
+
+  public static UserManagementException deleteConflicted() {
+    return new UserManagementException(DELETE_CONFLICTED_MESSAGE);
+  }
+
   public static UserManagementException passwordChangeFailure(Throwable cause) {
     return new UserManagementException(PASSWORD_CHANGE_FAILURE_MESSAGE, cause);
   }
 
   public static UserManagementException unlockUsersFailure(Throwable cause) {
     return new UserManagementException(UNLOCK_USERS_FAILURE_MESSAGE, cause);
+  }
+
+  public static UserManagementException deleteUsersFailure(Throwable cause) {
+    return new UserManagementException(DELETE_USERS_FAILURE_MESSAGE, cause);
   }
 }

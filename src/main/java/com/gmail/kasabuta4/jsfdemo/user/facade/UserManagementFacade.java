@@ -6,6 +6,7 @@ import static java.util.stream.Collectors.toList;
 import com.gmail.kasabuta4.jsfdemo.config.db.JsfDemoDB;
 import com.gmail.kasabuta4.jsfdemo.user.entity.JsfDemoUser;
 import com.gmail.kasabuta4.jsfdemo.user.entity.UserManagementException;
+import java.util.Collection;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -160,6 +161,87 @@ public class UserManagementFacade {
           }
         }
         throw UserManagementException.unlockUsersFailure(pex);
+      }
+    } finally {
+      em.close();
+    }
+  }
+
+  public List<UserProfileDto> listAllUsers() {
+    List<UserProfileDto> result = emptyList();
+    EntityManager em = emf.createEntityManager();
+    try {
+      em.getTransaction().begin();
+      try {
+        result =
+            em.createNamedQuery("allUsers", JsfDemoUser.class)
+                .getResultStream()
+                .map(UserProfileDto::fromJsfDemoUser)
+                .collect(toList());
+        em.getTransaction().commit();
+      } catch (PersistenceException pex) {
+        logger.log(Level.SEVERE, pex.getMessage(), pex);
+        if (em.getTransaction().isActive()) {
+          try {
+            em.getTransaction().rollback();
+          } catch (PersistenceException ignore) {
+          }
+        }
+      }
+    } finally {
+      em.close();
+      return result;
+    }
+  }
+
+  public void deleteUsers(Collection<String> userNames) throws UserManagementException {
+    if (userNames.isEmpty()) throw UserManagementException.deleteNoUser();
+
+    EntityManager em = emf.createEntityManager();
+    try {
+      em.getTransaction().begin();
+      try {
+        List<JsfDemoUser> usersToDelete =
+            em.createNamedQuery("listUnlockUsers", JsfDemoUser.class)
+                .setParameter("unlockNameList", userNames)
+                .getResultList();
+        if (usersToDelete.size() != userNames.size()) {
+          throw UserManagementException.alreadyDeleted();
+        }
+        usersToDelete.stream().forEach(em::remove);
+        em.flush();
+        em.getTransaction().commit();
+      } catch (UserManagementException uex) {
+        try {
+          em.getTransaction().commit();
+        } catch (PersistenceException pex) {
+          logger.log(Level.SEVERE, pex.getMessage(), pex);
+          if (em.getTransaction().isActive()) {
+            try {
+              em.getTransaction().rollback();
+            } catch (PersistenceException ignore) {
+            }
+          }
+        }
+        throw uex;
+      } catch (OptimisticLockException | RollbackException rex) {
+        if (em.getTransaction().isActive()) {
+          try {
+            em.getTransaction().rollback();
+          } catch (PersistenceException pex) {
+            logger.log(Level.SEVERE, pex.getMessage(), pex);
+          }
+        }
+        throw UserManagementException.deleteConflicted();
+      } catch (PersistenceException pex) {
+        logger.log(Level.SEVERE, pex.getMessage(), pex);
+        if (em.getTransaction().isActive()) {
+          try {
+            em.getTransaction().rollback();
+          } catch (PersistenceException ignore) {
+          }
+        }
+        throw UserManagementException.deleteUsersFailure(pex);
       }
     } finally {
       em.close();
