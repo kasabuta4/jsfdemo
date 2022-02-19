@@ -137,8 +137,8 @@ public class UserManagementFacade {
     try {
       em.getTransaction().begin();
       try {
-        em.createNamedQuery("listUnlockUsers", JsfDemoUser.class)
-            .setParameter("unlockNameList", list)
+        em.createNamedQuery("listUsersByNames", JsfDemoUser.class)
+            .setParameter("names", list)
             .getResultStream()
             .forEach(JsfDemoUser::unlock);
         em.flush();
@@ -202,8 +202,8 @@ public class UserManagementFacade {
       em.getTransaction().begin();
       try {
         List<JsfDemoUser> usersToDelete =
-            em.createNamedQuery("listUnlockUsers", JsfDemoUser.class)
-                .setParameter("unlockNameList", userNames)
+            em.createNamedQuery("listUsersByNames", JsfDemoUser.class)
+                .setParameter("names", userNames)
                 .getResultList();
         if (usersToDelete.size() != userNames.size()) {
           throw UserManagementException.alreadyDeleted();
