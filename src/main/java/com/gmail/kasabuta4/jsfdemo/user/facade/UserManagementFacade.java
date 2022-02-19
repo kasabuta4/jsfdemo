@@ -137,7 +137,7 @@ public class UserManagementFacade {
     try {
       em.getTransaction().begin();
       try {
-        em.createNamedQuery("listUsersByNames", JsfDemoUser.class)
+        em.createNamedQuery("searchUsersByNames", JsfDemoUser.class)
             .setParameter("names", list)
             .getResultStream()
             .forEach(JsfDemoUser::unlock);
@@ -174,7 +174,7 @@ public class UserManagementFacade {
       em.getTransaction().begin();
       try {
         result =
-            em.createNamedQuery("allUsers", JsfDemoUser.class)
+            em.createNamedQuery("listAllUsers", JsfDemoUser.class)
                 .getResultStream()
                 .map(UserProfileDto::fromJsfDemoUser)
                 .collect(toList());
@@ -202,7 +202,7 @@ public class UserManagementFacade {
       em.getTransaction().begin();
       try {
         List<JsfDemoUser> usersToDelete =
-            em.createNamedQuery("listUsersByNames", JsfDemoUser.class)
+            em.createNamedQuery("searchUsersByNames", JsfDemoUser.class)
                 .setParameter("names", userNames)
                 .getResultList();
         if (usersToDelete.size() != userNames.size()) {

@@ -25,6 +25,7 @@ import javax.persistence.Version;
 
 @Entity
 @Table(name = "JSF_DEMO_USER")
+@NamedQuery(name = "listAllUsers", query = "SELECT user FROM JsfDemoUser user ORDER BY user.name")
 @NamedQuery(
     name = "listLockedUsers",
     query =
@@ -32,9 +33,8 @@ import javax.persistence.Version;
             + "WHERE user.consecutiveLoginFailure >=4 OR user.expiration < CURRENT_DATE "
             + "ORDER BY user.name")
 @NamedQuery(
-    name = "listUsersByNames",
+    name = "searchUsersByNames",
     query = "SELECT user FROM JsfDemoUser user WHERE user.name IN :names ORDER BY user.name")
-@NamedQuery(name = "allUsers", query = "SELECT user FROM JsfDemoUser user ORDER BY user.name")
 public class JsfDemoUser implements Serializable {
 
   private static final long serialVersionUID = 1L;
