@@ -4,26 +4,30 @@
         xmlns="http://www.w3.org/1999/xhtml"
         xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
         xmlns:f="http://xmlns.jcp.org/jsf/core"
-        xmlns:navi="http://xmlns.jcp.org/jsf/composite/navigation">
+        xmlns:navi="http://xmlns.jcp.org/jsf/composite/navigation"
+        xmlns:page="http://xmlns.jcp.org/jsf/composite/page">
     <f:metadata>
-        <f:viewAction action="#{deleteUsersView.listAllUsers}" />
+        <f:viewAction action="#{deleteUsersView.list}" />
     </f:metadata>
     <ui:define name="title">
         <title>Covid-19 Newly Confirmed Cases Monthly - ユーザー削除</title>
     </ui:define>
     <ui:define name="body">
         <navi:toolbar id="toolbar" />
-        <div>
-            <h1>ユーザー削除</h1>
-            <ui:fragment id="select" rendered="#{deleteUsersView.selecting}">
-                <ui:include src="delete_users_select.xhtml" />
-            </ui:fragment>
-            <ui:fragment id="confirm" rendered="#{deleteUsersView.confirming}">
-                <ui:include src="delete_users_confirm.xhtml" />
-            </ui:fragment>
-            <ui:fragment id="result" rendered="#{deleteUsersView.deleted}">
-                <ui:include src="delete_users_result.xhtml" />
-            </ui:fragment>
-        </div>
+        <page:list_select_confirm_perform
+                id="main"
+                bean="#{deleteUsersView}"
+                page="delete_users.xhtml"
+                title="ユーザー削除"
+                promptSelect="削除するユーザを選択してください"
+                promptConfirm="以下のユーザを削除します"
+                promptDone="以下のユーザを削除しました"
+                buttonLabelAction="削除"
+                buttonLabelBackToSelect="戻る"
+                buttonLabelBackToInitial="戻る"
+                checkCaption="select"
+                modelPropertyCaptions="#{['name', 'fullname', 'group']}"
+                modelProperties="#{['name', 'fullname', 'group']}"
+                modelKeyProperty="name"/>
     </ui:define>
 </ui:composition>

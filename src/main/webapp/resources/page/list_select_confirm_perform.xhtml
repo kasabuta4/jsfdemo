@@ -1,0 +1,122 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+
+<ui:component id="list_select_confirm_perform"
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://xmlns.jcp.org/jsf/html"
+        xmlns:f="http://xmlns.jcp.org/jsf/core"
+        xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+        xmlns:cc="http://xmlns.jcp.org/jsf/composite">
+
+    <cc:interface name="toolbar">
+        <cc:attribute name="bean" required="true" />
+        <cc:attribute name="page" required="true" />
+        <cc:attribute name="title" required="true" />
+        <cc:attribute name="promptSelect" required="true" />
+        <cc:attribute name="promptConfirm" required="true" />
+        <cc:attribute name="promptDone" required="true" />
+        <cc:attribute name="buttonLabelAction" required="true" />
+        <cc:attribute name="buttonLabelBackToSelect" required="true" />
+        <cc:attribute name="buttonLabelBackToInitial" required="true" />
+        <cc:attribute name="checkCaption" required="true" />
+        <cc:attribute name="modelPropertyCaptions"  required="true" />
+        <cc:attribute name="modelProperties" required="true" />
+        <cc:attribute name="modelKeyProperty" required="true" />
+    </cc:interface>
+
+    <cc:implementation>
+        <div>
+            <h1><h:outputText id="title" value="#{cc.attrs.title}"/></h1>
+            <ui:fragment id="select" rendered="#{cc.attrs.bean.selecting}">
+                <h:form id="selectForm">
+                    <h:messages id="message" globalOnly="true" />
+                    <p><h:outputText id="promptSelect" value="#{cc.attrs.promptSelect}"/></p>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th><h:outputText id="checkCaption" value="#{cc.attrs.checkCaption}" /></th>
+                                <ui:repeat id="captions" var="caption" value="#{cc.attrs.modelPropertyCaptions}">
+                                    <th><h:outputText id="caption" value="#{caption}"/></th>
+                                </ui:repeat>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <ui:repeat id="allItems" var="item" value="#{cc.attrs.bean.allItems}">
+                                <tr>
+                                    <td>
+                                        <h:selectBooleanCheckbox id="check"
+                                                value="#{cc.attrs.bean.selectionStatus[item[cc.attrs.modelKeyProperty]]}">
+                                            <f:ajax execute="@this" render="#{cc.id +=':selectForm:confirm'}"
+                                                    listener="#{cc.attrs.bean.updateSelectionStatus}" />
+                                        </h:selectBooleanCheckbox>
+                                    </td>
+                                    <ui:repeat id="propertyNames" var="propertyName" value="#{cc.attrs.modelProperties}">
+                                        <td><h:outputText id="propertyValue" value="#{item[propertyName]}" /></td>
+                                    </ui:repeat>
+                                </tr>
+                            </ui:repeat>
+                        </tbody>
+                    </table>
+                    <p>
+                        <h:commandButton id="confirm" value="#{cc.attrs.buttonLabelAction}"
+                                         disabled="#{cc.attrs.bean.noItemSelected}"
+                                         action="#{cc.attrs.bean.confirm}" />
+                    </p>
+                </h:form>
+            </ui:fragment>
+            <ui:fragment id="confirm" rendered="#{cc.attrs.bean.confirming}">
+                <h:form id="confirmForm">
+                    <p><h:outputText id="promptConfirm" value="#{cc.attrs.promptConfirm}" /></p>
+                    <table>
+                        <thead>
+                            <tr>
+                                <ui:repeat id="captions" var="caption" value="#{cc.attrs.modelPropertyCaptions}">
+                                    <th><h:outputText id="caption" value="#{caption}"/></th>
+                                </ui:repeat>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <ui:repeat id="selectedItems" var="item" value="#{cc.attrs.bean.selectedItems}">
+                                <tr>
+                                    <ui:repeat id="propertyNames" var="propertyName" value="#{cc.attrs.modelProperties}">
+                                        <td><h:outputText id="propertyValue" value="#{item[propertyName]}" /></td>
+                                    </ui:repeat>
+                                </tr>
+                            </ui:repeat>
+                        </tbody>
+                    </table>
+                    <p>
+                        <h:commandButton id="backToSelect" value="#{cc.attrs.buttonLabelBackToSelect}"
+                                         action="#{cc.attrs.bean.backToSelect}"/>
+                        <h:commandButton id="perform" value="#{cc.attrs.buttonLabelAction}"
+                                         action="#{cc.attrs.bean.perform}"/>
+                    </p>
+                </h:form>
+            </ui:fragment>
+            <ui:fragment id="result" rendered="#{cc.attrs.bean.performed}">
+                <p><h:outputText id="promptDone" value="#{cc.attrs.promptDone}" /></p>
+                <table>
+                    <thead>
+                        <tr>
+                            <ui:repeat id="captions" var="caption" value="#{cc.attrs.modelPropertyCaptions}">
+                                <th><h:outputText id="caption" value="#{caption}"/></th>
+                            </ui:repeat>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <ui:repeat id="performedItems" var="item" value="#{cc.attrs.bean.performedItems}">
+                            <tr>
+                                <ui:repeat id="propertyNames" var="propertyName" value="#{cc.attrs.modelProperties}">
+                                    <td><h:outputText id="propertyValue" value="#{item[propertyName]}" /></td>
+                                </ui:repeat>
+                            </tr>
+                        </ui:repeat>
+                    </tbody>
+                </table>
+                <p>
+                    <h:button id="backToInitial" value="#{cc.attrs.buttonLabelBackToInitial}"
+                              outcome="#{cc.attrs.page}" />
+                </p>
+            </ui:fragment>
+        </div>
+    </cc:implementation>
+</ui:component>

@@ -4,26 +4,30 @@
         xmlns="http://www.w3.org/1999/xhtml"
         xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
         xmlns:f="http://xmlns.jcp.org/jsf/core"
-        xmlns:navi="http://xmlns.jcp.org/jsf/composite/navigation">
+        xmlns:navi="http://xmlns.jcp.org/jsf/composite/navigation"
+        xmlns:page="http://xmlns.jcp.org/jsf/composite/page">
     <f:metadata>
-        <f:viewAction action="#{unlockUsersView.listLockedUsers}" />
+        <f:viewAction action="#{unlockUsersView.list}" />
     </f:metadata>
     <ui:define name="title">
-        <title>Covid-19 Newly Confirmed Cases Monthly - ロック解除</title>
+        <title>Covid-19 Newly Confirmed Cases Monthly - ユーザー削除</title>
     </ui:define>
     <ui:define name="body">
         <navi:toolbar id="toolbar" />
-        <div>
-            <h1>ロック解除</h1>
-            <ui:fragment id="select" rendered="#{unlockUsersView.selecting}">
-                <ui:include src="unlock_users_select.xhtml" />
-            </ui:fragment>
-            <ui:fragment id="confirm" rendered="#{unlockUsersView.confirming}">
-                <ui:include src="unlock_users_confirm.xhtml" />
-            </ui:fragment>
-            <ui:fragment id="result" rendered="#{unlockUsersView.unlocked}">
-                <ui:include src="unlock_users_result.xhtml" />
-            </ui:fragment>
-        </div>
+        <page:list_select_confirm_perform
+                id="main"
+                bean="#{unlockUsersView}"
+                page="unlock_users.xhtml"
+                title="ロック解除"
+                promptSelect="ロックを解除するユーザを選択してください"
+                promptConfirm="以下のユーザのロックを解除します"
+                promptDone="以下のユーザのロックを解除しました"
+                buttonLabelAction="ロック解除"
+                buttonLabelBackToSelect="戻る"
+                buttonLabelBackToInitial="戻る"
+                checkCaption="select"
+                modelPropertyCaptions="#{['name', 'fullname', 'group']}"
+                modelProperties="#{['name', 'fullname', 'group']}"
+                modelKeyProperty="name"/>
     </ui:define>
 </ui:composition>
