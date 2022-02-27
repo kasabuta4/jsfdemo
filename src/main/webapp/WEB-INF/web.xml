@@ -39,6 +39,7 @@
                 /faces/excel/,
                 /faces/frame/,
                 /faces/linechart/,
+                /faces/simplelist/,
                 /faces/templating/
             </param-value>
         </init-param>
