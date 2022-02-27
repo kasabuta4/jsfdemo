@@ -1,18 +1,11 @@
 package com.gmail.kasabuta4.jsfdemo.common.poi;
 
-import java.awt.Color;
 import java.time.YearMonth;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 import java.util.function.Function;
-import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
-import org.apache.poi.xssf.usermodel.XSSFColor;
 import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -20,7 +13,6 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 public class SimpleListWorksheetModel<E> {
 
-  private static final Color FILL_COLOR_FOR_EVEN_ROW = new Color(224, 255, 255);
   // required property
   private final XSSFWorkbook workbook;
   private final String sheetName;
@@ -33,11 +25,9 @@ public class SimpleListWorksheetModel<E> {
   private int titleColumnIndex = 0;
   private int listStartRowIndex = 1;
 
-  // build result
+  // temporary variables used during building workbook
   private XSSFSheet worksheet;
   private XSSFCellStyle titleStyle;
-  private Map<SimpleListColumnModel<E, ?>, XSSFCellStyle> listHeaderStyles;
-  private List<Map<SimpleListColumnModel<E, ?>, XSSFCellStyle>> listDataStyles;
 
   protected SimpleListWorksheetModel(
       XSSFWorkbook workbook, String sheetName, String title, List<E> data) {
@@ -46,20 +36,6 @@ public class SimpleListWorksheetModel<E> {
     this.title = title;
     this.data = data;
     this.columns = new ArrayList<>();
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null) return false;
-    if (!(o instanceof SimpleListWorksheetModel)) return false;
-    final SimpleListWorksheetModel<?> other = (SimpleListWorksheetModel<?>) o;
-    return Objects.equals(workbook, other.workbook) && Objects.equals(sheetName, other.sheetName);
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(workbook, sheetName);
   }
 
   public SimpleListWorksheetModel<E> titlePosition(int rowIndex, int columnIndex) {
@@ -114,15 +90,13 @@ public class SimpleListWorksheetModel<E> {
   }
 
   private void initStyles() {
-    titleStyle = createTitleStyle();
-    listHeaderStyles = createListHeaderStyles();
-    listDataStyles = createListDataStyles();
+    titleStyle = createTitleStyle(workbook);
+    for (SimpleListColumnModel<E, ?> column : columns) column.initStyles(workbook);
   }
 
   private void initWorksheet() {
     worksheet = workbook.createSheet(this.sheetName);
-    for (SimpleListColumnModel<E, ?> column : columns)
-      worksheet.setColumnWidth(column.getIndex(), column.getColumnWidth());
+    for (SimpleListColumnModel<E, ?> column : columns) column.setColumnWidth(worksheet);
   }
 
   private void writeTitle() {
@@ -134,26 +108,18 @@ public class SimpleListWorksheetModel<E> {
 
   private void writeListHeader() {
     XSSFRow row = worksheet.createRow(listStartRowIndex);
-    for (SimpleListColumnModel<E, ?> column : columns) {
-      XSSFCell cell = row.createCell(column.getIndex());
-      cell.setCellStyle(listHeaderStyles.get(column));
-      XSSFCellUtil.setCellValue(cell, column.getTitle());
-    }
+    for (SimpleListColumnModel<E, ?> column : columns) column.writeTitle(row);
   }
 
   private void writeListData() {
     for (int i = 0; i < data.size(); i++) {
       E entity = data.get(i);
       XSSFRow row = worksheet.createRow(listStartRowIndex + 1 + i);
-      for (SimpleListColumnModel<E, ?> column : columns) {
-        XSSFCell cell = row.createCell(column.getIndex());
-        cell.setCellStyle(listDataStyles.get(i % listDataStyles.size()).get(column));
-        XSSFCellUtil.setCellValue(cell, column.getPropertyGetter().apply(entity));
-      }
+      for (SimpleListColumnModel<E, ?> column : columns) column.writeData(i, entity, row);
     }
   }
 
-  protected XSSFCellStyle createTitleStyle() {
+  protected XSSFCellStyle createTitleStyle(XSSFWorkbook workbook) {
     XSSFFont standardFont = workbook.getStylesSource().getFontAt(0);
 
     XSSFFont font = workbook.createFont();
@@ -165,77 +131,5 @@ public class SimpleListWorksheetModel<E> {
     XSSFCellStyle style = workbook.createCellStyle();
     style.setFont(font);
     return style;
-  }
-
-  protected Map<SimpleListColumnModel<E, ?>, XSSFCellStyle> createListHeaderStyles() {
-    XSSFFont standardFont = workbook.getStylesSource().getFontAt(0);
-
-    XSSFFont font = workbook.createFont();
-    font.setBold(true);
-    font.setColor(standardFont.getColor());
-    font.setFontName(standardFont.getFontName());
-    font.setFontHeightInPoints(standardFont.getFontHeightInPoints());
-
-    XSSFCellStyle style = workbook.createCellStyle();
-    style.setFont(font);
-
-    Map<SimpleListColumnModel<E, ?>, XSSFCellStyle> styles = new HashMap<>();
-    columns.stream().forEach(column -> styles.put(column, style));
-    return Collections.unmodifiableMap(styles);
-  }
-
-  protected List<Map<SimpleListColumnModel<E, ?>, XSSFCellStyle>> createListDataStyles() {
-    final XSSFColor fillColor =
-        new XSSFColor(FILL_COLOR_FOR_EVEN_ROW, workbook.getStylesSource().getIndexedColors());
-
-    Map<SimpleListColumnModel<E, ?>, XSSFCellStyle> oddStyles = new HashMap<>();
-    for (SimpleListColumnModel<E, ?> column : columns) {
-      XSSFCellStyle style = workbook.createCellStyle();
-      style.setFillPattern(FillPatternType.NO_FILL);
-      style.setDataFormat(column.getFormatIndex(workbook));
-      oddStyles.put(column, style);
-    }
-
-    Map<SimpleListColumnModel<E, ?>, XSSFCellStyle> evenStyles = new HashMap<>();
-    for (SimpleListColumnModel<E, ?> column : columns) {
-      XSSFCellStyle style = workbook.createCellStyle();
-      style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-      style.setFillForegroundColor(fillColor);
-      style.setDataFormat(column.getFormatIndex(workbook));
-      evenStyles.put(column, style);
-    }
-
-    List<Map<SimpleListColumnModel<E, ?>, XSSFCellStyle>> styles = new ArrayList<>(2);
-    styles.add(Collections.unmodifiableMap(oddStyles));
-    styles.add(Collections.unmodifiableMap(evenStyles));
-    return Collections.unmodifiableList(styles);
-  }
-
-  public String getSheetName() {
-    return sheetName;
-  }
-
-  public String getTitle() {
-    return title;
-  }
-
-  public List<E> getData() {
-    return data;
-  }
-
-  public List<SimpleListColumnModel<E, ?>> getColumns() {
-    return columns;
-  }
-
-  public int getTitleRowIndex() {
-    return titleRowIndex;
-  }
-
-  public int getTitleColumnIndex() {
-    return titleColumnIndex;
-  }
-
-  public int getListStartRowIndex() {
-    return listStartRowIndex;
   }
 }

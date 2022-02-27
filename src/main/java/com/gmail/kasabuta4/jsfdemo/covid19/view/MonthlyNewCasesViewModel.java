@@ -4,6 +4,7 @@ import static com.gmail.kasabuta4.jsfdemo.common.jsf.navigation.RedirectUtil.red
 
 import com.gmail.kasabuta4.jsfdemo.covid19.application.MonthlyNewCasesService;
 import com.gmail.kasabuta4.jsfdemo.covid19.application.MonthlyNewCasesSummary;
+import com.gmail.kasabuta4.jsfdemo.covid19.domain.SearchCondition;
 import java.io.IOException;
 import java.io.Serializable;
 import javax.enterprise.context.Conversation;

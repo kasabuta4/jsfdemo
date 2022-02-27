@@ -1,4 +1,4 @@
-package com.gmail.kasabuta4.jsfdemo.covid19.view;
+package com.gmail.kasabuta4.jsfdemo.covid19.domain;
 
 import java.io.Serializable;
 import java.time.YearMonth;
