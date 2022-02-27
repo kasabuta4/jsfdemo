@@ -39,7 +39,7 @@ public class SimpleListWorksheetModel<E> {
   private Map<SimpleListColumnModel<E, ?>, XSSFCellStyle> listHeaderStyles;
   private List<Map<SimpleListColumnModel<E, ?>, XSSFCellStyle>> listDataStyles;
 
-  public SimpleListWorksheetModel(
+  protected SimpleListWorksheetModel(
       XSSFWorkbook workbook, String sheetName, String title, List<E> data) {
     this.workbook = workbook;
     this.sheetName = sheetName;
@@ -54,12 +54,12 @@ public class SimpleListWorksheetModel<E> {
     if (o == null) return false;
     if (!(o instanceof SimpleListWorksheetModel)) return false;
     final SimpleListWorksheetModel<?> other = (SimpleListWorksheetModel<?>) o;
-    return Objects.equals(sheetName, other.sheetName);
+    return Objects.equals(workbook, other.workbook) && Objects.equals(sheetName, other.sheetName);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(sheetName);
+    return Objects.hash(workbook, sheetName);
   }
 
   public SimpleListWorksheetModel<E> titlePosition(int rowIndex, int columnIndex) {
@@ -100,7 +100,11 @@ public class SimpleListWorksheetModel<E> {
     return this;
   }
 
-  public XSSFSheet build() {
+  protected void addColumn(SimpleListColumnModel<E, ?> column) {
+    columns.add(column);
+  }
+
+  protected XSSFSheet build() {
     initStyles();
     initWorksheet();
     writeTitle();
@@ -117,8 +121,8 @@ public class SimpleListWorksheetModel<E> {
 
   private void initWorksheet() {
     worksheet = workbook.createSheet(this.sheetName);
-    columns.stream()
-        .forEach(column -> worksheet.setColumnWidth(column.getIndex(), column.getColumnWidth()));
+    for (SimpleListColumnModel<E, ?> column : columns)
+      worksheet.setColumnWidth(column.getIndex(), column.getColumnWidth());
   }
 
   private void writeTitle() {
@@ -143,7 +147,7 @@ public class SimpleListWorksheetModel<E> {
       XSSFRow row = worksheet.createRow(listStartRowIndex + 1 + i);
       for (SimpleListColumnModel<E, ?> column : columns) {
         XSSFCell cell = row.createCell(column.getIndex());
-        cell.setCellStyle(listDataStyles.get(i % 2).get(column));
+        cell.setCellStyle(listDataStyles.get(i % listDataStyles.size()).get(column));
         XSSFCellUtil.setCellValue(cell, column.getPropertyGetter().apply(entity));
       }
     }
@@ -205,11 +209,6 @@ public class SimpleListWorksheetModel<E> {
     styles.add(Collections.unmodifiableMap(oddStyles));
     styles.add(Collections.unmodifiableMap(evenStyles));
     return Collections.unmodifiableList(styles);
-  }
-
-  public SimpleListWorksheetModel addColumn(SimpleListColumnModel<E, ?> column) {
-    columns.add(column);
-    return this;
   }
 
   public String getSheetName() {

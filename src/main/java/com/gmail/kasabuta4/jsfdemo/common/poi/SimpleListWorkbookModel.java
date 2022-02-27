@@ -25,6 +25,10 @@ public class SimpleListWorkbookModel {
     return worksheetModel;
   }
 
+  protected void addWorksheetModel(SimpleListWorksheetModel<?> worksheetModel) {
+    worksheetModels.add(worksheetModel);
+  }
+
   public XSSFWorkbook build() {
     worksheetModels.stream().forEach(SimpleListWorksheetModel::build);
     return workbook;
