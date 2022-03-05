@@ -6,27 +6,21 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 public class SimpleListWorkbookModel {
 
+  // required properties
   private final String fileName;
-  private final List<SimpleListWorksheetModel<?>> worksheetModels;
-
-  private final XSSFWorkbook workbook;
+  private final List<SimpleListWorksheetModel<?>> worksheetModels = new ArrayList<>();
+  private final XSSFWorkbook workbook = new XSSFWorkbook();
 
   public SimpleListWorkbookModel(String fileName) {
     this.fileName = fileName;
-    this.worksheetModels = new ArrayList<>();
-    this.workbook = new XSSFWorkbook();
   }
 
   public <E> SimpleListWorksheetModel<E> addWorksheetModel(
       String sheetName, String title, List<E> data) {
     SimpleListWorksheetModel<E> worksheetModel =
-        new SimpleListWorksheetModel<>(workbook, sheetName, title, data);
+        new SimpleListWorksheetModel<>(this, sheetName, title, data);
     worksheetModels.add(worksheetModel);
     return worksheetModel;
-  }
-
-  protected void addWorksheetModel(SimpleListWorksheetModel<?> worksheetModel) {
-    worksheetModels.add(worksheetModel);
   }
 
   public XSSFWorkbook build() {
@@ -36,5 +30,9 @@ public class SimpleListWorkbookModel {
 
   public String getFileName() {
     return fileName;
+  }
+
+  XSSFWorkbook getWorkbook() {
+    return workbook;
   }
 }

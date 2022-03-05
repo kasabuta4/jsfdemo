@@ -10,63 +10,78 @@ import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFColor;
 import org.apache.poi.xssf.usermodel.XSSFFont;
-import org.apache.poi.xssf.usermodel.XSSFRow;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-public class SimpleListColumnModel<E, P> {
+public class SimpleListColumnModel<E, X, Y> {
 
   private static final Color FILL_COLOR_FOR_EVEN_ROW = new Color(224, 255, 255);
 
-  // required property
-  private final SimpleListWorksheetModel<E> worksheet;
-  private final int index;
+  // required properties
+  private final SimpleListWorksheetModel<E> worksheetModel;
   private final String title;
   protected final int characters;
   private final NumberFormat format;
-  private final Function<E, P> propertyGetter;
+  private final Function<X, Y> propertyGetter;
+
+  // optional properties
+  private Function<Y, ?> converter = Function.identity();
+  private Function<XSSFWorkbook, XSSFCellStyle> titleStyleProducer = this::createTitleStyle;
+  private Function<XSSFWorkbook, List<XSSFCellStyle>> dataStylesProducer = this::createDataStyles;
 
   // temporary variables used during building workbook
   private XSSFCellStyle titleStyle;
   private List<XSSFCellStyle> dataStyles;
 
-  protected SimpleListColumnModel(
-      SimpleListWorksheetModel<E> worksheet,
-      int columnIndex,
+  SimpleListColumnModel(
+      SimpleListWorksheetModel<E> worksheetModel,
       String header,
+      Function<X, Y> property,
       int characters,
-      NumberFormat format,
-      Function<E, P> property) {
-    this.worksheet = worksheet;
-    this.index = columnIndex;
+      NumberFormat format) {
+    this.worksheetModel = worksheetModel;
     this.title = header;
+    this.propertyGetter = property;
     this.characters = characters;
     this.format = format;
-    this.propertyGetter = property;
+  }
+
+  public SimpleListWorksheetModel<E> endColumn() {
+    return worksheetModel;
+  }
+
+  public SimpleListColumnModel<E, X, Y> converter(Function<Y, ?> converter) {
+    this.converter = converter;
+    return this;
+  }
+
+  public SimpleListColumnModel<E, X, Y> titleStyle(
+      Function<XSSFWorkbook, XSSFCellStyle> titleStyleProducer) {
+    this.titleStyleProducer = titleStyleProducer;
+    return this;
+  }
+
+  public SimpleListColumnModel<E, X, Y> dataStyles(
+      Function<XSSFWorkbook, List<XSSFCellStyle>> dataStylesProducer) {
+    this.dataStylesProducer = dataStylesProducer;
+    return this;
   }
 
   void initStyles(XSSFWorkbook workbook) {
-    titleStyle = createTitleStyle(workbook);
-    dataStyles = createDataStyles(workbook);
+    titleStyle = titleStyleProducer.apply(workbook);
+    dataStyles = dataStylesProducer.apply(workbook);
   }
 
-  void setColumnWidth(XSSFSheet worksheet) {
-    worksheet.setColumnWidth(index, getColumnWidth());
-  }
-
-  void writeTitle(XSSFRow row) {
-    XSSFCell cell = row.createCell(index);
+  void writeTitle(XSSFCell cell) {
     cell.setCellStyle(titleStyle);
     XSSFCellUtil.setCellValue(cell, title);
   }
 
-  void writeData(int rowIndex, E entity, XSSFRow row) {
-    XSSFCell cell = row.createCell(index);
+  void writeData(X entity, XSSFCell cell, int rowIndex) {
     cell.setCellStyle(dataStyles.get(rowIndex % dataStyles.size()));
-    XSSFCellUtil.setCellValue(cell, propertyGetter.apply(entity));
+    XSSFCellUtil.setCellValue(cell, propertyGetter.andThen(converter).apply(entity));
   }
 
-  protected XSSFCellStyle createTitleStyle(XSSFWorkbook workbook) {
+  private XSSFCellStyle createTitleStyle(XSSFWorkbook workbook) {
     XSSFFont standardFont = workbook.getStylesSource().getFontAt(0);
 
     XSSFFont font = workbook.createFont();
@@ -81,7 +96,7 @@ public class SimpleListColumnModel<E, P> {
     return style;
   }
 
-  protected List<XSSFCellStyle> createDataStyles(XSSFWorkbook workbook) {
+  private List<XSSFCellStyle> createDataStyles(XSSFWorkbook workbook) {
     final XSSFColor fillColor =
         new XSSFColor(FILL_COLOR_FOR_EVEN_ROW, workbook.getStylesSource().getIndexedColors());
 
@@ -100,7 +115,7 @@ public class SimpleListColumnModel<E, P> {
     return Collections.unmodifiableList(styles);
   }
 
-  protected int getColumnWidth() {
+  int getColumnWidth() {
     return (characters + 1) * 256;
   }
 
