@@ -1,6 +1,7 @@
 package com.gmail.kasabuta4.jsfdemo.common.application;
 
 import com.gmail.kasabuta4.jsfdemo.common.application.excel.SimpleListWorkbookModel;
+import com.gmail.kasabuta4.jsfdemo.common.application.html.SimpleListHtmlTableModel;
 import com.gmail.kasabuta4.jsfdemo.common.jsf.message.FacesMessageProducer;
 import java.io.IOException;
 import java.io.Serializable;
@@ -19,6 +20,8 @@ public abstract class SimpleListSearchView<C extends Serializable, R extends Ser
 
   private static final long serialVersionUID = 1L;
 
+  private static final String MESSAGE_NOT_FOUND = "検索条件を満たすデータはありません";
+
   private static final String CONTENT_TYPE_FOR_EXCEL_WORKBOOK =
       "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet; charset=utf-8";
 
@@ -27,7 +30,7 @@ public abstract class SimpleListSearchView<C extends Serializable, R extends Ser
       "attachment; filename=\"{0}\"";
 
   @NotNull @Valid private C condition;
-  private List<R> result;
+  private SimpleListHtmlTableModel<R> result;
 
   protected SimpleListSearchView(C condition) {
     this.condition = condition;
@@ -37,14 +40,26 @@ public abstract class SimpleListSearchView<C extends Serializable, R extends Ser
 
   protected abstract Logger getLogger();
 
-  protected abstract String getDestinationOnSuccess();
+  protected abstract String getDestinationOnFound();
+
+  protected String getDestinationOnNotFound() {
+    return null;
+  }
+
+  protected abstract SimpleListHtmlTableModel<R> createHtmlTableModel(List<R> result);
 
   protected abstract SimpleListWorkbookModel createWorkbookModel(List<R> result);
 
-  public String search() {
+  public String show() {
     try {
-      result = getFacade().search(condition);
-      return result.isEmpty() ? null : getDestinationOnSuccess();
+      List<R> searchResult = getFacade().search(condition);
+      if (searchResult.isEmpty() && getDestinationOnNotFound() == null) {
+        FacesContext.getCurrentInstance()
+            .addMessage(null, FacesMessageProducer.error(MESSAGE_NOT_FOUND));
+        return null;
+      }
+      result = createHtmlTableModel(getFacade().search(condition));
+      return result.getData().isEmpty() ? getDestinationOnNotFound() : getDestinationOnFound();
     } catch (ApplicationException ex) {
       FacesContext.getCurrentInstance().addMessage(null, FacesMessageProducer.error(ex));
       return null;
@@ -53,7 +68,13 @@ public abstract class SimpleListSearchView<C extends Serializable, R extends Ser
 
   public void outputExcel() {
     try {
-      result = getFacade().search(condition);
+      List<R> result = getFacade().search(condition);
+
+      if (result.isEmpty()) {
+        FacesContext.getCurrentInstance()
+            .addMessage(null, FacesMessageProducer.error(MESSAGE_NOT_FOUND));
+        return;
+      }
 
       SimpleListWorkbookModel model = createWorkbookModel(result);
       XSSFWorkbook workbook = model.build();
@@ -78,7 +99,7 @@ public abstract class SimpleListSearchView<C extends Serializable, R extends Ser
     return condition;
   }
 
-  public List<R> getResult() {
+  public SimpleListHtmlTableModel<R> getResult() {
     return result;
   }
 }

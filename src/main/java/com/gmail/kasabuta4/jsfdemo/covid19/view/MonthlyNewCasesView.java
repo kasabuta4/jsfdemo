@@ -6,9 +6,14 @@ import com.gmail.kasabuta4.jsfdemo.common.application.SimpleListSearchFacade;
 import com.gmail.kasabuta4.jsfdemo.common.application.SimpleListSearchView;
 import com.gmail.kasabuta4.jsfdemo.common.application.excel.CommonNumberFormat;
 import com.gmail.kasabuta4.jsfdemo.common.application.excel.SimpleListWorkbookModel;
+import com.gmail.kasabuta4.jsfdemo.common.application.html.SimpleListHtmlTableModel;
 import com.gmail.kasabuta4.jsfdemo.covid19.application.MonthlyNewCasesFacade;
 import com.gmail.kasabuta4.jsfdemo.covid19.domain.MonthlyNewCases;
 import com.gmail.kasabuta4.jsfdemo.covid19.domain.SearchCondition;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.time.YearMonth;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,6 +27,9 @@ import javax.inject.Named;
 public class MonthlyNewCasesView extends SimpleListSearchView<SearchCondition, MonthlyNewCases> {
 
   private static final Map<String, String> PREFECTURE_MAP = prefectureMap();
+  private static final DateTimeFormatter YEAR_MONTH_FORMATTER =
+      DateTimeFormatter.ofPattern("uuuu/MM");
+  private static final NumberFormat 桁区切り整数 = new DecimalFormat("#,##0");
 
   @Inject MonthlyNewCasesFacade facade;
   @Inject Logger logger;
@@ -41,8 +49,31 @@ public class MonthlyNewCasesView extends SimpleListSearchView<SearchCondition, M
   }
 
   @Override
-  protected String getDestinationOnSuccess() {
+  protected String getDestinationOnFound() {
     return "result.xhtml";
+  }
+
+  @Override
+  protected SimpleListHtmlTableModel<MonthlyNewCases> createHtmlTableModel(
+      List<MonthlyNewCases> result) {
+    return new SimpleListHtmlTableModel<>(result)
+        .title("Covid-19 Monthly New Cases")
+        .tableClass("monthlyNewCases")
+        .addSequenceColumn("Seq")
+        .headerColumn(true)
+        .endColumn()
+        .addColumn("年月", MonthlyNewCases::getYearMonth)
+        .converter(MonthlyNewCasesView::convertYearMonth)
+        .columnClass("yearMonth")
+        .endColumn()
+        .addColumn("都道府県", MonthlyNewCases::getPrefecture)
+        .converter(MonthlyNewCasesView::convertPrefecture)
+        .endColumn()
+        .addColumn("新規感染者数", MonthlyNewCases::getCases)
+        .converter(桁区切り整数::format)
+        .titleClass("headerForInteger")
+        .dataClass("integer")
+        .endColumn();
   }
 
   @Override
@@ -66,6 +97,10 @@ public class MonthlyNewCasesView extends SimpleListSearchView<SearchCondition, M
 
   private static String convertPrefecture(String prefecture) {
     return PREFECTURE_MAP.get(prefecture);
+  }
+
+  private static String convertYearMonth(YearMonth yearMonth) {
+    return yearMonth == null ? null : YEAR_MONTH_FORMATTER.format(yearMonth);
   }
 
   private static Map<String, String> prefectureMap() {

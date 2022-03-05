@@ -7,4 +7,8 @@ public class FacesMessageProducer {
   public static FacesMessage error(Throwable cause) {
     return new FacesMessage(FacesMessage.SEVERITY_ERROR, cause.getMessage(), cause.getMessage());
   }
+
+  public static FacesMessage error(String message) {
+    return new FacesMessage(FacesMessage.SEVERITY_ERROR, message, message);
+  }
 }

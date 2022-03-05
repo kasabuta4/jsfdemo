@@ -1,0 +1,72 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+
+<ui:component
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://xmlns.jcp.org/jsf/html"
+        xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+        xmlns:cc="http://xmlns.jcp.org/jsf/composite">
+
+    <cc:interface name="toolbar">
+        <cc:attribute name="model" required="true" />
+    </cc:interface>
+
+    <cc:implementation>
+        <table class="#{cc.attrs.model.tableClass}">
+            <ui:fragment id="caption" rendered="#{not empty cc.attrs.model.title}">
+                <caption><h:outputText value="#{cc.attrs.model.title}" /></caption>
+            </ui:fragment>
+            <colgroup>
+                <ui:fragment id="sequenceColumn" rendered="#{not empty cc.attrs.model.sequenceColumn}">
+                    <col class="#{cc.attrs.model.sequenceColumn.columnClass}" />
+                </ui:fragment>
+                <ui:repeat id="columns" var="column" value="#{cc.attrs.model.columns}">
+                    <col class="#{column.columnClass}" />
+                </ui:repeat>
+            </colgroup>
+            <thead>
+                <tr>
+                    <ui:fragment id="sequenceColumn" rendered="#{not empty cc.attrs.model.sequenceColumn}">
+                        <th class="#{cc.attrs.model.sequenceColumn.titleClass}">
+                            <h:outputText value="#{cc.attrs.model.sequenceColumn.title}"/>
+                        </th>
+                    </ui:fragment>
+                    <ui:repeat id="columns" var="column" value="#{cc.attrs.model.columns}">
+                        <th class="#{column.titleClass}">
+                            <h:outputText value="#{column.title}"/>
+                        </th>
+                    </ui:repeat>
+                </tr>
+            </thead>
+            <tbody>
+                <ui:repeat id="entity" var="entity" varStatus="status" value="#{cc.attrs.model.data}">
+                    <tr>
+                        <ui:fragment id="sequenceColumn" rendered="#{not empty cc.attrs.model.sequenceColumn}">
+                            <ui:fragment id="headerColumn" rendered="#{cc.attrs.model.sequenceColumn.headerColumn}">
+                                <th class="#{cc.attrs.model.sequenceColumn.dataClass}">
+                                    <h:outputText value="#{cc.attrs.model.sequenceColumn.propertyFunction.apply(status.index +1)}"/>
+                                </th>
+                            </ui:fragment>
+                            <ui:fragment id="dataColumn" rendered="#{not cc.attrs.model.sequenceColumn.headerColumn}">
+                                <td class="#{cc.attrs.model.sequenceColumn.dataClass}">
+                                    <h:outputText value="#{cc.attrs.model.sequenceColumn.propertyFunction.apply(status.index +1)}"/>
+                                </td>
+                            </ui:fragment>
+                        </ui:fragment>
+                        <ui:repeat id="columns" var="column" value="#{cc.attrs.model.columns}">
+                            <ui:fragment id="headerColumn" rendered="#{column.headerColumn}">
+                                <th class="#{column.dataClass}">
+                                    <h:outputText value="#{column.propertyFunction.apply(entity)}"/>
+                                </th>
+                            </ui:fragment>
+                            <ui:fragment id="dataColumn" rendered="#{not column.headerColumn}">
+                                <td class="#{column.dataClass}">
+                                    <h:outputText value="#{column.propertyFunction.apply(entity)}"/>
+                                </td>
+                            </ui:fragment>
+                        </ui:repeat>
+                    </tr>
+                </ui:repeat>
+            </tbody>
+        </table>
+    </cc:implementation>
+</ui:component>
