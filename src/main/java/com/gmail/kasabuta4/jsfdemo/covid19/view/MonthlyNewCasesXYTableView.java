@@ -6,7 +6,7 @@ import com.gmail.kasabuta4.jsfdemo.common.application.XYTableFacade;
 import com.gmail.kasabuta4.jsfdemo.common.application.XYTableView;
 import com.gmail.kasabuta4.jsfdemo.common.application.excel.CommonNumberFormat;
 import com.gmail.kasabuta4.jsfdemo.common.application.excel.WorkbookModel;
-import com.gmail.kasabuta4.jsfdemo.common.application.html.MultiColGroupsHtmlTable;
+import com.gmail.kasabuta4.jsfdemo.common.application.html.HtmlXYTable;
 import com.gmail.kasabuta4.jsfdemo.covid19.application.MonthlyNewCasesXYTableFacade;
 import com.gmail.kasabuta4.jsfdemo.covid19.domain.MonthlyNewCases;
 import com.gmail.kasabuta4.jsfdemo.covid19.domain.SearchCondition;
@@ -65,23 +65,23 @@ public class MonthlyNewCasesXYTableView
   }
 
   @Override
-  protected MultiColGroupsHtmlTable<YearMonth, String, MonthlyNewCases>
-      createMultiColGroupsHtmlTable(Map<YearMonth, Map<String, MonthlyNewCases>> data) {
-    return new MultiColGroupsHtmlTable<>("東京圏と大阪圏の比較", data)
-        .addDefaultRowKeyColumn("年月")
+  protected HtmlXYTable<YearMonth, String, MonthlyNewCases> createHtmlXYTable(
+      Map<YearMonth, Map<String, MonthlyNewCases>> data) {
+    return new HtmlXYTable<>("東京圏と大阪圏の比較", data)
+        .addIdentityXColumn("年月")
         .converter(MonthlyNewCasesXYTableView::convertYearMonth)
         .columnClass("yearMonth")
-        .endRowKeyColumn()
-        .addColumnGroup("東京圏", 東京圏::contains, MonthlyNewCases::getCases)
+        .endXColumn()
+        .addYColumn("東京圏", 東京圏::contains, MonthlyNewCases::getCases)
         .converter(MonthlyNewCasesXYTableView::convertInteger)
-        .columnTitles(Arrays.asList(MonthlyNewCasesXYTableView::convertPrefecture))
-        .colgroupClass("東京圏colgroup")
-        .endColumnGroup()
-        .addColumnGroup("大阪圏", 大阪圏::contains, MonthlyNewCases::getCases)
+        .yTitles(Arrays.asList(MonthlyNewCasesXYTableView::convertPrefecture))
+        .columnClass("東京圏colgroup")
+        .endYColumn()
+        .addYColumn("大阪圏", 大阪圏::contains, MonthlyNewCases::getCases)
         .converter(MonthlyNewCasesXYTableView::convertInteger)
-        .columnTitles(Arrays.asList(MonthlyNewCasesXYTableView::convertPrefecture))
-        .colgroupClass("大阪圏colgroup")
-        .endColumnGroup();
+        .yTitles(Arrays.asList(MonthlyNewCasesXYTableView::convertPrefecture))
+        .columnClass("大阪圏colgroup")
+        .endYColumn();
   }
 
   @Override

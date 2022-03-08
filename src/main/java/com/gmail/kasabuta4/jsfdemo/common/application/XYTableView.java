@@ -1,7 +1,7 @@
 package com.gmail.kasabuta4.jsfdemo.common.application;
 
 import com.gmail.kasabuta4.jsfdemo.common.application.excel.WorkbookModel;
-import com.gmail.kasabuta4.jsfdemo.common.application.html.MultiColGroupsHtmlTable;
+import com.gmail.kasabuta4.jsfdemo.common.application.html.HtmlXYTable;
 import com.gmail.kasabuta4.jsfdemo.common.jsf.message.FacesMessageProducer;
 import java.io.IOException;
 import java.io.Serializable;
@@ -32,7 +32,7 @@ public abstract class XYTableView<P extends Serializable, E extends Serializable
       "attachment; filename=\"{0}\"";
 
   @NotNull @Valid private P condition;
-  private MultiColGroupsHtmlTable<X, Y, E> result;
+  private HtmlXYTable<X, Y, E> result;
 
   protected XYTableView(P condition) {
     this.condition = condition;
@@ -48,8 +48,7 @@ public abstract class XYTableView<P extends Serializable, E extends Serializable
     return null;
   }
 
-  protected abstract MultiColGroupsHtmlTable<X, Y, E> createMultiColGroupsHtmlTable(
-      Map<X, Map<Y, E>> data);
+  protected abstract HtmlXYTable<X, Y, E> createHtmlXYTable(Map<X, Map<Y, E>> data);
 
   protected abstract WorkbookModel createWorkbookModel(Map<X, Map<Y, E>> data);
 
@@ -61,7 +60,7 @@ public abstract class XYTableView<P extends Serializable, E extends Serializable
             .addMessage(null, FacesMessageProducer.error(MESSAGE_NOT_FOUND));
         return null;
       }
-      result = createMultiColGroupsHtmlTable(searchResult);
+      result = createHtmlXYTable(searchResult);
       return searchResult.isEmpty() ? getDestinationOnNotFound() : getDestinationOnFound();
     } catch (ApplicationException ex) {
       FacesContext.getCurrentInstance().addMessage(null, FacesMessageProducer.error(ex));
@@ -104,7 +103,7 @@ public abstract class XYTableView<P extends Serializable, E extends Serializable
     return condition;
   }
 
-  public MultiColGroupsHtmlTable<X, Y, E> getResult() {
+  public HtmlXYTable<X, Y, E> getResult() {
     return result;
   }
 }

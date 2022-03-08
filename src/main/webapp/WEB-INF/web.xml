@@ -34,13 +34,13 @@
         <init-param>
             <param-name>resources-for-user</param-name>
             <param-value>
+                /faces/XYTable/,
                 /faces/compsiteview/,
                 /faces/covid19/,
                 /faces/excel/,
                 /faces/frame/,
                 /faces/linechart/,
-                /faces/multicolgroup/,
-                /faces/simplelist/,
+                /faces/simpleTable/,
                 /faces/templating/
             </param-value>
         </init-param>

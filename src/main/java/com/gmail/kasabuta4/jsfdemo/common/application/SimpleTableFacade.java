@@ -10,7 +10,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceException;
 
-public abstract class SimpleListSearchFacade<C extends Serializable, R extends Serializable> {
+public abstract class SimpleTableFacade<C extends Serializable, R extends Serializable> {
 
   @Inject @JsfDemoDB EntityManagerFactory emf;
   @Inject Logger logger;

@@ -2,7 +2,8 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml"
         xmlns:h="http://xmlns.jcp.org/jsf/html"
-        xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+        xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+        xmlns:navi="http://xmlns.jcp.org/jsf/composite/navigation">
     <h:head>
         <ui:insert name="title">
             <title>Covid-19 Newly Confirmed Cases Monthly - Search</title>
@@ -11,6 +12,7 @@
     </h:head>
     <h:body>
         <ui:debug />
+        <navi:toolbar id="toolbar" />
         <ui:insert name="body">
             <title>Covid-19 Newly Confirmed Cases Monthly - Search</title>
         </ui:insert>

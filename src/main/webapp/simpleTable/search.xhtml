@@ -13,9 +13,9 @@
         <h:form id="search">
             <p>
                 <label>表示期間</label>
-                <input type="month" jsf:id="fromYearMonth" value="#{monthlyNewCasesView.condition.from}" />
+                <input type="month" jsf:id="fromYearMonth" value="#{monthlyNewCasesSimpleTableView.condition.from}" />
                 〜
-                <input type="month" jsf:id="toYearMonth" value="#{monthlyNewCasesView.condition.to}" />
+                <input type="month" jsf:id="toYearMonth" value="#{monthlyNewCasesSimpleTableView.condition.to}" />
                 <h:message for="fromYearMonth" />
                 <h:message for="toYearMonth" />
             </p>
@@ -23,8 +23,8 @@
                 <h:messages globalOnly="true" />
             </p>
             <p>
-                <h:commandButton id="show" value="Show" action="#{monthlyNewCasesView.show}" />
-                <h:commandButton id="excel" value="Excel" action="#{monthlyNewCasesView.outputExcel}" />
+                <h:commandButton id="show" value="Show" action="#{monthlyNewCasesSimpleTableView.show}" />
+                <h:commandButton id="excel" value="Excel" action="#{monthlyNewCasesSimpleTableView.outputExcel}" />
             </p>
         </h:form>
     </ui:define>

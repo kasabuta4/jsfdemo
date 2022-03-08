@@ -2,12 +2,12 @@ package com.gmail.kasabuta4.jsfdemo.covid19.view;
 
 import static java.util.Collections.unmodifiableMap;
 
-import com.gmail.kasabuta4.jsfdemo.common.application.SimpleListSearchFacade;
-import com.gmail.kasabuta4.jsfdemo.common.application.SimpleListSearchView;
+import com.gmail.kasabuta4.jsfdemo.common.application.SimpleTableFacade;
+import com.gmail.kasabuta4.jsfdemo.common.application.SimpleTableView;
 import com.gmail.kasabuta4.jsfdemo.common.application.excel.CommonNumberFormat;
 import com.gmail.kasabuta4.jsfdemo.common.application.excel.WorkbookModel;
-import com.gmail.kasabuta4.jsfdemo.common.application.html.SimpleListHtmlTableModel;
-import com.gmail.kasabuta4.jsfdemo.covid19.application.MonthlyNewCasesFacade;
+import com.gmail.kasabuta4.jsfdemo.common.application.html.HtmlSimpleTable;
+import com.gmail.kasabuta4.jsfdemo.covid19.application.MonthlyNewCasesSimpleTableFacade;
 import com.gmail.kasabuta4.jsfdemo.covid19.domain.MonthlyNewCases;
 import com.gmail.kasabuta4.jsfdemo.covid19.domain.SearchCondition;
 import java.text.DecimalFormat;
@@ -24,22 +24,23 @@ import javax.inject.Named;
 
 @Named
 @RequestScoped
-public class MonthlyNewCasesView extends SimpleListSearchView<SearchCondition, MonthlyNewCases> {
+public class MonthlyNewCasesSimpleTableView
+    extends SimpleTableView<SearchCondition, MonthlyNewCases> {
 
   private static final Map<String, String> PREFECTURE_MAP = prefectureMap();
   private static final DateTimeFormatter YEAR_MONTH_FORMATTER =
       DateTimeFormatter.ofPattern("uuuu/MM");
   private static final NumberFormat 桁区切り整数 = new DecimalFormat("#,##0");
 
-  @Inject MonthlyNewCasesFacade facade;
+  @Inject MonthlyNewCasesSimpleTableFacade facade;
   @Inject Logger logger;
 
-  public MonthlyNewCasesView() {
+  public MonthlyNewCasesSimpleTableView() {
     super(new SearchCondition());
   }
 
   @Override
-  protected SimpleListSearchFacade<SearchCondition, MonthlyNewCases> getFacade() {
+  protected SimpleTableFacade<SearchCondition, MonthlyNewCases> getFacade() {
     return facade;
   }
 
@@ -54,26 +55,25 @@ public class MonthlyNewCasesView extends SimpleListSearchView<SearchCondition, M
   }
 
   @Override
-  protected SimpleListHtmlTableModel<MonthlyNewCases> createHtmlTableModel(
-      List<MonthlyNewCases> result) {
-    return new SimpleListHtmlTableModel<>(result)
-        .title("Covid-19 Monthly New Cases")
+  protected HtmlSimpleTable<MonthlyNewCases> createHtmlTableModel(List<MonthlyNewCases> result) {
+    return new HtmlSimpleTable<>(result)
+        .caption("Covid-19 Monthly New Cases")
         .tableClass("monthlyNewCases")
         .addSequenceColumn("Seq")
         .headerColumn(true)
-        .endColumn()
-        .addColumn("年月", MonthlyNewCases::getYearMonth)
-        .converter(MonthlyNewCasesView::convertYearMonth)
+        .endSimpleColumn()
+        .addSimpleColumn("年月", MonthlyNewCases::getYearMonth)
+        .converter(MonthlyNewCasesSimpleTableView::convertYearMonth)
         .columnClass("yearMonth")
-        .endColumn()
-        .addColumn("都道府県", MonthlyNewCases::getPrefecture)
-        .converter(MonthlyNewCasesView::convertPrefecture)
-        .endColumn()
-        .addColumn("新規感染者数", MonthlyNewCases::getCases)
+        .endSimpleColumn()
+        .addSimpleColumn("都道府県", MonthlyNewCases::getPrefecture)
+        .converter(MonthlyNewCasesSimpleTableView::convertPrefecture)
+        .endSimpleColumn()
+        .addSimpleColumn("新規感染者数", MonthlyNewCases::getCases)
         .converter(桁区切り整数::format)
-        .titleClass("headerForInteger")
-        .dataClass("integer")
-        .endColumn();
+        .headerCellClass("headerForInteger")
+        .bodyCellClass("integer")
+        .endSimpleColumn();
   }
 
   @Override
@@ -88,7 +88,7 @@ public class MonthlyNewCasesView extends SimpleListSearchView<SearchCondition, M
         .addYearMonthColumn("年月", MonthlyNewCases::getYearMonth)
         .endSimpleColumn()
         .addStringColumn("都道府県", MonthlyNewCases::getPrefecture, 8)
-        .converter(MonthlyNewCasesView::convertPrefecture)
+        .converter(MonthlyNewCasesSimpleTableView::convertPrefecture)
         .endSimpleColumn()
         .addIntegerColumn("新規感染者数", MonthlyNewCases::getCases, 12, CommonNumberFormat.桁区切り整数)
         .endSimpleColumn()

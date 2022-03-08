@@ -1,7 +1,7 @@
 package com.gmail.kasabuta4.jsfdemo.common.application;
 
 import com.gmail.kasabuta4.jsfdemo.common.application.excel.WorkbookModel;
-import com.gmail.kasabuta4.jsfdemo.common.application.html.SimpleListHtmlTableModel;
+import com.gmail.kasabuta4.jsfdemo.common.application.html.HtmlSimpleTable;
 import com.gmail.kasabuta4.jsfdemo.common.jsf.message.FacesMessageProducer;
 import java.io.IOException;
 import java.io.Serializable;
@@ -15,7 +15,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-public abstract class SimpleListSearchView<C extends Serializable, R extends Serializable>
+public abstract class SimpleTableView<C extends Serializable, R extends Serializable>
     implements Serializable {
 
   private static final long serialVersionUID = 1L;
@@ -30,13 +30,13 @@ public abstract class SimpleListSearchView<C extends Serializable, R extends Ser
       "attachment; filename=\"{0}\"";
 
   @NotNull @Valid private C condition;
-  private SimpleListHtmlTableModel<R> result;
+  private HtmlSimpleTable<R> result;
 
-  protected SimpleListSearchView(C condition) {
+  protected SimpleTableView(C condition) {
     this.condition = condition;
   }
 
-  protected abstract SimpleListSearchFacade<C, R> getFacade();
+  protected abstract SimpleTableFacade<C, R> getFacade();
 
   protected abstract Logger getLogger();
 
@@ -46,7 +46,7 @@ public abstract class SimpleListSearchView<C extends Serializable, R extends Ser
     return null;
   }
 
-  protected abstract SimpleListHtmlTableModel<R> createHtmlTableModel(List<R> result);
+  protected abstract HtmlSimpleTable<R> createHtmlTableModel(List<R> result);
 
   protected abstract WorkbookModel createWorkbookModel(List<R> result);
 
@@ -99,7 +99,7 @@ public abstract class SimpleListSearchView<C extends Serializable, R extends Ser
     return condition;
   }
 
-  public SimpleListHtmlTableModel<R> getResult() {
+  public HtmlSimpleTable<R> getResult() {
     return result;
   }
 }

@@ -3,7 +3,7 @@ package com.gmail.kasabuta4.jsfdemo.covid19.application;
 import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE;
 import static java.util.stream.Collectors.toList;
 
-import com.gmail.kasabuta4.jsfdemo.common.application.SimpleListSearchFacade;
+import com.gmail.kasabuta4.jsfdemo.common.application.SimpleTableFacade;
 import com.gmail.kasabuta4.jsfdemo.covid19.domain.MonthlyNewCases;
 import com.gmail.kasabuta4.jsfdemo.covid19.domain.SearchCondition;
 import java.time.YearMonth;
@@ -13,8 +13,8 @@ import javax.enterprise.context.Dependent;
 import javax.persistence.EntityManager;
 
 @Dependent
-public class MonthlyNewCasesFacade
-    extends SimpleListSearchFacade<SearchCondition, MonthlyNewCases> {
+public class MonthlyNewCasesSimpleTableFacade
+    extends SimpleTableFacade<SearchCondition, MonthlyNewCases> {
 
   private static final long serialVersionUID = 1L;
 
