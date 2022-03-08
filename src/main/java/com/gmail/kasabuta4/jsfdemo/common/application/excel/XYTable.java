@@ -12,6 +12,7 @@ import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 public class XYTable<X, Y, E> implements WorkSheetModel {
 
@@ -98,23 +99,23 @@ public class XYTable<X, Y, E> implements WorkSheetModel {
     return yColumn;
   }
 
-  public XSSFSheet build() {
-    initStyles();
-    initWorksheet();
+  public XSSFSheet build(XSSFWorkbook workbook) {
+    initStyles(workbook);
+    initWorksheet(workbook);
     writeTableCaption();
     writeTableHeader();
     writeTableBody();
     return worksheet;
   }
 
-  private void initStyles() {
-    captionStyle = captionStyler.createStyle(workbookModel.getWorkbook());
-    for (XColumn<X, Y, E, ?> xColumn : xColumns) xColumn.initStyles(workbookModel.getWorkbook());
-    for (YColumn<X, Y, E, ?> yColumn : yColumns) yColumn.initStyles(workbookModel.getWorkbook());
+  private void initStyles(XSSFWorkbook workbook) {
+    captionStyle = captionStyler.createStyle(workbook);
+    for (XColumn<X, Y, E, ?> xColumn : xColumns) xColumn.initStyles(workbook);
+    for (YColumn<X, Y, E, ?> yColumn : yColumns) yColumn.initStyles(workbook);
   }
 
-  private void initWorksheet() {
-    worksheet = workbookModel.getWorkbook().createSheet(sheetName);
+  private void initWorksheet(XSSFWorkbook workbook) {
+    worksheet = workbook.createSheet(sheetName);
     int columnIndex = headerStartColumnIndex;
     for (int i = 0; i < xColumns.size(); i++)
       worksheet.setColumnWidth(columnIndex++, xColumns.get(i).getColumnWidth());

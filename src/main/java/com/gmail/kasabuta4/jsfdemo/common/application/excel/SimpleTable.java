@@ -9,6 +9,7 @@ import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 public class SimpleTable<E> implements WorkSheetModel {
 
@@ -105,23 +106,23 @@ public class SimpleTable<E> implements WorkSheetModel {
     return columnModel;
   }
 
-  public XSSFSheet build() {
-    initStyles();
-    initWorksheet();
+  public XSSFSheet build(XSSFWorkbook workbook) {
+    initStyles(workbook);
+    initWorksheet(workbook);
     writeCaption();
     writeHeader();
     writeBody();
     return worksheet;
   }
 
-  private void initStyles() {
-    captionStyle = captionStyler.createStyle(workbookModel.getWorkbook());
-    if (sequenceColumn != null) sequenceColumn.initStyles(workbookModel.getWorkbook());
-    for (SimpleColumn<E, E, ?> column : columns) column.initStyles(workbookModel.getWorkbook());
+  private void initStyles(XSSFWorkbook workbook) {
+    captionStyle = captionStyler.createStyle(workbook);
+    if (sequenceColumn != null) sequenceColumn.initStyles(workbook);
+    for (SimpleColumn<E, E, ?> column : columns) column.initStyles(workbook);
   }
 
-  private void initWorksheet() {
-    worksheet = workbookModel.getWorkbook().createSheet(this.sheetName);
+  private void initWorksheet(XSSFWorkbook workbook) {
+    worksheet = workbook.createSheet(this.sheetName);
     if (sequenceColumn != null)
       worksheet.setColumnWidth(headerStartColumnIndex, sequenceColumn.getColumnWidth());
     for (int i = 0; i < columns.size(); i++)

@@ -30,15 +30,11 @@ public class WorkbookModel {
   }
 
   public XSSFWorkbook build() {
-    worksheetModels.stream().forEach(WorkSheetModel::build);
+    worksheetModels.stream().forEach(worksheetModel -> worksheetModel.build(workbook));
     return workbook;
   }
 
   public String getFileName() {
     return fileName;
-  }
-
-  XSSFWorkbook getWorkbook() {
-    return workbook;
   }
 }
