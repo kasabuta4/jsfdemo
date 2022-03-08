@@ -36,7 +36,7 @@ public abstract class SimpleTableView<C extends Serializable, R extends Serializ
     this.condition = condition;
   }
 
-  protected abstract SimpleTableFacade<C, R> getFacade();
+  protected abstract SimpleSearchFacade<C, List<R>, R> getFacade();
 
   protected abstract Logger getLogger();
 
@@ -58,8 +58,8 @@ public abstract class SimpleTableView<C extends Serializable, R extends Serializ
             .addMessage(null, FacesMessageProducer.error(MESSAGE_NOT_FOUND));
         return null;
       }
-      result = createHtmlTableModel(getFacade().search(condition));
-      return result.getData().isEmpty() ? getDestinationOnNotFound() : getDestinationOnFound();
+      result = createHtmlTableModel(searchResult);
+      return searchResult.isEmpty() ? getDestinationOnNotFound() : getDestinationOnFound();
     } catch (ApplicationException ex) {
       FacesContext.getCurrentInstance().addMessage(null, FacesMessageProducer.error(ex));
       return null;

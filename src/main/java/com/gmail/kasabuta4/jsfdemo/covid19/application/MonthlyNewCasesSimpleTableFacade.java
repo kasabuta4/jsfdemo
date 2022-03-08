@@ -3,7 +3,7 @@ package com.gmail.kasabuta4.jsfdemo.covid19.application;
 import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE;
 import static java.util.stream.Collectors.toList;
 
-import com.gmail.kasabuta4.jsfdemo.common.application.SimpleTableFacade;
+import com.gmail.kasabuta4.jsfdemo.common.application.SimpleSearchFacade;
 import com.gmail.kasabuta4.jsfdemo.covid19.domain.MonthlyNewCases;
 import com.gmail.kasabuta4.jsfdemo.covid19.domain.SearchCondition;
 import java.time.YearMonth;
@@ -14,7 +14,7 @@ import javax.persistence.EntityManager;
 
 @Dependent
 public class MonthlyNewCasesSimpleTableFacade
-    extends SimpleTableFacade<SearchCondition, MonthlyNewCases> {
+    extends SimpleSearchFacade<SearchCondition, List<MonthlyNewCases>, MonthlyNewCases> {
 
   private static final long serialVersionUID = 1L;
 
@@ -40,14 +40,19 @@ public class MonthlyNewCasesSimpleTableFacade
           + "    PREFECTURE";
 
   @Override
-  protected List<MonthlyNewCases> doSearch(EntityManager em, SearchCondition condition) {
+  protected Stream<MonthlyNewCases> doSearch(EntityManager em, SearchCondition condition) {
     Stream rawStream =
         em.createNativeQuery(BY_PREFECTURE_SQL)
             .setParameter(1, condition.getFrom().atDay(1).format(ISO_LOCAL_DATE))
             .setParameter(2, condition.getTo().plusMonths(1).atDay(1).format(ISO_LOCAL_DATE))
             .getResultStream();
     Stream<Object[]> stream = (Stream<Object[]>) rawStream;
-    return stream.map(this::toMonthlyNewCases).collect(toList());
+    return stream.map(this::toMonthlyNewCases);
+  }
+
+  @Override
+  protected List<MonthlyNewCases> convert(Stream<MonthlyNewCases> stream) {
+    return stream.collect(toList());
   }
 
   private MonthlyNewCases toMonthlyNewCases(Object[] a) {

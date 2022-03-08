@@ -2,7 +2,7 @@ package com.gmail.kasabuta4.jsfdemo.covid19.view;
 
 import static java.util.Collections.unmodifiableMap;
 
-import com.gmail.kasabuta4.jsfdemo.common.application.SimpleTableFacade;
+import com.gmail.kasabuta4.jsfdemo.common.application.SimpleSearchFacade;
 import com.gmail.kasabuta4.jsfdemo.common.application.SimpleTableView;
 import com.gmail.kasabuta4.jsfdemo.common.application.excel.CommonNumberFormat;
 import com.gmail.kasabuta4.jsfdemo.common.application.excel.WorkbookModel;
@@ -40,7 +40,8 @@ public class MonthlyNewCasesSimpleTableView
   }
 
   @Override
-  protected SimpleTableFacade<SearchCondition, MonthlyNewCases> getFacade() {
+  protected SimpleSearchFacade<SearchCondition, List<MonthlyNewCases>, MonthlyNewCases>
+      getFacade() {
     return facade;
   }
 

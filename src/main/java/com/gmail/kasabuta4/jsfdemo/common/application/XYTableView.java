@@ -38,7 +38,7 @@ public abstract class XYTableView<P extends Serializable, E extends Serializable
     this.condition = condition;
   }
 
-  protected abstract XYTableFacade<P, E, X, Y> getFacade();
+  protected abstract SimpleSearchFacade<P, Map<X, Map<Y, E>>, E> getFacade();
 
   protected abstract Logger getLogger();
 

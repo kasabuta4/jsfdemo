@@ -1,18 +1,23 @@
 package com.gmail.kasabuta4.jsfdemo.covid19.application;
 
 import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE;
+import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.toMap;
 
-import com.gmail.kasabuta4.jsfdemo.common.application.XYTableFacade;
+import com.gmail.kasabuta4.jsfdemo.common.application.SimpleSearchFacade;
 import com.gmail.kasabuta4.jsfdemo.covid19.domain.MonthlyNewCases;
 import com.gmail.kasabuta4.jsfdemo.covid19.domain.SearchCondition;
 import java.time.YearMonth;
+import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Stream;
 import javax.enterprise.context.Dependent;
 import javax.persistence.EntityManager;
 
 @Dependent
 public class MonthlyNewCasesXYTableFacade
-    extends XYTableFacade<SearchCondition, MonthlyNewCases, YearMonth, String> {
+    extends SimpleSearchFacade<
+        SearchCondition, Map<YearMonth, Map<String, MonthlyNewCases>>, MonthlyNewCases> {
 
   private static final String BY_PREFECTURE_SQL =
       "SELECT "
@@ -47,13 +52,11 @@ public class MonthlyNewCasesXYTableFacade
   }
 
   @Override
-  protected YearMonth xOf(MonthlyNewCases entity) {
-    return entity.getYearMonth();
-  }
-
-  @Override
-  protected String yOf(MonthlyNewCases entity) {
-    return entity.getPrefecture();
+  protected Map<YearMonth, Map<String, MonthlyNewCases>> convert(Stream<MonthlyNewCases> stream) {
+    return stream.collect(
+        groupingBy(
+            MonthlyNewCases::getYearMonth,
+            toMap(MonthlyNewCases::getPrefecture, Function.identity())));
   }
 
   private MonthlyNewCases toMonthlyNewCases(Object[] a) {

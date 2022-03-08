@@ -2,7 +2,7 @@ package com.gmail.kasabuta4.jsfdemo.covid19.view;
 
 import static java.util.Collections.unmodifiableMap;
 
-import com.gmail.kasabuta4.jsfdemo.common.application.XYTableFacade;
+import com.gmail.kasabuta4.jsfdemo.common.application.SimpleSearchFacade;
 import com.gmail.kasabuta4.jsfdemo.common.application.XYTableView;
 import com.gmail.kasabuta4.jsfdemo.common.application.excel.CommonNumberFormat;
 import com.gmail.kasabuta4.jsfdemo.common.application.excel.WorkbookModel;
@@ -50,7 +50,9 @@ public class MonthlyNewCasesXYTableView
   }
 
   @Override
-  protected XYTableFacade<SearchCondition, MonthlyNewCases, YearMonth, String> getFacade() {
+  protected SimpleSearchFacade<
+          SearchCondition, Map<YearMonth, Map<String, MonthlyNewCases>>, MonthlyNewCases>
+      getFacade() {
     return facade;
   }
 
