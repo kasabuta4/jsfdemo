@@ -50,8 +50,7 @@ public class MonthlyNewCasesXYTableView
   }
 
   @Override
-  protected XYTableFacade<SearchCondition, MonthlyNewCases, YearMonth, String>
-      getFacade() {
+  protected XYTableFacade<SearchCondition, MonthlyNewCases, YearMonth, String> getFacade() {
     return facade;
   }
 
@@ -88,7 +87,7 @@ public class MonthlyNewCasesXYTableView
   @Override
   protected WorkbookModel createWorkbookModel(Map<YearMonth, Map<String, MonthlyNewCases>> data) {
     return new WorkbookModel("東京圏と大阪圏の比較.xlsx")
-        .addMultiColGroupsTable("比較", "東京圏と大阪圏の月間新規感染者数比較", data)
+        .addXYTable("比較", "東京圏と大阪圏の月間新規感染者数比較", data)
         .addYearMonthXColumn("年月", Function.identity())
         .converter(MonthlyNewCasesXYTableView::convertYearMonth)
         .endXColumn()
@@ -104,7 +103,7 @@ public class MonthlyNewCasesXYTableView
         .converter(MonthlyNewCasesXYTableView::convertPrefecture)
         .endYTitle()
         .endYColumn()
-        .endTable();
+        .endXYTable();
   }
 
   private static String convertPrefecture(String prefecture) {

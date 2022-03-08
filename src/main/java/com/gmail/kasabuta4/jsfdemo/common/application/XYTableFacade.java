@@ -15,8 +15,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceException;
 
-public abstract class XYTableFacade<
-    P extends Serializable, E extends Serializable, X, Y> {
+public abstract class XYTableFacade<P extends Serializable, E extends Serializable, X, Y> {
 
   @Inject @JsfDemoDB EntityManagerFactory emf;
   @Inject Logger logger;

@@ -16,15 +16,13 @@ public class WorkbookModel {
     this.fileName = fileName;
   }
 
-  public <E> SimpleListWorksheetModel<E> addWorksheetModel(
-      String sheetName, String title, List<E> data) {
-    SimpleListWorksheetModel<E> worksheetModel =
-        new SimpleListWorksheetModel<>(this, sheetName, title, data);
-    worksheetModels.add(worksheetModel);
-    return worksheetModel;
+  public <E> SimpleTable<E> addSimpleTable(String sheetName, String title, List<E> data) {
+    SimpleTable<E> table = new SimpleTable<>(this, sheetName, title, data);
+    worksheetModels.add(table);
+    return table;
   }
 
-  public <R, C, E> XYTable<R, C, E> addMultiColGroupsTable(
+  public <R, C, E> XYTable<R, C, E> addXYTable(
       String sheetName, String title, Map<R, Map<C, E>> data) {
     XYTable<R, C, E> table = new XYTable<>(this, sheetName, title, data);
     worksheetModels.add(table);

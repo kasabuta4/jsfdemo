@@ -79,20 +79,20 @@ public class MonthlyNewCasesView extends SimpleListSearchView<SearchCondition, M
   @Override
   protected WorkbookModel createWorkbookModel(List<MonthlyNewCases> result) {
     return new WorkbookModel("MonthlyNewCases.xlsx")
-        .addWorksheetModel("list", "Covid-19", result)
-        .titlePosition(1, 1)
-        .titleSize(2, 4)
-        .listStartPosition(5, 1)
+        .addSimpleTable("list", "Covid-19", result)
+        .captionPosition(1, 1)
+        .captionSize(2, 4)
+        .headerStartPosition(5, 1)
         .addSequenceColumn("Seq", 4, CommonNumberFormat.整数)
-        .endColumn()
+        .endSimpleColumn()
         .addYearMonthColumn("年月", MonthlyNewCases::getYearMonth)
-        .endColumn()
+        .endSimpleColumn()
         .addStringColumn("都道府県", MonthlyNewCases::getPrefecture, 8)
         .converter(MonthlyNewCasesView::convertPrefecture)
-        .endColumn()
+        .endSimpleColumn()
         .addIntegerColumn("新規感染者数", MonthlyNewCases::getCases, 12, CommonNumberFormat.桁区切り整数)
-        .endColumn()
-        .endWorksheet();
+        .endSimpleColumn()
+        .endSimpleTable();
   }
 
   private static String convertPrefecture(String prefecture) {

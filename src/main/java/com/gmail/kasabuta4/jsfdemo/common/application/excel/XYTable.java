@@ -52,7 +52,7 @@ public class XYTable<X, Y, E> implements WorkSheetModel {
             .collect(toList());
   }
 
-  public WorkbookModel endTable() {
+  public WorkbookModel endXYTable() {
     return workbookModel;
   }
 
@@ -79,8 +79,7 @@ public class XYTable<X, Y, E> implements WorkSheetModel {
     return this;
   }
 
-  public <V> XColumn<X, Y, E, V> addYearMonthXColumn(
-      String header, Function<X, V> propertyGetter) {
+  public <V> XColumn<X, Y, E, V> addYearMonthXColumn(String header, Function<X, V> propertyGetter) {
     XColumn<X, Y, E, V> xColumn =
         new XColumn<>(this, header, propertyGetter, 7, CommonNumberFormat.年月);
     xColumns.add(xColumn);
@@ -94,8 +93,7 @@ public class XYTable<X, Y, E> implements WorkSheetModel {
       int characters,
       NumberFormat format) {
     YColumn<X, Y, E, Integer> yColumn =
-        new YColumn<>(
-            this, yList, header, yFilter, propertyGetter, characters, format);
+        new YColumn<>(this, yList, header, yFilter, propertyGetter, characters, format);
     yColumns.add(yColumn);
     return yColumn;
   }
@@ -111,10 +109,8 @@ public class XYTable<X, Y, E> implements WorkSheetModel {
 
   private void initStyles() {
     captionStyle = captionStyler.createStyle(workbookModel.getWorkbook());
-    for (XColumn<X, Y, E, ?> xColumn : xColumns)
-      xColumn.initStyles(workbookModel.getWorkbook());
-    for (YColumn<X, Y, E, ?> yColumn : yColumns)
-      yColumn.initStyles(workbookModel.getWorkbook());
+    for (XColumn<X, Y, E, ?> xColumn : xColumns) xColumn.initStyles(workbookModel.getWorkbook());
+    for (YColumn<X, Y, E, ?> yColumn : yColumns) yColumn.initStyles(workbookModel.getWorkbook());
   }
 
   private void initWorksheet() {

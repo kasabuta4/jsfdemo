@@ -70,8 +70,7 @@ public class YColumn<X, Y, E, V> {
   }
 
   public YTitle<X, Y, E, V, Y> addIdentityYTitle(NumberFormat format) {
-    YTitle<X, Y, E, V, Y> yTitle =
-        new YTitle<>(this, Function.identity(), format);
+    YTitle<X, Y, E, V, Y> yTitle = new YTitle<>(this, Function.identity(), format);
     yTitles.add(yTitle);
     return yTitle;
   }
@@ -90,8 +89,8 @@ public class YColumn<X, Y, E, V> {
     headerCell.setCellStyle(headerStyle);
     XSSFCellUtil.setCellValue(headerCell, header);
     if (yList.size() > 1)
-      sheet.addMergedRegion(new CellRangeAddress(
-              rowIndex, rowIndex, columnIndex, columnIndex + yList.size() - 1));
+      sheet.addMergedRegion(
+          new CellRangeAddress(rowIndex, rowIndex, columnIndex, columnIndex + yList.size() - 1));
 
     for (int i = 0; i < yTitles.size(); i++) {
       YTitle<X, Y, E, V, ?> yTitle = yTitles.get(i);
@@ -106,7 +105,8 @@ public class YColumn<X, Y, E, V> {
     }
     if (yTitles.size() < maxColumnTitles)
       for (int j = 0; j < yList.size(); j++)
-        sheet.addMergedRegion(new CellRangeAddress(
+        sheet.addMergedRegion(
+            new CellRangeAddress(
                 rowIndex + yTitles.size(),
                 rowIndex + maxColumnTitles,
                 columnIndex + j,

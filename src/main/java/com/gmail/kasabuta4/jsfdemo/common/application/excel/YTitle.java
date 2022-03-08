@@ -19,8 +19,7 @@ public class YTitle<X, Y, E, V, P> {
   // temporary variables used during building workbook
   private XSSFCellStyle style;
 
-  YTitle(
-      YColumn<X, Y, E, V> yColumn, Function<Y, P> propertyGetter, NumberFormat format) {
+  YTitle(YColumn<X, Y, E, V> yColumn, Function<Y, P> propertyGetter, NumberFormat format) {
     this.yColumn = yColumn;
     this.propertyGetter = propertyGetter;
     this.format = format;

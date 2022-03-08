@@ -1,0 +1,77 @@
+package com.gmail.kasabuta4.jsfdemo.common.application.excel;
+
+import java.util.List;
+import java.util.function.Function;
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFCellStyle;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
+public class SimpleColumn<E, X, Y> {
+
+  // required properties
+  private final SimpleTable<E> table;
+  private final String header;
+  protected final int characters;
+  private final NumberFormat format;
+  private final Function<X, Y> propertyGetter;
+
+  // optional properties
+  private Function<Y, ?> converter = Function.identity();
+  private Stylers.Simple headerStyler = Stylers.forTableHeader();
+  private Stylers.FormattableList bodyStyler = Stylers.forFormattableTableBody();
+
+  // temporary variables used during building workbook
+  private XSSFCellStyle headerStyle;
+  private List<XSSFCellStyle> bodyStyles;
+
+  SimpleColumn(
+      SimpleTable<E> table,
+      String header,
+      Function<X, Y> property,
+      int characters,
+      NumberFormat format) {
+    this.table = table;
+    this.header = header;
+    this.propertyGetter = property;
+    this.characters = characters;
+    this.format = format;
+  }
+
+  public SimpleTable<E> endSimpleColumn() {
+    return table;
+  }
+
+  public SimpleColumn<E, X, Y> converter(Function<Y, ?> converter) {
+    this.converter = converter;
+    return this;
+  }
+
+  public SimpleColumn<E, X, Y> headerStyler(Stylers.Simple headerStyler) {
+    this.headerStyler = headerStyler;
+    return this;
+  }
+
+  public SimpleColumn<E, X, Y> bodyStyler(Stylers.FormattableList bodyStyler) {
+    this.bodyStyler = bodyStyler;
+    return this;
+  }
+
+  void initStyles(XSSFWorkbook workbook) {
+    headerStyle = headerStyler.createStyle(workbook);
+    bodyStyles = bodyStyler.createStyles(workbook, format);
+  }
+
+  void writeHeader(XSSFCell cell) {
+    cell.setCellStyle(headerStyle);
+    XSSFCellUtil.setCellValue(cell, header);
+  }
+
+  void writeBody(X entity, XSSFCell cell, int rowIndex) {
+    cell.setCellStyle(bodyStyles.get(rowIndex % bodyStyles.size()));
+    XSSFCellUtil.setCellValue(cell, propertyGetter.andThen(converter).apply(entity));
+  }
+
+  int getColumnWidth() {
+    return (characters + 1) * 256;
+  }
+}
