@@ -1,12 +1,14 @@
 package com.gmail.kasabuta4.jsfdemo.common.application;
 
 import com.gmail.kasabuta4.jsfdemo.common.application.excel.WorkbookModel;
-import com.gmail.kasabuta4.jsfdemo.common.application.html.SimpleListHtmlTableModel;
+import com.gmail.kasabuta4.jsfdemo.common.application.html.MultiColGroupsHtmlTable;
 import com.gmail.kasabuta4.jsfdemo.common.jsf.message.FacesMessageProducer;
 import java.io.IOException;
 import java.io.Serializable;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
-import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.faces.context.FacesContext;
@@ -15,7 +17,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-public abstract class SimpleListSearchView<C extends Serializable, R extends Serializable>
+public abstract class XYTableView<P extends Serializable, E extends Serializable, X, Y>
     implements Serializable {
 
   private static final long serialVersionUID = 1L;
@@ -29,14 +31,14 @@ public abstract class SimpleListSearchView<C extends Serializable, R extends Ser
   private static final String CONTENT_DISPOSITION_TEMPLATE_FOR_EXCEL_WORKBOOK =
       "attachment; filename=\"{0}\"";
 
-  @NotNull @Valid private C condition;
-  private SimpleListHtmlTableModel<R> result;
+  @NotNull @Valid private P condition;
+  private MultiColGroupsHtmlTable<X, Y, E> result;
 
-  protected SimpleListSearchView(C condition) {
+  protected XYTableView(P condition) {
     this.condition = condition;
   }
 
-  protected abstract SimpleListSearchFacade<C, R> getFacade();
+  protected abstract XYTableFacade<P, E, X, Y> getFacade();
 
   protected abstract Logger getLogger();
 
@@ -46,20 +48,21 @@ public abstract class SimpleListSearchView<C extends Serializable, R extends Ser
     return null;
   }
 
-  protected abstract SimpleListHtmlTableModel<R> createHtmlTableModel(List<R> result);
+  protected abstract MultiColGroupsHtmlTable<X, Y, E> createMultiColGroupsHtmlTable(
+      Map<X, Map<Y, E>> data);
 
-  protected abstract WorkbookModel createWorkbookModel(List<R> result);
+  protected abstract WorkbookModel createWorkbookModel(Map<X, Map<Y, E>> data);
 
   public String show() {
     try {
-      List<R> searchResult = getFacade().search(condition);
+      Map<X, Map<Y, E>> searchResult = getFacade().search(condition);
       if (searchResult.isEmpty() && getDestinationOnNotFound() == null) {
         FacesContext.getCurrentInstance()
             .addMessage(null, FacesMessageProducer.error(MESSAGE_NOT_FOUND));
         return null;
       }
-      result = createHtmlTableModel(getFacade().search(condition));
-      return result.getData().isEmpty() ? getDestinationOnNotFound() : getDestinationOnFound();
+      result = createMultiColGroupsHtmlTable(searchResult);
+      return searchResult.isEmpty() ? getDestinationOnNotFound() : getDestinationOnFound();
     } catch (ApplicationException ex) {
       FacesContext.getCurrentInstance().addMessage(null, FacesMessageProducer.error(ex));
       return null;
@@ -68,24 +71,26 @@ public abstract class SimpleListSearchView<C extends Serializable, R extends Ser
 
   public void outputExcel() {
     try {
-      List<R> result = getFacade().search(condition);
+      Map<X, Map<Y, E>> searchResult = getFacade().search(condition);
 
-      if (result.isEmpty()) {
+      if (searchResult.isEmpty()) {
         FacesContext.getCurrentInstance()
             .addMessage(null, FacesMessageProducer.error(MESSAGE_NOT_FOUND));
         return;
       }
 
-      WorkbookModel model = createWorkbookModel(result);
+      WorkbookModel model = createWorkbookModel(searchResult);
       XSSFWorkbook workbook = model.build();
 
+      String encodedFileName =
+          URLEncoder.encode(model.getFileName(), StandardCharsets.UTF_8.name());
       FacesContext context = FacesContext.getCurrentInstance();
       HttpServletResponse res = (HttpServletResponse) context.getExternalContext().getResponse();
       res.setContentType(CONTENT_TYPE_FOR_EXCEL_WORKBOOK);
       res.setHeader(
           CONTENT_DISPOSITION_HEADER_NAME,
-          MessageFormat.format(
-              CONTENT_DISPOSITION_TEMPLATE_FOR_EXCEL_WORKBOOK, model.getFileName()));
+          MessageFormat.format(CONTENT_DISPOSITION_TEMPLATE_FOR_EXCEL_WORKBOOK, encodedFileName));
+
       workbook.write(res.getOutputStream());
       context.responseComplete();
     } catch (ApplicationException ex) {
@@ -95,11 +100,11 @@ public abstract class SimpleListSearchView<C extends Serializable, R extends Ser
     }
   }
 
-  public C getCondition() {
+  public P getCondition() {
     return condition;
   }
 
-  public SimpleListHtmlTableModel<R> getResult() {
+  public MultiColGroupsHtmlTable<X, Y, E> getResult() {
     return result;
   }
 }

@@ -5,7 +5,7 @@ import static java.util.Collections.unmodifiableMap;
 import com.gmail.kasabuta4.jsfdemo.common.application.SimpleListSearchFacade;
 import com.gmail.kasabuta4.jsfdemo.common.application.SimpleListSearchView;
 import com.gmail.kasabuta4.jsfdemo.common.application.excel.CommonNumberFormat;
-import com.gmail.kasabuta4.jsfdemo.common.application.excel.SimpleListWorkbookModel;
+import com.gmail.kasabuta4.jsfdemo.common.application.excel.WorkbookModel;
 import com.gmail.kasabuta4.jsfdemo.common.application.html.SimpleListHtmlTableModel;
 import com.gmail.kasabuta4.jsfdemo.covid19.application.MonthlyNewCasesFacade;
 import com.gmail.kasabuta4.jsfdemo.covid19.domain.MonthlyNewCases;
@@ -77,8 +77,8 @@ public class MonthlyNewCasesView extends SimpleListSearchView<SearchCondition, M
   }
 
   @Override
-  protected SimpleListWorkbookModel createWorkbookModel(List<MonthlyNewCases> result) {
-    return new SimpleListWorkbookModel("MonthlyNewCases.xlsx")
+  protected WorkbookModel createWorkbookModel(List<MonthlyNewCases> result) {
+    return new WorkbookModel("MonthlyNewCases.xlsx")
         .addWorksheetModel("list", "Covid-19", result)
         .titlePosition(1, 1)
         .titleSize(2, 4)

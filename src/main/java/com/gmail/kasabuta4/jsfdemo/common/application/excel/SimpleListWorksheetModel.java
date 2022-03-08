@@ -12,10 +12,10 @@ import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-public class SimpleListWorksheetModel<E> {
+public class SimpleListWorksheetModel<E> implements WorkSheetModel {
 
   // required properties
-  private final SimpleListWorkbookModel workbookModel;
+  private final WorkbookModel workbookModel;
   private final String sheetName;
   private final String title;
   private final List<E> data;
@@ -36,14 +36,14 @@ public class SimpleListWorksheetModel<E> {
   private XSSFCellStyle titleStyle;
 
   SimpleListWorksheetModel(
-      SimpleListWorkbookModel workbookModel, String sheetName, String title, List<E> data) {
+      WorkbookModel workbookModel, String sheetName, String title, List<E> data) {
     this.workbookModel = workbookModel;
     this.sheetName = sheetName;
     this.title = title;
     this.data = data;
   }
 
-  public SimpleListWorkbookModel endWorksheet() {
+  public WorkbookModel endWorksheet() {
     return workbookModel;
   }
 
@@ -109,7 +109,7 @@ public class SimpleListWorksheetModel<E> {
     return columnModel;
   }
 
-  XSSFSheet build() {
+  public XSSFSheet build() {
     initStyles();
     initWorksheet();
     writeTitle();

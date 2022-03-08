@@ -2,10 +2,12 @@ package com.gmail.kasabuta4.jsfdemo.covid19.view;
 
 import static java.util.Collections.unmodifiableMap;
 
-import com.gmail.kasabuta4.jsfdemo.common.application.MultiColGroupsTableFacade;
-import com.gmail.kasabuta4.jsfdemo.common.application.MultiColGroupsTableView;
+import com.gmail.kasabuta4.jsfdemo.common.application.XYTableFacade;
+import com.gmail.kasabuta4.jsfdemo.common.application.XYTableView;
+import com.gmail.kasabuta4.jsfdemo.common.application.excel.CommonNumberFormat;
+import com.gmail.kasabuta4.jsfdemo.common.application.excel.WorkbookModel;
 import com.gmail.kasabuta4.jsfdemo.common.application.html.MultiColGroupsHtmlTable;
-import com.gmail.kasabuta4.jsfdemo.covid19.application.MultiColGroupMonthlyNewCasesFacade;
+import com.gmail.kasabuta4.jsfdemo.covid19.application.MonthlyNewCasesXYTableFacade;
 import com.gmail.kasabuta4.jsfdemo.covid19.domain.MonthlyNewCases;
 import com.gmail.kasabuta4.jsfdemo.covid19.domain.SearchCondition;
 import java.text.DecimalFormat;
@@ -17,6 +19,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.logging.Logger;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -24,8 +27,8 @@ import javax.inject.Named;
 
 @Named
 @RequestScoped
-public class MultiColGroupMonthlyNewCasesView
-    extends MultiColGroupsTableView<SearchCondition, MonthlyNewCases, YearMonth, String> {
+public class MonthlyNewCasesXYTableView
+    extends XYTableView<SearchCondition, MonthlyNewCases, YearMonth, String> {
 
   private static final long serialVersionUID = 1L;
 
@@ -38,16 +41,16 @@ public class MultiColGroupMonthlyNewCasesView
       DateTimeFormatter.ofPattern("uuuu/MM");
   private static final NumberFormat 桁区切り整数 = new DecimalFormat("#,##0");
 
-  @Inject MultiColGroupMonthlyNewCasesFacade facade;
+  @Inject MonthlyNewCasesXYTableFacade facade;
 
   @Inject Logger logger;
 
-  public MultiColGroupMonthlyNewCasesView() {
+  public MonthlyNewCasesXYTableView() {
     super(new SearchCondition());
   }
 
   @Override
-  protected MultiColGroupsTableFacade<SearchCondition, MonthlyNewCases, YearMonth, String>
+  protected XYTableFacade<SearchCondition, MonthlyNewCases, YearMonth, String>
       getFacade() {
     return facade;
   }
@@ -67,19 +70,41 @@ public class MultiColGroupMonthlyNewCasesView
       createMultiColGroupsHtmlTable(Map<YearMonth, Map<String, MonthlyNewCases>> data) {
     return new MultiColGroupsHtmlTable<>("東京圏と大阪圏の比較", data)
         .addDefaultRowKeyColumn("年月")
-        .converter(MultiColGroupMonthlyNewCasesView::convertYearMonth)
+        .converter(MonthlyNewCasesXYTableView::convertYearMonth)
         .columnClass("yearMonth")
         .endRowKeyColumn()
         .addColumnGroup("東京圏", 東京圏::contains, MonthlyNewCases::getCases)
-        .converter(MultiColGroupMonthlyNewCasesView::convertInteger)
-        .columnTitles(Arrays.asList(MultiColGroupMonthlyNewCasesView::convertPrefecture))
+        .converter(MonthlyNewCasesXYTableView::convertInteger)
+        .columnTitles(Arrays.asList(MonthlyNewCasesXYTableView::convertPrefecture))
         .colgroupClass("東京圏colgroup")
         .endColumnGroup()
         .addColumnGroup("大阪圏", 大阪圏::contains, MonthlyNewCases::getCases)
-        .converter(MultiColGroupMonthlyNewCasesView::convertInteger)
-        .columnTitles(Arrays.asList(MultiColGroupMonthlyNewCasesView::convertPrefecture))
+        .converter(MonthlyNewCasesXYTableView::convertInteger)
+        .columnTitles(Arrays.asList(MonthlyNewCasesXYTableView::convertPrefecture))
         .colgroupClass("大阪圏colgroup")
         .endColumnGroup();
+  }
+
+  @Override
+  protected WorkbookModel createWorkbookModel(Map<YearMonth, Map<String, MonthlyNewCases>> data) {
+    return new WorkbookModel("東京圏と大阪圏の比較.xlsx")
+        .addMultiColGroupsTable("比較", "東京圏と大阪圏の月間新規感染者数比較", data)
+        .addYearMonthXColumn("年月", Function.identity())
+        .converter(MonthlyNewCasesXYTableView::convertYearMonth)
+        .endXColumn()
+        .addIntegerYColumn(
+            "東京圏", 東京圏::contains, MonthlyNewCases::getCases, 7, CommonNumberFormat.桁区切り整数)
+        .addIdentityYTitle(CommonNumberFormat.標準)
+        .converter(MonthlyNewCasesXYTableView::convertPrefecture)
+        .endYTitle()
+        .endYColumn()
+        .addIntegerYColumn(
+            "大阪圏", 大阪圏::contains, MonthlyNewCases::getCases, 7, CommonNumberFormat.桁区切り整数)
+        .addIdentityYTitle(CommonNumberFormat.標準)
+        .converter(MonthlyNewCasesXYTableView::convertPrefecture)
+        .endYTitle()
+        .endYColumn()
+        .endTable();
   }
 
   private static String convertPrefecture(String prefecture) {

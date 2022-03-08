@@ -15,20 +15,20 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceException;
 
-public abstract class MultiColGroupsTableFacade<
-    P extends Serializable, E extends Serializable, R, C> {
+public abstract class XYTableFacade<
+    P extends Serializable, E extends Serializable, X, Y> {
 
   @Inject @JsfDemoDB EntityManagerFactory emf;
   @Inject Logger logger;
 
-  public Map<R, Map<C, E>> search(P condition) throws ApplicationException {
+  public Map<X, Map<Y, E>> search(P condition) throws ApplicationException {
     EntityManager em = createEntityManager(emf);
     try {
       em.getTransaction().begin();
       try {
-        Map<R, Map<C, E>> result =
+        Map<X, Map<Y, E>> result =
             doSearch(em, condition)
-                .collect(groupingBy(this::rowKeyOf, toMap(this::columnKeyOf, Function.identity())));
+                .collect(groupingBy(this::xOf, toMap(this::yOf, Function.identity())));
         em.getTransaction().commit();
         return result;
       } catch (PersistenceException ex) {
@@ -52,7 +52,7 @@ public abstract class MultiColGroupsTableFacade<
 
   protected abstract Stream<E> doSearch(EntityManager em, P condition);
 
-  protected abstract R rowKeyOf(E entity);
+  protected abstract X xOf(E entity);
 
-  protected abstract C columnKeyOf(E entity);
+  protected abstract Y yOf(E entity);
 }

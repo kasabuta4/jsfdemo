@@ -2,7 +2,7 @@ package com.gmail.kasabuta4.jsfdemo.covid19.application;
 
 import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE;
 
-import com.gmail.kasabuta4.jsfdemo.common.application.MultiColGroupsTableFacade;
+import com.gmail.kasabuta4.jsfdemo.common.application.XYTableFacade;
 import com.gmail.kasabuta4.jsfdemo.covid19.domain.MonthlyNewCases;
 import com.gmail.kasabuta4.jsfdemo.covid19.domain.SearchCondition;
 import java.time.YearMonth;
@@ -11,8 +11,8 @@ import javax.enterprise.context.Dependent;
 import javax.persistence.EntityManager;
 
 @Dependent
-public class MultiColGroupMonthlyNewCasesFacade
-    extends MultiColGroupsTableFacade<SearchCondition, MonthlyNewCases, YearMonth, String> {
+public class MonthlyNewCasesXYTableFacade
+    extends XYTableFacade<SearchCondition, MonthlyNewCases, YearMonth, String> {
 
   private static final String BY_PREFECTURE_SQL =
       "SELECT "
@@ -47,12 +47,12 @@ public class MultiColGroupMonthlyNewCasesFacade
   }
 
   @Override
-  protected YearMonth rowKeyOf(MonthlyNewCases entity) {
+  protected YearMonth xOf(MonthlyNewCases entity) {
     return entity.getYearMonth();
   }
 
   @Override
-  protected String columnKeyOf(MonthlyNewCases entity) {
+  protected String yOf(MonthlyNewCases entity) {
     return entity.getPrefecture();
   }
 
