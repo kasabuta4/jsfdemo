@@ -1,12 +1,12 @@
 package com.gmail.kasabuta4.jsfdemo.common.application;
 
 import com.gmail.kasabuta4.jsfdemo.common.application.excel.WorkbookModel;
-import com.gmail.kasabuta4.jsfdemo.common.application.html.HtmlSimpleTable;
 import com.gmail.kasabuta4.jsfdemo.common.jsf.message.FacesMessageProducer;
 import java.io.IOException;
 import java.io.Serializable;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.faces.context.FacesContext;
@@ -15,8 +15,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-public abstract class SimpleTableView<C extends Serializable, R extends Serializable>
-    implements Serializable {
+public abstract class TableView<C, E, R, T> implements Serializable {
 
   private static final long serialVersionUID = 1L;
 
@@ -30,13 +29,13 @@ public abstract class SimpleTableView<C extends Serializable, R extends Serializ
       "attachment; filename=\"{0}\"";
 
   @NotNull @Valid private C condition;
-  private HtmlSimpleTable<R> result;
+  private T result;
 
-  protected SimpleTableView(C condition) {
+  protected TableView(C condition) {
     this.condition = condition;
   }
 
-  protected abstract SimpleSearchFacade<C, List<R>, R> getFacade();
+  protected abstract SimpleSearchFacade<C, R, E> getFacade();
 
   protected abstract Logger getLogger();
 
@@ -46,20 +45,22 @@ public abstract class SimpleTableView<C extends Serializable, R extends Serializ
     return null;
   }
 
-  protected abstract HtmlSimpleTable<R> createHtmlTableModel(List<R> result);
+  protected abstract boolean isEmpty(R searchResult);
 
-  protected abstract WorkbookModel createWorkbookModel(List<R> result);
+  protected abstract T createHtmlTable(R result);
+
+  protected abstract WorkbookModel createWorkbookModel(R result);
 
   public String show() {
     try {
-      List<R> searchResult = getFacade().search(condition);
-      if (searchResult.isEmpty() && getDestinationOnNotFound() == null) {
+      R searchResult = getFacade().search(condition);
+      if (isEmpty(searchResult) && getDestinationOnNotFound() == null) {
         FacesContext.getCurrentInstance()
             .addMessage(null, FacesMessageProducer.error(MESSAGE_NOT_FOUND));
         return null;
       }
-      result = createHtmlTableModel(searchResult);
-      return searchResult.isEmpty() ? getDestinationOnNotFound() : getDestinationOnFound();
+      result = createHtmlTable(searchResult);
+      return isEmpty(searchResult) ? getDestinationOnNotFound() : getDestinationOnFound();
     } catch (ApplicationException ex) {
       FacesContext.getCurrentInstance().addMessage(null, FacesMessageProducer.error(ex));
       return null;
@@ -68,24 +69,26 @@ public abstract class SimpleTableView<C extends Serializable, R extends Serializ
 
   public void outputExcel() {
     try {
-      List<R> result = getFacade().search(condition);
+      R searchResult = getFacade().search(condition);
 
-      if (result.isEmpty()) {
+      if (isEmpty(searchResult)) {
         FacesContext.getCurrentInstance()
             .addMessage(null, FacesMessageProducer.error(MESSAGE_NOT_FOUND));
         return;
       }
 
-      WorkbookModel model = createWorkbookModel(result);
+      WorkbookModel model = createWorkbookModel(searchResult);
       XSSFWorkbook workbook = model.build();
 
+      String encodedFileName =
+          URLEncoder.encode(model.getFileName(), StandardCharsets.UTF_8.name());
       FacesContext context = FacesContext.getCurrentInstance();
       HttpServletResponse res = (HttpServletResponse) context.getExternalContext().getResponse();
       res.setContentType(CONTENT_TYPE_FOR_EXCEL_WORKBOOK);
       res.setHeader(
           CONTENT_DISPOSITION_HEADER_NAME,
-          MessageFormat.format(
-              CONTENT_DISPOSITION_TEMPLATE_FOR_EXCEL_WORKBOOK, model.getFileName()));
+          MessageFormat.format(CONTENT_DISPOSITION_TEMPLATE_FOR_EXCEL_WORKBOOK, encodedFileName));
+
       workbook.write(res.getOutputStream());
       context.responseComplete();
     } catch (ApplicationException ex) {
@@ -99,7 +102,7 @@ public abstract class SimpleTableView<C extends Serializable, R extends Serializ
     return condition;
   }
 
-  public HtmlSimpleTable<R> getResult() {
+  public T getResult() {
     return result;
   }
 }

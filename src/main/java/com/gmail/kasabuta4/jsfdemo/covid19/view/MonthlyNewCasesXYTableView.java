@@ -3,7 +3,7 @@ package com.gmail.kasabuta4.jsfdemo.covid19.view;
 import static java.util.Collections.unmodifiableMap;
 
 import com.gmail.kasabuta4.jsfdemo.common.application.SimpleSearchFacade;
-import com.gmail.kasabuta4.jsfdemo.common.application.XYTableView;
+import com.gmail.kasabuta4.jsfdemo.common.application.TableView;
 import com.gmail.kasabuta4.jsfdemo.common.application.excel.CommonNumberFormat;
 import com.gmail.kasabuta4.jsfdemo.common.application.excel.WorkbookModel;
 import com.gmail.kasabuta4.jsfdemo.common.application.html.HtmlXYTable;
@@ -28,7 +28,11 @@ import javax.inject.Named;
 @Named
 @RequestScoped
 public class MonthlyNewCasesXYTableView
-    extends XYTableView<SearchCondition, MonthlyNewCases, YearMonth, String> {
+    extends TableView<
+        SearchCondition,
+        MonthlyNewCases,
+        Map<YearMonth, Map<String, MonthlyNewCases>>,
+        HtmlXYTable<YearMonth, String, MonthlyNewCases>> {
 
   private static final long serialVersionUID = 1L;
 
@@ -67,7 +71,12 @@ public class MonthlyNewCasesXYTableView
   }
 
   @Override
-  protected HtmlXYTable<YearMonth, String, MonthlyNewCases> createHtmlXYTable(
+  protected boolean isEmpty(Map<YearMonth, Map<String, MonthlyNewCases>> result) {
+    return result.isEmpty();
+  }
+
+  @Override
+  protected HtmlXYTable<YearMonth, String, MonthlyNewCases> createHtmlTable(
       Map<YearMonth, Map<String, MonthlyNewCases>> data) {
     return new HtmlXYTable<>("東京圏と大阪圏の比較", data)
         .addIdentityXColumn("年月")

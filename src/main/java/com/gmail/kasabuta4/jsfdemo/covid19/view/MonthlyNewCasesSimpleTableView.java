@@ -3,7 +3,7 @@ package com.gmail.kasabuta4.jsfdemo.covid19.view;
 import static java.util.Collections.unmodifiableMap;
 
 import com.gmail.kasabuta4.jsfdemo.common.application.SimpleSearchFacade;
-import com.gmail.kasabuta4.jsfdemo.common.application.SimpleTableView;
+import com.gmail.kasabuta4.jsfdemo.common.application.TableView;
 import com.gmail.kasabuta4.jsfdemo.common.application.excel.CommonNumberFormat;
 import com.gmail.kasabuta4.jsfdemo.common.application.excel.WorkbookModel;
 import com.gmail.kasabuta4.jsfdemo.common.application.html.HtmlSimpleTable;
@@ -25,7 +25,8 @@ import javax.inject.Named;
 @Named
 @RequestScoped
 public class MonthlyNewCasesSimpleTableView
-    extends SimpleTableView<SearchCondition, MonthlyNewCases> {
+    extends TableView<
+        SearchCondition, MonthlyNewCases, List<MonthlyNewCases>, HtmlSimpleTable<MonthlyNewCases>> {
 
   private static final Map<String, String> PREFECTURE_MAP = prefectureMap();
   private static final DateTimeFormatter YEAR_MONTH_FORMATTER =
@@ -56,7 +57,12 @@ public class MonthlyNewCasesSimpleTableView
   }
 
   @Override
-  protected HtmlSimpleTable<MonthlyNewCases> createHtmlTableModel(List<MonthlyNewCases> result) {
+  protected boolean isEmpty(List<MonthlyNewCases> searchResult) {
+    return searchResult.isEmpty();
+  }
+
+  @Override
+  protected HtmlSimpleTable<MonthlyNewCases> createHtmlTable(List<MonthlyNewCases> result) {
     return new HtmlSimpleTable<>(result)
         .caption("Covid-19 Monthly New Cases")
         .tableClass("monthlyNewCases")
