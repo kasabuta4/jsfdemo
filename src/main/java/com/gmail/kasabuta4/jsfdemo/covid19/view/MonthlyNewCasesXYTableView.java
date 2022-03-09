@@ -24,6 +24,8 @@ import java.util.logging.Logger;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
+import org.apache.poi.xssf.usermodel.XSSFCellStyle;
+import org.apache.poi.xssf.usermodel.XSSFFont;
 
 @Named
 @RequestScoped
@@ -110,6 +112,7 @@ public class MonthlyNewCasesXYTableView
   @Override
   protected WorkbookModel createWorkbookModel(Map<YearMonth, Map<String, MonthlyNewCases>> data) {
     return new WorkbookModel("東京圏と大阪圏の比較.xlsx")
+        .standardStyleChanger(MonthlyNewCasesXYTableView::changeStandardStyle)
         .addXYTable("比較", "東京圏と大阪圏の月間新規感染者数比較", data)
         .addYearMonthXColumn("年月", Function.identity())
         .endXColumn()
@@ -124,6 +127,12 @@ public class MonthlyNewCasesXYTableView
         .endYTitle()
         .endYColumn()
         .endXYTable();
+  }
+
+  private static void changeStandardStyle(XSSFCellStyle standardStyle) {
+    XSSFFont standardFont = standardStyle.getFont();
+    standardFont.setFontName("ヒラギノ角ゴシック");
+    standardFont.setFontHeightInPoints((short) 14);
   }
 
   private static String convertPrefecture(String prefecture) {
