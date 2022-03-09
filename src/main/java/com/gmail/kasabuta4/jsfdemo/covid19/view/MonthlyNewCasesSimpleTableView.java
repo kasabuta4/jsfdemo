@@ -64,7 +64,7 @@ public class MonthlyNewCasesSimpleTableView
         .headerColumn(true)
         .endSimpleColumn()
         .addSimpleColumn("年月", MonthlyNewCases::getYearMonth)
-        .converter(HtmlConverters.スラッシュ区切り年月())
+        .converter(HtmlConverters.年月())
         .columnClass("yearMonth")
         .endSimpleColumn()
         .addSimpleColumn("都道府県", MonthlyNewCases::getPrefecture)

@@ -77,7 +77,7 @@ public class MonthlyNewCasesXYTableView
         .caption("東京圏と大阪圏の比較")
         .tableClass("東京圏と大阪圏の比較")
         .addIdentityXColumn("年月")
-        .converter(HtmlConverters.スラッシュ区切り年月())
+        .converter(HtmlConverters.年月())
         .headerColumn(true)
         .columnClass("yearMonthColumn")
         .headerCellClass("yearMonthHeaderCell")

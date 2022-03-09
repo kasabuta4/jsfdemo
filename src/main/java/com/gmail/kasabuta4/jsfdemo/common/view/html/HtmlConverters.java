@@ -8,6 +8,14 @@ import java.util.function.Function;
 
 public class HtmlConverters {
 
+  public static <T> Function<T, String> appendPrefix(String prefix) {
+    return t -> prefix + t.toString();
+  }
+
+  public static <T> Function<T, String> appendSuffix(String suffix) {
+    return t -> t.toString() + suffix;
+  }
+
   public static Function<Integer, String> 桁区切り整数() {
     return fromInteger("#,##0");
   }
@@ -17,7 +25,7 @@ public class HtmlConverters {
     return n -> n == null ? null : formatter.format(n);
   }
 
-  public static Function<YearMonth, String> スラッシュ区切り年月() {
+  public static Function<YearMonth, String> 年月() {
     return fromYearMonth("uuuu/MM");
   }
 
