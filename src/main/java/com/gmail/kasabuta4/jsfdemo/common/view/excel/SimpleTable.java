@@ -1,5 +1,9 @@
 package com.gmail.kasabuta4.jsfdemo.common.view.excel;
 
+import static com.gmail.kasabuta4.jsfdemo.common.view.excel.ColumnWidthConfigurators.byCharacters;
+import static com.gmail.kasabuta4.jsfdemo.common.view.excel.CommonNumberFormat.年月;
+import static com.gmail.kasabuta4.jsfdemo.common.view.excel.CommonNumberFormat.標準;
+
 import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
@@ -69,31 +73,39 @@ public class SimpleTable<E> implements WorkSheetModel {
   }
 
   public SimpleColumn<E, Integer, Integer> addSequenceColumn(
-      String header, int characters, NumberFormat format) {
+      String header, ColumnWidthConfigurator columnWidthConfigurator, NumberFormat format) {
     return sequenceColumn =
-        new SimpleColumn<>(this, header, Function.identity(), characters, format);
+        new SimpleColumn<>(this, header, Function.identity(), columnWidthConfigurator, format);
   }
 
   public SimpleColumn<E, E, String> addStringColumn(
-      String header, Function<E, String> property, int characters) {
+      String header,
+      Function<E, String> property,
+      ColumnWidthConfigurator columnWidthConfigurator) {
     SimpleColumn<E, E, String> columnModel =
-        new SimpleColumn<>(this, header, property, characters, CommonNumberFormat.標準);
+        new SimpleColumn<>(this, header, property, columnWidthConfigurator, 標準);
     columns.add(columnModel);
     return columnModel;
   }
 
   public SimpleColumn<E, E, Integer> addIntegerColumn(
-      String header, Function<E, Integer> property, int characters, NumberFormat format) {
+      String header,
+      Function<E, Integer> property,
+      ColumnWidthConfigurator columnWidthConfigurator,
+      NumberFormat format) {
     SimpleColumn<E, E, Integer> columnModel =
-        new SimpleColumn<>(this, header, property, characters, format);
+        new SimpleColumn<>(this, header, property, columnWidthConfigurator, format);
     columns.add(columnModel);
     return columnModel;
   }
 
   public SimpleColumn<E, E, Double> addDoubleColumn(
-      String header, Function<E, Double> property, int characters, NumberFormat format) {
+      String header,
+      Function<E, Double> property,
+      ColumnWidthConfigurator columnWidthConfigurator,
+      NumberFormat format) {
     SimpleColumn<E, E, Double> columnModel =
-        new SimpleColumn<>(this, header, property, characters, format);
+        new SimpleColumn<>(this, header, property, columnWidthConfigurator, format);
     columns.add(columnModel);
     return columnModel;
   }
@@ -101,7 +113,7 @@ public class SimpleTable<E> implements WorkSheetModel {
   public SimpleColumn<E, E, YearMonth> addYearMonthColumn(
       String header, Function<E, YearMonth> property) {
     SimpleColumn<E, E, YearMonth> columnModel =
-        new SimpleColumn<>(this, header, property, 7, CommonNumberFormat.年月);
+        new SimpleColumn<>(this, header, property, byCharacters(7), 年月);
     columns.add(columnModel);
     return columnModel;
   }
@@ -112,6 +124,7 @@ public class SimpleTable<E> implements WorkSheetModel {
     writeCaption();
     writeHeader();
     writeBody();
+    configureColumnWidth();
     return worksheet;
   }
 
@@ -123,10 +136,6 @@ public class SimpleTable<E> implements WorkSheetModel {
 
   private void initWorksheet(XSSFWorkbook workbook) {
     worksheet = workbook.createSheet(this.sheetName);
-    if (sequenceColumn != null)
-      worksheet.setColumnWidth(headerStartColumnIndex, sequenceColumn.getColumnWidth());
-    for (int i = 0; i < columns.size(); i++)
-      worksheet.setColumnWidth(columnIndex(i), columns.get(i).getColumnWidth());
   }
 
   private void writeCaption() {
@@ -159,6 +168,13 @@ public class SimpleTable<E> implements WorkSheetModel {
       for (int j = 0; j < columns.size(); j++)
         columns.get(j).writeBody(entity, row.createCell(columnIndex(j)), i);
     }
+  }
+
+  private void configureColumnWidth() {
+    if (sequenceColumn != null)
+      sequenceColumn.configureColumnWidth(worksheet, headerStartColumnIndex);
+    for (int i = 0; i < columns.size(); i++)
+      columns.get(i).configureColumnWidth(worksheet, columnIndex(i));
   }
 
   private int columnIndex(int i) {

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.function.Function;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 public class SimpleColumn<E, X, Y> {
@@ -11,7 +12,7 @@ public class SimpleColumn<E, X, Y> {
   // required properties
   private final SimpleTable<E> table;
   private final String header;
-  private final int characters;
+  private final ColumnWidthConfigurator columnWidthConfigurator;
   private final NumberFormat format;
   private final Function<X, Y> propertyGetter;
 
@@ -28,12 +29,12 @@ public class SimpleColumn<E, X, Y> {
       SimpleTable<E> table,
       String header,
       Function<X, Y> property,
-      int characters,
+      ColumnWidthConfigurator columnWidthConfigurator,
       NumberFormat format) {
     this.table = table;
     this.header = header;
     this.propertyGetter = property;
-    this.characters = characters;
+    this.columnWidthConfigurator = columnWidthConfigurator;
     this.format = format;
   }
 
@@ -71,7 +72,7 @@ public class SimpleColumn<E, X, Y> {
     XSSFCellUtil.setCellValue(cell, propertyGetter.andThen(converter).apply(entity));
   }
 
-  int getColumnWidth() {
-    return (characters + 1) * 256;
+  void configureColumnWidth(XSSFSheet worksheet, int columnIndex) {
+    columnWidthConfigurator.configure(worksheet, columnIndex);
   }
 }

@@ -15,7 +15,7 @@ public class XColumn<X, Y, E, V> {
   private final XYTable<X, Y, E> table;
   private final String header;
   private final Function<X, V> propertyGetter;
-  private final int characters;
+  private final ColumnWidthConfigurator columnWidthConfigurator;
   private final NumberFormat format;
 
   // optional properties
@@ -31,12 +31,12 @@ public class XColumn<X, Y, E, V> {
       XYTable<X, Y, E> table,
       String header,
       Function<X, V> propertyGetter,
-      int characters,
+      ColumnWidthConfigurator columnWidthConfigurator,
       NumberFormat format) {
     this.table = table;
     this.header = header;
     this.propertyGetter = propertyGetter;
-    this.characters = characters;
+    this.columnWidthConfigurator = columnWidthConfigurator;
     this.format = format;
   }
 
@@ -79,7 +79,7 @@ public class XColumn<X, Y, E, V> {
     XSSFCellUtil.setCellValue(cell, propertyGetter.andThen(converter).apply(x));
   }
 
-  int getColumnWidth() {
-    return (characters + 1) * 256;
+  void configureColumnWidth(XSSFSheet worksheet, int columnIndex) {
+    columnWidthConfigurator.configure(worksheet, columnIndex);
   }
 }

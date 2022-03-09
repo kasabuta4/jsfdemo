@@ -1,5 +1,7 @@
 package com.gmail.kasabuta4.jsfdemo.covid19.view;
 
+import static com.gmail.kasabuta4.jsfdemo.common.view.excel.ColumnWidthConfigurators.byCharacters;
+import static com.gmail.kasabuta4.jsfdemo.common.view.excel.CommonNumberFormat.桁区切り整数;
 import static java.util.Collections.unmodifiableMap;
 
 import com.gmail.kasabuta4.jsfdemo.common.facade.SimpleSearchFacade;
@@ -111,14 +113,12 @@ public class MonthlyNewCasesXYTableView
         .addXYTable("比較", "東京圏と大阪圏の月間新規感染者数比較", data)
         .addYearMonthXColumn("年月", Function.identity())
         .endXColumn()
-        .addIntegerYColumn(
-            "東京圏", 東京圏::contains, MonthlyNewCases::getCases, 7, CommonNumberFormat.桁区切り整数)
+        .addIntegerYColumn("東京圏", 東京圏::contains, MonthlyNewCases::getCases, byCharacters(7), 桁区切り整数)
         .addIdentityYTitle(CommonNumberFormat.標準)
         .converter(MonthlyNewCasesXYTableView::convertPrefecture)
         .endYTitle()
         .endYColumn()
-        .addIntegerYColumn(
-            "大阪圏", 大阪圏::contains, MonthlyNewCases::getCases, 7, CommonNumberFormat.桁区切り整数)
+        .addIntegerYColumn("大阪圏", 大阪圏::contains, MonthlyNewCases::getCases, byCharacters(7), 桁区切り整数)
         .addIdentityYTitle(CommonNumberFormat.標準)
         .converter(MonthlyNewCasesXYTableView::convertPrefecture)
         .endYTitle()

@@ -21,7 +21,7 @@ public class YColumn<X, Y, E, V> {
   private final String header;
   private final List<Y> yList;
   private final Function<E, V> propertyGetter;
-  private final int characters;
+  private final ColumnWidthConfigurator columnWidthConfigurator;
   private final NumberFormat format;
   private final List<YTitle<X, Y, E, V, ?>> yTitles = new ArrayList<>();
 
@@ -40,13 +40,13 @@ public class YColumn<X, Y, E, V> {
       String header,
       Predicate<Y> yFilter,
       Function<E, V> propertyGetter,
-      int characters,
+      ColumnWidthConfigurator columnWidthConfigurator,
       NumberFormat format) {
     this.table = table;
     this.header = header;
     this.yList = yList.stream().filter(yFilter).collect(toList());
     this.propertyGetter = propertyGetter;
-    this.characters = characters;
+    this.columnWidthConfigurator = columnWidthConfigurator;
     this.format = format;
   }
 
@@ -122,8 +122,9 @@ public class YColumn<X, Y, E, V> {
     }
   }
 
-  int getColumnWidth() {
-    return (characters + 1) * 256;
+  void configureColumnWidth(XSSFSheet worksheet, int columnIndex) {
+    for (int i = 0; i < yList.size(); i++)
+      columnWidthConfigurator.configure(worksheet, columnIndex + i);
   }
 
   List<Y> getYList() {

@@ -1,5 +1,7 @@
 package com.gmail.kasabuta4.jsfdemo.common.view.excel;
 
+import static com.gmail.kasabuta4.jsfdemo.common.view.excel.ColumnWidthConfigurators.byCharacters;
+import static com.gmail.kasabuta4.jsfdemo.common.view.excel.CommonNumberFormat.年月;
 import static java.util.stream.Collectors.toList;
 
 import java.util.ArrayList;
@@ -81,8 +83,7 @@ public class XYTable<X, Y, E> implements WorkSheetModel {
   }
 
   public <V> XColumn<X, Y, E, V> addYearMonthXColumn(String header, Function<X, V> propertyGetter) {
-    XColumn<X, Y, E, V> xColumn =
-        new XColumn<>(this, header, propertyGetter, 7, CommonNumberFormat.年月);
+    XColumn<X, Y, E, V> xColumn = new XColumn<>(this, header, propertyGetter, byCharacters(7), 年月);
     xColumns.add(xColumn);
     return xColumn;
   }
@@ -91,10 +92,11 @@ public class XYTable<X, Y, E> implements WorkSheetModel {
       String header,
       Predicate<Y> yFilter,
       Function<E, Integer> propertyGetter,
-      int characters,
+      ColumnWidthConfigurator columnWidthConfigurator,
       NumberFormat format) {
     YColumn<X, Y, E, Integer> yColumn =
-        new YColumn<>(this, yList, header, yFilter, propertyGetter, characters, format);
+        new YColumn<>(
+            this, yList, header, yFilter, propertyGetter, columnWidthConfigurator, format);
     yColumns.add(yColumn);
     return yColumn;
   }
@@ -105,6 +107,7 @@ public class XYTable<X, Y, E> implements WorkSheetModel {
     writeTableCaption();
     writeTableHeader();
     writeTableBody();
+    configureColumnWidth();
     return worksheet;
   }
 
@@ -116,12 +119,6 @@ public class XYTable<X, Y, E> implements WorkSheetModel {
 
   private void initWorksheet(XSSFWorkbook workbook) {
     worksheet = workbook.createSheet(sheetName);
-    int columnIndex = headerStartColumnIndex;
-    for (int i = 0; i < xColumns.size(); i++)
-      worksheet.setColumnWidth(columnIndex++, xColumns.get(i).getColumnWidth());
-    for (int i = 0; i < yColumns.size(); i++)
-      for (int j = 0; j < yColumns.get(i).getYList().size(); j++)
-        worksheet.setColumnWidth(columnIndex++, yColumns.get(i).getColumnWidth());
   }
 
   private void writeTableCaption() {
@@ -171,6 +168,15 @@ public class XYTable<X, Y, E> implements WorkSheetModel {
           columnIndex += yColumns.get(i++).getYList().size())
         yColumns.get(i).writeBody(data.get(x), row, columnIndex, xIndex);
     }
+  }
+
+  private void configureColumnWidth() {
+    for (int i = 0; i < xColumns.size(); i++)
+      xColumns.get(i).configureColumnWidth(worksheet, headerStartColumnIndex + i);
+    for (int i = 0, columnIndex = headerStartColumnIndex + xColumns.size();
+        i < yColumns.size();
+        columnIndex += yColumns.get(i++).getYList().size())
+      yColumns.get(i).configureColumnWidth(worksheet, columnIndex);
   }
 
   private int maxYTitles() {
