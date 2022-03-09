@@ -11,13 +11,9 @@
 http://localhost:8080/jsfdemo/faces/index.xhtml
 ### 検索画面
 http://localhost:8080/jsfdemo/faces/covid19/search.xhtml
-### 複合ビューの検索画面
-http://localhost:8080/jsfdemo/faces/compsiteview/search.xhtml
-### テンプレート利用の検索画面
-http://localhost:8080/jsfdemo/faces/templating/search.xhtml
-### フレーム利用の検索画面
-http://localhost:8080/jsfdemo/faces/frame/search.xhtml
 ### ラインチャートの検索画面
 http://localhost:8080/jsfdemo/faces/linechart/search.xhtml
-### Excel出力の検索画面
-http://localhost:8080/jsfdemo/faces/excel/search.xhtml
+### 汎用の単純な表コンポーネントを利用して結果を表示する画面
+http://localhost:8080/jsfdemo/faces/simpleTable/search.xhtml
+### 汎用の2次元(XY)表コンポーネントを利用して結果を表示する画面
+http://localhost:8080/jsfdemo/faces/XYTable/search.xhtml
