@@ -11,7 +11,7 @@ public class SimpleColumn<E, X, Y> {
   // required properties
   private final SimpleTable<E> table;
   private final String header;
-  protected final int characters;
+  private final int characters;
   private final NumberFormat format;
   private final Function<X, Y> propertyGetter;
 
