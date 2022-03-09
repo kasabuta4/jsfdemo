@@ -6,14 +6,12 @@ import com.gmail.kasabuta4.jsfdemo.common.facade.SimpleSearchFacade;
 import com.gmail.kasabuta4.jsfdemo.common.view.TableView;
 import com.gmail.kasabuta4.jsfdemo.common.view.excel.CommonNumberFormat;
 import com.gmail.kasabuta4.jsfdemo.common.view.excel.WorkbookModel;
+import com.gmail.kasabuta4.jsfdemo.common.view.html.HtmlConverters;
 import com.gmail.kasabuta4.jsfdemo.common.view.html.HtmlXYTable;
 import com.gmail.kasabuta4.jsfdemo.covid19.application.MonthlyNewCasesXYTableFacade;
 import com.gmail.kasabuta4.jsfdemo.covid19.domain.MonthlyNewCases;
 import com.gmail.kasabuta4.jsfdemo.covid19.domain.SearchCondition;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.time.YearMonth;
-import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -41,9 +39,6 @@ public class MonthlyNewCasesXYTableView
   private static final Set<String> 大阪圏 = new HashSet<>(Arrays.asList("Osaka", "Hyogo", "Kyoto"));
 
   private static final Map<String, String> PREFECTURE_MAP = prefectureMap();
-  private static final DateTimeFormatter YEAR_MONTH_FORMATTER =
-      DateTimeFormatter.ofPattern("uuuu/MM");
-  private static final NumberFormat 桁区切り整数 = new DecimalFormat("#,##0");
 
   @Inject MonthlyNewCasesXYTableFacade facade;
 
@@ -82,14 +77,14 @@ public class MonthlyNewCasesXYTableView
         .caption("東京圏と大阪圏の比較")
         .tableClass("東京圏と大阪圏の比較")
         .addIdentityXColumn("年月")
-        .converter(MonthlyNewCasesXYTableView::convertYearMonth)
+        .converter(HtmlConverters.スラッシュ区切り年月())
         .headerColumn(true)
         .columnClass("yearMonthColumn")
         .headerCellClass("yearMonthHeaderCell")
         .bodyCellClass("yearMonthBodyCell")
         .endXColumn()
         .addYColumn("東京圏", 東京圏::contains, MonthlyNewCases::getCases)
-        .converter(MonthlyNewCasesXYTableView::convertInteger)
+        .converter(HtmlConverters.桁区切り整数())
         .columnClass("東京圏colgroup")
         .headerCellClass("東京圏HeaderCell")
         .bodyCellClass("東京圏BodyCell")
@@ -99,7 +94,7 @@ public class MonthlyNewCasesXYTableView
         .endYTitle()
         .endYColumn()
         .addYColumn("大阪圏", 大阪圏::contains, MonthlyNewCases::getCases)
-        .converter(MonthlyNewCasesXYTableView::convertInteger)
+        .converter(HtmlConverters.桁区切り整数())
         .columnClass("大阪圏colgroup")
         .headerCellClass("大阪圏HeaderCell")
         .bodyCellClass("大阪圏BodyCell")
@@ -115,7 +110,6 @@ public class MonthlyNewCasesXYTableView
     return new WorkbookModel("東京圏と大阪圏の比較.xlsx")
         .addXYTable("比較", "東京圏と大阪圏の月間新規感染者数比較", data)
         .addYearMonthXColumn("年月", Function.identity())
-        .converter(MonthlyNewCasesXYTableView::convertYearMonth)
         .endXColumn()
         .addIntegerYColumn(
             "東京圏", 東京圏::contains, MonthlyNewCases::getCases, 7, CommonNumberFormat.桁区切り整数)
@@ -134,14 +128,6 @@ public class MonthlyNewCasesXYTableView
 
   private static String convertPrefecture(String prefecture) {
     return PREFECTURE_MAP.get(prefecture);
-  }
-
-  private static String convertYearMonth(YearMonth yearMonth) {
-    return yearMonth == null ? null : YEAR_MONTH_FORMATTER.format(yearMonth);
-  }
-
-  private static String convertInteger(Integer i) {
-    return i == null ? null : 桁区切り整数.format(i);
   }
 
   private static Map<String, String> prefectureMap() {

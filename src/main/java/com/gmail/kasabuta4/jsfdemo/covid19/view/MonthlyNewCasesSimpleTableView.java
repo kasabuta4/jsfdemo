@@ -6,14 +6,11 @@ import com.gmail.kasabuta4.jsfdemo.common.facade.SimpleSearchFacade;
 import com.gmail.kasabuta4.jsfdemo.common.view.TableView;
 import com.gmail.kasabuta4.jsfdemo.common.view.excel.CommonNumberFormat;
 import com.gmail.kasabuta4.jsfdemo.common.view.excel.WorkbookModel;
+import com.gmail.kasabuta4.jsfdemo.common.view.html.HtmlConverters;
 import com.gmail.kasabuta4.jsfdemo.common.view.html.HtmlSimpleTable;
 import com.gmail.kasabuta4.jsfdemo.covid19.application.MonthlyNewCasesSimpleTableFacade;
 import com.gmail.kasabuta4.jsfdemo.covid19.domain.MonthlyNewCases;
 import com.gmail.kasabuta4.jsfdemo.covid19.domain.SearchCondition;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
-import java.time.YearMonth;
-import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,9 +26,6 @@ public class MonthlyNewCasesSimpleTableView
         SearchCondition, MonthlyNewCases, List<MonthlyNewCases>, HtmlSimpleTable<MonthlyNewCases>> {
 
   private static final Map<String, String> PREFECTURE_MAP = prefectureMap();
-  private static final DateTimeFormatter YEAR_MONTH_FORMATTER =
-      DateTimeFormatter.ofPattern("uuuu/MM");
-  private static final NumberFormat 桁区切り整数 = new DecimalFormat("#,##0");
 
   @Inject MonthlyNewCasesSimpleTableFacade facade;
   @Inject Logger logger;
@@ -70,14 +64,14 @@ public class MonthlyNewCasesSimpleTableView
         .headerColumn(true)
         .endSimpleColumn()
         .addSimpleColumn("年月", MonthlyNewCases::getYearMonth)
-        .converter(MonthlyNewCasesSimpleTableView::convertYearMonth)
+        .converter(HtmlConverters.スラッシュ区切り年月())
         .columnClass("yearMonth")
         .endSimpleColumn()
         .addSimpleColumn("都道府県", MonthlyNewCases::getPrefecture)
         .converter(MonthlyNewCasesSimpleTableView::convertPrefecture)
         .endSimpleColumn()
         .addSimpleColumn("新規感染者数", MonthlyNewCases::getCases)
-        .converter(桁区切り整数::format)
+        .converter(HtmlConverters.桁区切り整数())
         .headerCellClass("headerForInteger")
         .bodyCellClass("integer")
         .endSimpleColumn();
@@ -104,10 +98,6 @@ public class MonthlyNewCasesSimpleTableView
 
   private static String convertPrefecture(String prefecture) {
     return PREFECTURE_MAP.get(prefecture);
-  }
-
-  private static String convertYearMonth(YearMonth yearMonth) {
-    return yearMonth == null ? null : YEAR_MONTH_FORMATTER.format(yearMonth);
   }
 
   private static Map<String, String> prefectureMap() {
