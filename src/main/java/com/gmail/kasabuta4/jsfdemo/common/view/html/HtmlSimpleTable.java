@@ -1,4 +1,4 @@
-package com.gmail.kasabuta4.jsfdemo.common.application.html;
+package com.gmail.kasabuta4.jsfdemo.common.view.html;
 
 import java.util.ArrayList;
 import java.util.List;

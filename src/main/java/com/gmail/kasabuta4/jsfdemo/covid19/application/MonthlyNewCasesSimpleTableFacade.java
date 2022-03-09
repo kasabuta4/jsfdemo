@@ -3,7 +3,7 @@ package com.gmail.kasabuta4.jsfdemo.covid19.application;
 import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE;
 import static java.util.stream.Collectors.toList;
 
-import com.gmail.kasabuta4.jsfdemo.common.application.SimpleSearchFacade;
+import com.gmail.kasabuta4.jsfdemo.common.facade.SimpleSearchFacade;
 import com.gmail.kasabuta4.jsfdemo.covid19.domain.MonthlyNewCases;
 import com.gmail.kasabuta4.jsfdemo.covid19.domain.SearchCondition;
 import java.time.YearMonth;

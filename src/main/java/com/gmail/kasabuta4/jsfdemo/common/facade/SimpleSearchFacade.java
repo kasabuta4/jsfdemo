@@ -1,4 +1,4 @@
-package com.gmail.kasabuta4.jsfdemo.common.application;
+package com.gmail.kasabuta4.jsfdemo.common.facade;
 
 import com.gmail.kasabuta4.jsfdemo.config.db.JsfDemoDB;
 import java.util.logging.Level;

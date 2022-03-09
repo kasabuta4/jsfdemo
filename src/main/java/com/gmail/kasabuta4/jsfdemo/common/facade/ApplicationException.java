@@ -1,4 +1,4 @@
-package com.gmail.kasabuta4.jsfdemo.common.application;
+package com.gmail.kasabuta4.jsfdemo.common.facade;
 
 public class ApplicationException extends Exception {
 

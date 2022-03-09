@@ -1,4 +1,4 @@
-package com.gmail.kasabuta4.jsfdemo.common.application.excel;
+package com.gmail.kasabuta4.jsfdemo.common.view.excel;
 
 import static java.util.stream.Collectors.toList;
 

@@ -2,11 +2,11 @@ package com.gmail.kasabuta4.jsfdemo.covid19.view;
 
 import static java.util.Collections.unmodifiableMap;
 
-import com.gmail.kasabuta4.jsfdemo.common.application.SimpleSearchFacade;
-import com.gmail.kasabuta4.jsfdemo.common.application.TableView;
-import com.gmail.kasabuta4.jsfdemo.common.application.excel.CommonNumberFormat;
-import com.gmail.kasabuta4.jsfdemo.common.application.excel.WorkbookModel;
-import com.gmail.kasabuta4.jsfdemo.common.application.html.HtmlSimpleTable;
+import com.gmail.kasabuta4.jsfdemo.common.facade.SimpleSearchFacade;
+import com.gmail.kasabuta4.jsfdemo.common.view.TableView;
+import com.gmail.kasabuta4.jsfdemo.common.view.excel.CommonNumberFormat;
+import com.gmail.kasabuta4.jsfdemo.common.view.excel.WorkbookModel;
+import com.gmail.kasabuta4.jsfdemo.common.view.html.HtmlSimpleTable;
 import com.gmail.kasabuta4.jsfdemo.covid19.application.MonthlyNewCasesSimpleTableFacade;
 import com.gmail.kasabuta4.jsfdemo.covid19.domain.MonthlyNewCases;
 import com.gmail.kasabuta4.jsfdemo.covid19.domain.SearchCondition;
