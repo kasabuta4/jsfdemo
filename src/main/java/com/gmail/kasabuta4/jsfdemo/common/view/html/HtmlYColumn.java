@@ -1,6 +1,5 @@
 package com.gmail.kasabuta4.jsfdemo.common.view.html;
 
-import static java.util.Collections.unmodifiableList;
 import static java.util.stream.Collectors.toList;
 
 import java.util.ArrayList;
@@ -14,12 +13,14 @@ public class HtmlYColumn<X, Y, E, V> {
   private final HtmlXYTable<X, Y, E> table;
   private final String header;
   private final List<Y> yList;
+  private final List<HtmlYTitle<X, Y, E, V, ?>> yTitles = new ArrayList<>();
   private final Function<E, V> propertyGetter;
 
   // optional properties
   private Function<V, ?> converter = Function.identity();
-  private List<Function<Y, ?>> yTitles = defaultColumnTitles();
   private String columnClass;
+  private String headerCellClass;
+  private String bodyCellClass;
 
   HtmlYColumn(
       HtmlXYTable<X, Y, E> table,
@@ -42,18 +43,29 @@ public class HtmlYColumn<X, Y, E, V> {
     return this;
   }
 
-  public HtmlYColumn<X, Y, E, V> yTitles(List<Function<Y, ?>> yTitles) {
-    this.yTitles = yTitles;
-    return this;
-  }
-
   public HtmlYColumn<X, Y, E, V> columnClass(String columnClass) {
     this.columnClass = columnClass;
     return this;
   }
 
-  public int columnTitleRowspan(int index) {
-    return index < yTitles.size() - 1 ? 1 : table.getColumnTitleRowCount() - index;
+  public HtmlYColumn<X, Y, E, V> headerCellClass(String headerCellClass) {
+    this.headerCellClass = headerCellClass;
+    return this;
+  }
+
+  public HtmlYColumn<X, Y, E, V> bodyCellClass(String bodyCellClass) {
+    this.bodyCellClass = bodyCellClass;
+    return this;
+  }
+
+  public HtmlYTitle<X, Y, E, V, Y> addIdentityYTitle() {
+    HtmlYTitle<X, Y, E, V, Y> yTitle = new HtmlYTitle<>(this, Function.identity());
+    yTitles.add(yTitle);
+    return yTitle;
+  }
+
+  public int headerCellRowspan(int index) {
+    return index < yTitles.size() - 1 ? 1 : table.getMaxYTitles() - index;
   }
 
   public String getHeader() {
@@ -64,21 +76,23 @@ public class HtmlYColumn<X, Y, E, V> {
     return yList;
   }
 
-  public Function<E, ?> getProperty() {
-    return propertyGetter.andThen(converter);
+  public List<HtmlYTitle<X, Y, E, V, ?>> getyTitles() {
+    return yTitles;
   }
 
-  public List<Function<Y, ?>> getyTitles() {
-    return yTitles;
+  public Function<E, ?> getProperty() {
+    return propertyGetter.andThen(converter);
   }
 
   public String getColumnClass() {
     return columnClass;
   }
 
-  private static <Y> List<Function<Y, ?>> defaultColumnTitles() {
-    List<Function<Y, ?>> result = new ArrayList<>(1);
-    result.add(Function.identity());
-    return unmodifiableList(result);
+  public String getHeaderCellClass() {
+    return headerCellClass;
+  }
+
+  public String getBodyCellClass() {
+    return bodyCellClass;
   }
 }

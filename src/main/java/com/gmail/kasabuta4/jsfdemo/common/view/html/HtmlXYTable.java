@@ -12,15 +12,17 @@ import java.util.stream.Stream;
 public class HtmlXYTable<X, Y, E> {
 
   // required properties
-  private final String caption;
   private final Map<X, Map<Y, E>> data;
   private final List<X> xList;
   private final List<Y> yList;
   private List<HtmlXColumn<X, Y, E, ?>> xColumns = new ArrayList<>();
   private final List<HtmlYColumn<X, Y, E, ?>> yColumns = new ArrayList<>();
 
-  public HtmlXYTable(String caption, Map<X, Map<Y, E>> data) {
-    this.caption = caption;
+  // optional properties
+  private String caption;
+  private String tableClass;
+
+  public HtmlXYTable(Map<X, Map<Y, E>> data) {
     this.data = data;
     this.xList = data.keySet().stream().sorted().collect(toList());
     this.yList =
@@ -29,6 +31,16 @@ public class HtmlXYTable<X, Y, E> {
             .distinct()
             .sorted()
             .collect(toList());
+  }
+
+  public HtmlXYTable<X, Y, E> caption(String caption) {
+    this.caption = caption;
+    return this;
+  }
+
+  public HtmlXYTable<X, Y, E> tableClass(String tableClass) {
+    this.tableClass = tableClass;
+    return this;
   }
 
   public <V> HtmlXColumn<X, Y, E, V> addXColumn(String header, Function<X, V> propertyGetter) {
@@ -51,16 +63,12 @@ public class HtmlXYTable<X, Y, E> {
     return yColumn;
   }
 
-  public int getColumnTitleRowCount() {
+  public int getMaxYTitles() {
     return yColumns.stream().map(HtmlYColumn::getyTitles).mapToInt(List::size).max().orElse(0);
   }
 
-  public List<Integer> getColumnTitleRowIndices() {
-    return Stream.iterate(0, i -> i + 1).limit(getColumnTitleRowCount()).collect(toList());
-  }
-
-  public String getCaption() {
-    return caption;
+  public List<Integer> getyTitleIndices() {
+    return Stream.iterate(0, i -> i + 1).limit(getMaxYTitles()).collect(toList());
   }
 
   public Map<X, Map<Y, E>> getData() {
@@ -77,5 +85,13 @@ public class HtmlXYTable<X, Y, E> {
 
   public List<HtmlYColumn<X, Y, E, ?>> getyColumns() {
     return yColumns;
+  }
+
+  public String getCaption() {
+    return caption;
+  }
+
+  public String getTableClass() {
+    return tableClass;
   }
 }

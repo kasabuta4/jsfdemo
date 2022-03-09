@@ -10,8 +10,11 @@ public class HtmlXColumn<X, Y, E, V> {
   private final Function<X, V> propertyGetter;
 
   // optional properties
-  private String columnClass;
   private Function<V, ?> converter = Function.identity();
+  private boolean headerColumn = false;
+  private String columnClass;
+  private String headerCellClass;
+  private String bodyCellClass;
 
   HtmlXColumn(HtmlXYTable<X, Y, E> table, String header, Function<X, V> propertyGetter) {
     this.table = table;
@@ -23,13 +26,28 @@ public class HtmlXColumn<X, Y, E, V> {
     return table;
   }
 
+  public HtmlXColumn<X, Y, E, V> converter(Function<V, ?> converter) {
+    this.converter = converter;
+    return this;
+  }
+
+  public HtmlXColumn<X, Y, E, V> headerColumn(boolean headerColumn) {
+    this.headerColumn = headerColumn;
+    return this;
+  }
+
   public HtmlXColumn<X, Y, E, V> columnClass(String columnClass) {
     this.columnClass = columnClass;
     return this;
   }
 
-  public HtmlXColumn<X, Y, E, V> converter(Function<V, ?> converter) {
-    this.converter = converter;
+  public HtmlXColumn<X, Y, E, V> headerCellClass(String headerCellClass) {
+    this.headerCellClass = headerCellClass;
+    return this;
+  }
+
+  public HtmlXColumn<X, Y, E, V> bodyCellClass(String bodyCellClass) {
+    this.bodyCellClass = bodyCellClass;
     return this;
   }
 
@@ -41,7 +59,19 @@ public class HtmlXColumn<X, Y, E, V> {
     return propertyGetter.andThen(converter);
   }
 
+  public boolean isHeaderColumn() {
+    return headerColumn;
+  }
+
   public String getColumnClass() {
     return columnClass;
+  }
+
+  public String getHeaderCellClass() {
+    return headerCellClass;
+  }
+
+  public String getBodyCellClass() {
+    return bodyCellClass;
   }
 }
