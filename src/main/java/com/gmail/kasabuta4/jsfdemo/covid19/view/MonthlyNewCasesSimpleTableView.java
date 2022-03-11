@@ -65,19 +65,19 @@ public class MonthlyNewCasesSimpleTableView
         .tableClass("monthlyNewCases")
         .addSequenceColumn("Seq")
         .headerColumn(true)
-        .endSimpleColumn()
+        .endColumn()
         .addSimpleColumn("年月", MonthlyNewCases::getYearMonth)
         .converter(HtmlConverters.年月())
         .columnClass("yearMonth")
-        .endSimpleColumn()
+        .endColumn()
         .addSimpleColumn("都道府県", MonthlyNewCases::getPrefecture)
         .converter(MonthlyNewCasesSimpleTableView::convertPrefecture)
-        .endSimpleColumn()
+        .endColumn()
         .addSimpleColumn("新規感染者数", MonthlyNewCases::getCases)
         .converter(HtmlConverters.桁区切り整数())
         .headerCellClass("headerForInteger")
         .bodyCellClass("integer")
-        .endSimpleColumn();
+        .endColumn();
   }
 
   @Override

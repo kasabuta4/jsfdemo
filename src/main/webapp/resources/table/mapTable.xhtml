@@ -1,0 +1,104 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+
+<ui:component
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://xmlns.jcp.org/jsf/html"
+        xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+        xmlns:cc="http://xmlns.jcp.org/jsf/composite">
+
+    <cc:interface name="mapTable">
+        <cc:attribute name="model" required="true" />
+    </cc:interface>
+
+    <cc:implementation>
+        <table class="#{cc.attrs.model.tableClass}">
+            <ui:fragment id="caption" rendered="#{not empty cc.attrs.model.caption}">
+                <caption><h:outputText value="#{cc.attrs.model.caption}" /></caption>
+            </ui:fragment>
+            <ui:fragment id="colgroupSequenceColumn" rendered="#{not empty cc.attrs.model.sequenceColumn}">
+                <colgroup class="#{cc.attrs.model.sequenceColumn.columnClass}" />
+            </ui:fragment>
+            <ui:fragment id="colgroupKeyColumns" rendered="#{not empty cc.attrs.model.keyColumns}">
+                <colgroup>
+                    <ui:repeat id="colgroupKeyColumn" var="keyColumn" value="#{cc.attrs.model.keyColumns}">
+                        <col class="#{keyColumn.columnClass}" />
+                    </ui:repeat>
+                </colgroup>
+            </ui:fragment>
+            <ui:repeat id="colgroupValueColumn" var="valueColumn" value="#{cc.attrs.model.valueColumns}">
+                <colgroup class="#{valueColumn.columnClass}" span="#{valueColumn.keys.size()}" />
+            </ui:repeat>
+            <thead>
+                <tr>
+                    <ui:fragment id="theadSequenceColumn" rendered="#{not empty cc.attrs.model.sequenceColumn}">
+                        <th class="#{cc.attrs.model.sequenceColumn.headerCellClass}" rowspan="#{cc.attrs.model.headerRowCount}">
+                            <h:outputText value="#{cc.attrs.model.sequenceColumn.header}"/>
+                        </th>
+                    </ui:fragment>
+                    <ui:repeat id="theadKeyColumns" var="keyColumn" value="#{cc.attrs.model.keyColumns}">
+                        <th class="#{keyColumn.headerCellClass}" rowspan="#{cc.attrs.model.headerRowCount}">
+                            <h:outputText value="#{keyColumn.header}"/>
+                        </th>
+                    </ui:repeat>
+                    <ui:repeat id="theadValueColumns" var="valueColumn" value="#{cc.attrs.model.valueColumns}">
+                        <ui:fragment id="theadValueColumn" rendered="#{not empty valueColumn.keys}">
+                            <th class="#{valueColumn.headerCellClass}" colspan="#{valueColumn.keys.size()}">
+                                <h:outputText value="#{valueColumn.header}"/>
+                            </th>
+                        </ui:fragment>
+                    </ui:repeat>
+                </tr>
+                <ui:repeat id="keyHeader" var="index" value="#{cc.attrs.model.keyHeaderIndices}">
+                    <tr>
+                        <ui:repeat id="keyHeaderValueColumns" var="valueColumn" value="#{cc.attrs.model.valueColumns}">
+                            <ui:repeat id="keyHeaderKeyList" var="key" value="#{valueColumn.keys}">
+                                <ui:fragment id="keyHeaderKey" rendered="#{index le valueColumn.keyHeaders.size()}">
+                                    <th class="#{valueColumn.keyHeaders[index].headerCellClass}" rowspan="#{valueColumn.rowspanOfKeyHeader(index)}">
+                                        <h:outputText value="#{valueColumn.keyHeaders[index].property.apply(key)}"/>
+                                    </th>
+                                </ui:fragment>
+                            </ui:repeat>
+                        </ui:repeat>
+                    </tr>
+                </ui:repeat>
+            </thead>
+            <tbody>
+                <ui:repeat id="rowKeys" var="rowKey" varStatus="status" value="#{cc.attrs.model.rowKeys}">
+                    <tr>
+                        <ui:fragment id="tbodySequenceColumn" rendered="#{not empty cc.attrs.model.sequenceColumn}">
+                            <ui:fragment id="tbodySequenceColumnHeaderCell" rendered="#{cc.attrs.model.sequenceColumn.headerColumn}">
+                                <th class="#{cc.attrs.model.sequenceColumn.bodyCellClass}">
+                                    <h:outputText value="#{cc.attrs.model.sequenceColumn.property.apply(status.index + 1)}"/>
+                                </th>
+                            </ui:fragment>
+                            <ui:fragment id="tbodySequenceColumnDataCell" rendered="#{not cc.attrs.model.sequenceColumn.headerColumn}">
+                                <td class="#{cc.attrs.model.sequenceColumn.bodyCellClass}">
+                                    <h:outputText value="#{cc.attrs.model.sequenceColumn.property.apply(status.index + 1)}"/>
+                                </td>
+                            </ui:fragment>
+                        </ui:fragment>
+                        <ui:repeat id="tbodyKeyColumns" var="keyColumn" value="#{cc.attrs.model.keyColumns}">
+                            <ui:fragment id="tbodyKeyColumnHeaderCell" rendered="#{keyColumn.headerColumn}">
+                                <th class="#{keyColumn.bodyCellClass}">
+                                    <h:outputText value="#{keyColumn.property.apply(rowKey)}"/>
+                                </th>
+                            </ui:fragment>
+                            <ui:fragment id="tbodyKeyColumnDataCell" rendered="#{not keyColumn.headerColumn}">
+                                <td class="#{keyColumn.bodyCellClass}">
+                                    <h:outputText value="#{keyColumn.property.apply(rowKey)}"/>
+                                </td>
+                            </ui:fragment>
+                        </ui:repeat>
+                        <ui:repeat id="tbodyValueColumns" var="valueColumn" value="#{cc.attrs.model.valueColumns}">
+                            <ui:repeat id="tbodyValueColumnKeyList" var="columnKey" value="#{valueColumn.keys}">
+                                <td class="#{valueColumn.bodyCellClass}">
+                                    <h:outputText value="#{valueColumn.property.apply(cc.attrs.model.data[rowKey][columnKey])}"/>
+                                </td>
+                            </ui:repeat>
+                        </ui:repeat>
+                    </tr>
+                </ui:repeat>
+            </tbody>
+        </table>
+    </cc:implementation>
+</ui:component>

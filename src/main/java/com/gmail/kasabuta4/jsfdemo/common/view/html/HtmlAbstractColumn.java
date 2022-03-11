@@ -2,65 +2,58 @@ package com.gmail.kasabuta4.jsfdemo.common.view.html;
 
 import java.util.function.Function;
 
-public class HtmlXColumn<X, Y, E, V> {
+public abstract class HtmlAbstractColumn<
+    C extends HtmlAbstractColumn, T extends HtmlAbstractTable, E, V> {
 
   // required properties
-  private final HtmlXYTable<X, Y, E> table;
+  protected final T table;
   private final String header;
-  private final Function<X, V> propertyGetter;
+  private final Function<E, V> propertyGetter;
 
   // optional properties
   private Function<V, ?> converter = Function.identity();
-  private boolean headerColumn = false;
   private String columnClass;
   private String headerCellClass;
   private String bodyCellClass;
 
-  HtmlXColumn(HtmlXYTable<X, Y, E> table, String header, Function<X, V> propertyGetter) {
+  protected HtmlAbstractColumn(T table, String header, Function<E, V> propertyGetter) {
     this.table = table;
     this.header = header;
     this.propertyGetter = propertyGetter;
   }
 
-  public HtmlXYTable<X, Y, E> endXColumn() {
+  protected abstract C self();
+
+  public T endColumn() {
     return table;
   }
 
-  public HtmlXColumn<X, Y, E, V> converter(Function<V, ?> converter) {
+  public C converter(Function<V, ?> converter) {
     this.converter = converter;
-    return this;
+    return self();
   }
 
-  public HtmlXColumn<X, Y, E, V> headerColumn(boolean headerColumn) {
-    this.headerColumn = headerColumn;
-    return this;
-  }
-
-  public HtmlXColumn<X, Y, E, V> columnClass(String columnClass) {
+  public C columnClass(String columnClass) {
     this.columnClass = columnClass;
-    return this;
+    return self();
   }
 
-  public HtmlXColumn<X, Y, E, V> headerCellClass(String headerCellClass) {
+  public C headerCellClass(String headerCellClass) {
     this.headerCellClass = headerCellClass;
-    return this;
+    return self();
   }
 
-  public HtmlXColumn<X, Y, E, V> bodyCellClass(String bodyCellClass) {
+  public C bodyCellClass(String bodyCellClass) {
     this.bodyCellClass = bodyCellClass;
-    return this;
+    return self();
   }
 
   public String getHeader() {
     return header;
   }
 
-  public Function<X, ?> getProperty() {
+  public Function<E, ?> getProperty() {
     return propertyGetter.andThen(converter);
-  }
-
-  public boolean isHeaderColumn() {
-    return headerColumn;
   }
 
   public String getColumnClass() {

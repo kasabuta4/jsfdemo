@@ -9,7 +9,7 @@ import com.gmail.kasabuta4.jsfdemo.common.view.TableView;
 import com.gmail.kasabuta4.jsfdemo.common.view.excel.CommonNumberFormat;
 import com.gmail.kasabuta4.jsfdemo.common.view.excel.WorkbookModel;
 import com.gmail.kasabuta4.jsfdemo.common.view.html.HtmlConverters;
-import com.gmail.kasabuta4.jsfdemo.common.view.html.HtmlXYTable;
+import com.gmail.kasabuta4.jsfdemo.common.view.html.HtmlMapTable;
 import com.gmail.kasabuta4.jsfdemo.covid19.application.MonthlyNewCasesXYTableFacade;
 import com.gmail.kasabuta4.jsfdemo.covid19.domain.MonthlyNewCases;
 import com.gmail.kasabuta4.jsfdemo.covid19.domain.SearchCondition;
@@ -29,12 +29,12 @@ import org.apache.poi.xssf.usermodel.XSSFFont;
 
 @Named
 @RequestScoped
-public class MonthlyNewCasesXYTableView
+public class MonthlyNewCasesMapTableView
     extends TableView<
         SearchCondition,
         MonthlyNewCases,
         Map<YearMonth, Map<String, MonthlyNewCases>>,
-        HtmlXYTable<YearMonth, String, MonthlyNewCases>> {
+        HtmlMapTable<YearMonth, String, MonthlyNewCases>> {
 
   private static final long serialVersionUID = 1L;
 
@@ -48,7 +48,7 @@ public class MonthlyNewCasesXYTableView
 
   @Inject Logger logger;
 
-  public MonthlyNewCasesXYTableView() {
+  public MonthlyNewCasesMapTableView() {
     super(new SearchCondition());
   }
 
@@ -75,9 +75,9 @@ public class MonthlyNewCasesXYTableView
   }
 
   @Override
-  protected HtmlXYTable<YearMonth, String, MonthlyNewCases> createHtmlTable(
+  protected HtmlMapTable<YearMonth, String, MonthlyNewCases> createHtmlTable(
       Map<YearMonth, Map<String, MonthlyNewCases>> data) {
-    return new HtmlXYTable<>(data)
+    return new HtmlMapTable<>(data)
         .caption("東京圏と大阪圏の比較")
         .tableClass("東京圏と大阪圏の比較")
         .addSequenceColumn("Seq")
@@ -85,51 +85,51 @@ public class MonthlyNewCasesXYTableView
         .columnClass("seqColumn")
         .headerCellClass("seqHeader")
         .bodyCellClass("seqBody")
-        .endSequenceColumn()
+        .endColumn()
         .addIdentityXColumn("年月")
         .converter(HtmlConverters.年月())
         .headerColumn(true)
         .columnClass("yearMonthColumn")
         .headerCellClass("yearMonthHeaderCell")
         .bodyCellClass("yearMonthBodyCell")
-        .endXColumn()
-        .addYColumn("東京圏", 東京圏::contains, MonthlyNewCases::getCases)
+        .endColumn()
+        .addYColumn("東京圏", MonthlyNewCases::getCases, 東京圏::contains)
         .converter(HtmlConverters.桁区切り整数())
         .columnClass("東京圏colgroup")
         .headerCellClass("東京圏HeaderCell")
         .bodyCellClass("東京圏BodyCell")
-        .addIdentityYTitle()
-        .converter(MonthlyNewCasesXYTableView::convertPrefecture)
+        .addIdentityKeyHeader()
+        .converter(MonthlyNewCasesMapTableView::convertPrefecture)
         .headerCellClass("東京圏都道府県HeaderCell")
-        .endYTitle()
-        .endYColumn()
-        .addYColumn("大阪圏", 大阪圏::contains, MonthlyNewCases::getCases)
+        .endKeyHeader()
+        .endColumn()
+        .addYColumn("大阪圏", MonthlyNewCases::getCases, 大阪圏::contains)
         .converter(HtmlConverters.桁区切り整数())
         .columnClass("大阪圏colgroup")
         .headerCellClass("大阪圏HeaderCell")
         .bodyCellClass("大阪圏BodyCell")
-        .addIdentityYTitle()
-        .converter(MonthlyNewCasesXYTableView::convertPrefecture)
+        .addIdentityKeyHeader()
+        .converter(MonthlyNewCasesMapTableView::convertPrefecture)
         .headerCellClass("大阪圏都道府県HeaderCell")
-        .endYTitle()
-        .endYColumn();
+        .endKeyHeader()
+        .endColumn();
   }
 
   @Override
   protected WorkbookModel createWorkbookModel(Map<YearMonth, Map<String, MonthlyNewCases>> data) {
     return new WorkbookModel("東京圏と大阪圏の比較.xlsx")
-        .standardStyleChanger(MonthlyNewCasesXYTableView::changeStandardStyle)
+        .standardStyleChanger(MonthlyNewCasesMapTableView::changeStandardStyle)
         .addXYTable("比較", "東京圏と大阪圏の月間新規感染者数比較", data)
         .addYearMonthXColumn("年月", Function.identity())
         .endXColumn()
         .addIntegerYColumn("東京圏", 東京圏::contains, MonthlyNewCases::getCases, byCharacters(7), 桁区切り整数)
         .addIdentityYTitle(CommonNumberFormat.標準)
-        .converter(MonthlyNewCasesXYTableView::convertPrefecture)
+        .converter(MonthlyNewCasesMapTableView::convertPrefecture)
         .endYTitle()
         .endYColumn()
         .addIntegerYColumn("大阪圏", 大阪圏::contains, MonthlyNewCases::getCases, byCharacters(7), 桁区切り整数)
         .addIdentityYTitle(CommonNumberFormat.標準)
-        .converter(MonthlyNewCasesXYTableView::convertPrefecture)
+        .converter(MonthlyNewCasesMapTableView::convertPrefecture)
         .endYTitle()
         .endYColumn()
         .endXYTable();

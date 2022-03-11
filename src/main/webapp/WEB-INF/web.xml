@@ -35,9 +35,9 @@
             <param-name>resources-for-user</param-name>
             <param-value>
                 /faces/index.xhtml,
-                /faces/XYTable/,
                 /faces/covid19/,
                 /faces/linechart/,
+                /faces/mapTable/,
                 /faces/simpleTable/
             </param-value>
         </init-param>
