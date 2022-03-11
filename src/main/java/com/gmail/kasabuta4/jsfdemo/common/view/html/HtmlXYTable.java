@@ -19,6 +19,7 @@ public class HtmlXYTable<X, Y, E> {
   private final List<HtmlYColumn<X, Y, E, ?>> yColumns = new ArrayList<>();
 
   // optional properties
+  private HtmlSequenceColumn<HtmlXYTable<X, Y, E>> sequenceColumn;
   private String caption;
   private String tableClass;
 
@@ -41,6 +42,11 @@ public class HtmlXYTable<X, Y, E> {
   public HtmlXYTable<X, Y, E> tableClass(String tableClass) {
     this.tableClass = tableClass;
     return this;
+  }
+
+  public HtmlSequenceColumn<HtmlXYTable<X, Y, E>> addSequenceColumn(String header) {
+    sequenceColumn = new HtmlSequenceColumn<>(this, header);
+    return sequenceColumn;
   }
 
   public <V> HtmlXColumn<X, Y, E, V> addXColumn(String header, Function<X, V> propertyGetter) {
@@ -85,6 +91,10 @@ public class HtmlXYTable<X, Y, E> {
 
   public List<HtmlYColumn<X, Y, E, ?>> getyColumns() {
     return yColumns;
+  }
+
+  public HtmlSequenceColumn<HtmlXYTable<X, Y, E>> getSequenceColumn() {
+    return sequenceColumn;
   }
 
   public String getCaption() {

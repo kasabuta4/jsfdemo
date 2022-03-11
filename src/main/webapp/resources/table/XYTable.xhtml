@@ -15,6 +15,9 @@
             <ui:fragment id="caption" rendered="#{not empty cc.attrs.model.caption}">
                 <caption><h:outputText value="#{cc.attrs.model.caption}" /></caption>
             </ui:fragment>
+            <ui:fragment id="sequenceColumnColgroup" rendered="#{not empty cc.attrs.model.sequenceColumn}">
+                <colgroup class="#{cc.attrs.model.sequenceColumn.columnClass}" />
+            </ui:fragment>
             <ui:fragment id="xColumns" rendered="#{not empty cc.attrs.model.xColumns}">
                 <colgroup>
                     <ui:repeat id="xColumn" var="xColumn" value="#{cc.attrs.model.xColumns}">
@@ -27,6 +30,11 @@
             </ui:repeat>
             <thead>
                 <tr>
+                    <ui:fragment id="sequenceColumnThead" rendered="#{not empty cc.attrs.model.sequenceColumn}">
+                        <th class="#{cc.attrs.model.sequenceColumn.headerCellClass}" rowspan="#{cc.attrs.model.maxYTitles + 1}">
+                            <h:outputText value="#{cc.attrs.model.sequenceColumn.header}"/>
+                        </th>
+                    </ui:fragment>
                     <ui:repeat id="xColumns" var="xColumn" value="#{cc.attrs.model.xColumns}">
                         <th class="#{xColumn.headerCellClass}" rowspan="#{cc.attrs.model.maxYTitles + 1}">
                             <h:outputText value="#{xColumn.header}"/>
@@ -55,8 +63,20 @@
                 </ui:repeat>
             </thead>
             <tbody>
-                <ui:repeat id="xList" var="x" value="#{cc.attrs.model.xList}">
+                <ui:repeat id="xList" var="x" varStatus="status" value="#{cc.attrs.model.xList}">
                     <tr>
+                        <ui:fragment id="sequenceColumnTBody" rendered="#{not empty cc.attrs.model.sequenceColumn}">
+                            <ui:fragment id="sequenceColumnTh" rendered="#{cc.attrs.model.sequenceColumn.headerColumn}">
+                                <th class="#{cc.attrs.model.sequenceColumn.bodyCellClass}">
+                                    <h:outputText value="#{cc.attrs.model.sequenceColumn.property.apply(status.index + 1)}"/>
+                                </th>
+                            </ui:fragment>
+                            <ui:fragment id="sequenceColumnTd" rendered="#{not cc.attrs.model.sequenceColumn.headerColumn}">
+                                <td class="#{cc.attrs.model.sequenceColumn.bodyCellClass}">
+                                    <h:outputText value="#{cc.attrs.model.sequenceColumn.property.apply(status.index + 1)}"/>
+                                </td>
+                            </ui:fragment>
+                        </ui:fragment>
                         <ui:repeat id="xColumns" var="xColumn" value="#{cc.attrs.model.xColumns}">
                             <ui:fragment id="headerCell" rendered="#{xColumn.headerColumn}">
                                 <th class="#{xColumn.bodyCellClass}">
