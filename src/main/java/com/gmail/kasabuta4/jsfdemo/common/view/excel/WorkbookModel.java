@@ -33,9 +33,9 @@ public class WorkbookModel {
     return table;
   }
 
-  public <R, C, E> XYTable<R, C, E> addXYTable(
+  public <R, C, E> MapTable<R, C, E> addMapTable(
       String sheetName, String title, Map<R, Map<C, E>> data) {
-    XYTable<R, C, E> table = new XYTable<>(this, sheetName, title, data);
+    MapTable<R, C, E> table = new MapTable<>(this, sheetName, title, data);
     worksheetModels.add(table);
     return table;
   }
