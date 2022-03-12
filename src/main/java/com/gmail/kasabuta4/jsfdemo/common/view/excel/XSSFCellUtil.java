@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.util.Calendar;
 import java.util.Date;
+import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 
 public class XSSFCellUtil {
@@ -43,5 +44,16 @@ public class XSSFCellUtil {
       Calendar v = (Calendar) value;
       cell.setCellValue(v);
     }
+  }
+
+  public static void mergeCell(XSSFCell cell, int rows, int columns) {
+    if (rows > 1 || columns > 1)
+      cell.getSheet()
+          .addMergedRegion(
+              new CellRangeAddress(
+                  cell.getRowIndex(),
+                  cell.getRowIndex() + rows - 1,
+                  cell.getColumnIndex(),
+                  cell.getColumnIndex() + columns - 1));
   }
 }

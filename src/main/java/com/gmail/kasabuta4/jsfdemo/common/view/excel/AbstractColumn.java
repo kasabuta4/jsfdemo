@@ -2,7 +2,6 @@ package com.gmail.kasabuta4.jsfdemo.common.view.excel;
 
 import java.util.List;
 import java.util.function.Function;
-import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFRow;
@@ -71,9 +70,7 @@ public abstract class AbstractColumn<C extends AbstractColumn, T extends WorkShe
     XSSFCell cell = row.createCell(columnIndex);
     cell.setCellStyle(headerStyle);
     XSSFCellUtil.setCellValue(cell, header);
-    if (keyHeaderCount > 0)
-      sheet.addMergedRegion(
-          new CellRangeAddress(rowIndex, rowIndex + keyHeaderCount, columnIndex, columnIndex));
+    XSSFCellUtil.mergeCell(cell, keyHeaderCount + 1, 1);
   }
 
   protected void writeBodyRecord(

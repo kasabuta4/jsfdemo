@@ -1,7 +1,6 @@
 package com.gmail.kasabuta4.jsfdemo.common.view.excel;
 
 import java.util.function.Function;
-import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFRow;
@@ -102,13 +101,7 @@ public abstract class AbstractTable<T extends AbstractTable> implements WorkShee
     XSSFCell cell = row.createCell(captionColumnIndex);
     cell.setCellStyle(captionStyle);
     XSSFCellUtil.setCellValue(cell, caption);
-    if (captionRows > 1 || captionColumns > 1)
-      worksheet.addMergedRegion(
-          new CellRangeAddress(
-              captionRowIndex,
-              captionRowIndex + captionRows - 1,
-              captionColumnIndex,
-              captionColumnIndex + captionColumns - 1));
+    XSSFCellUtil.mergeCell(cell, captionRows, captionColumns);
   }
 
   protected void writeHeader() {

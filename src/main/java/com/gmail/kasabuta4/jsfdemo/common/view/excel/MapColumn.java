@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.function.Predicate;
-import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -64,9 +63,7 @@ public class MapColumn<T extends WorkSheetModel, Y, E, V>
     XSSFCell headerCell = headerRow.createCell(columnIndex);
     headerCell.setCellStyle(headerStyle);
     XSSFCellUtil.setCellValue(headerCell, header);
-    if (keys.size() > 1)
-      sheet.addMergedRegion(
-          new CellRangeAddress(rowIndex, rowIndex, columnIndex, columnIndex + keys.size() - 1));
+    XSSFCellUtil.mergeCell(headerCell, 1, keys.size());
   }
 
   private void writeKeyHeader(XSSFSheet sheet, int rowIndex, int columnIndex) {
@@ -77,14 +74,10 @@ public class MapColumn<T extends WorkSheetModel, Y, E, V>
 
   private void mergeKeyHeaderCell(
       XSSFSheet sheet, int rowIndex, int columnIndex, int keyHeaderCount) {
-    if (keyHeaders.size() < keyHeaderCount)
-      for (int i = 0; i < keys.size(); i++)
-        sheet.addMergedRegion(
-            new CellRangeAddress(
-                rowIndex + keyHeaders.size(),
-                rowIndex + keyHeaderCount,
-                columnIndex + i,
-                columnIndex + i));
+    for (int i = 0; i < keys.size(); i++) {
+      XSSFCell cell = sheet.getRow(rowIndex + keyHeaders.size()).getCell(columnIndex + i);
+      XSSFCellUtil.mergeCell(cell, keyHeaderCount - keyHeaders.size() + 1, 1);
+    }
   }
 
   protected void writeBodyRecord(
