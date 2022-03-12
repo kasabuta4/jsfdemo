@@ -52,7 +52,7 @@
                     <tr>
                         <ui:repeat id="keyHeaderValueColumns" var="valueColumn" value="#{cc.attrs.model.valueColumns}">
                             <ui:repeat id="keyHeaderKeyList" var="key" value="#{valueColumn.keys}">
-                                <ui:fragment id="keyHeaderKey" rendered="#{index le valueColumn.keyHeaders.size()}">
+                                <ui:fragment id="keyHeaderKey" rendered="#{index le valueColumn.keyHeaders.size() - 1}">
                                     <th class="#{valueColumn.keyHeaders[index].headerCellClass}" rowspan="#{valueColumn.rowspanOfKeyHeader(index)}">
                                         <h:outputText value="#{valueColumn.keyHeaders[index].property.apply(key)}"/>
                                     </th>

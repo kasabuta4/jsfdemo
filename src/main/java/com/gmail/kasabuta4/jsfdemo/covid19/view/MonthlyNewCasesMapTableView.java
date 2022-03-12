@@ -121,6 +121,9 @@ public class MonthlyNewCasesMapTableView
         .converter(MonthlyNewCasesMapTableView::convertPrefecture)
         .headerCellClass("大阪圏都道府県HeaderCell")
         .endKeyHeader()
+        .addIdentityKeyHeader()
+        .headerCellClass("大阪圏PrefectureHeaderCell")
+        .endKeyHeader()
         .endColumn();
   }
 
@@ -145,6 +148,8 @@ public class MonthlyNewCasesMapTableView
             "大阪圏", 大阪圏::contains, MonthlyNewCases::getCases, byCharacters(7), 桁区切り整数)
         .addIdentityKeyHeader(標準)
         .converter(MonthlyNewCasesMapTableView::convertPrefecture)
+        .endKeyHeader()
+        .addIdentityKeyHeader(標準)
         .endKeyHeader()
         .endColumn()
         .endTable();
