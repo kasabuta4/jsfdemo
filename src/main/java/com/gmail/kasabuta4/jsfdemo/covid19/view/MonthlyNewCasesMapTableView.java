@@ -1,22 +1,28 @@
 package com.gmail.kasabuta4.jsfdemo.covid19.view;
 
+import static com.gmail.kasabuta4.jsfdemo.common.view.excel.ColumnWidthConfigurators.autoSizeColumn;
 import static com.gmail.kasabuta4.jsfdemo.common.view.excel.ColumnWidthConfigurators.byCharacters;
 import static com.gmail.kasabuta4.jsfdemo.common.view.excel.CommonNumberFormat.桁区切り整数;
+import static com.gmail.kasabuta4.jsfdemo.common.view.excel.CommonNumberFormat.標準;
 import static java.util.Collections.unmodifiableMap;
 
 import com.gmail.kasabuta4.jsfdemo.common.facade.SimpleSearchFacade;
 import com.gmail.kasabuta4.jsfdemo.common.view.TableView;
-import com.gmail.kasabuta4.jsfdemo.common.view.excel.CommonNumberFormat;
+import com.gmail.kasabuta4.jsfdemo.common.view.excel.NumberFormat;
 import com.gmail.kasabuta4.jsfdemo.common.view.excel.WorkbookModel;
 import com.gmail.kasabuta4.jsfdemo.common.view.html.HtmlConverters;
 import com.gmail.kasabuta4.jsfdemo.common.view.html.HtmlMapTable;
 import com.gmail.kasabuta4.jsfdemo.covid19.application.MonthlyNewCasesXYTableFacade;
 import com.gmail.kasabuta4.jsfdemo.covid19.domain.MonthlyNewCases;
 import com.gmail.kasabuta4.jsfdemo.covid19.domain.SearchCondition;
+import java.awt.Color;
 import java.time.YearMonth;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
@@ -24,8 +30,11 @@ import java.util.logging.Logger;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
+import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
+import org.apache.poi.xssf.usermodel.XSSFColor;
 import org.apache.poi.xssf.usermodel.XSSFFont;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 @Named
 @RequestScoped
@@ -119,26 +128,52 @@ public class MonthlyNewCasesMapTableView
   protected WorkbookModel createWorkbookModel(Map<YearMonth, Map<String, MonthlyNewCases>> data) {
     return new WorkbookModel("東京圏と大阪圏の比較.xlsx")
         .standardStyleChanger(MonthlyNewCasesMapTableView::changeStandardStyle)
-        .addXYTable("比較", "東京圏と大阪圏の月間新規感染者数比較", data)
-        .addYearMonthXColumn("年月", Function.identity())
-        .endXColumn()
-        .addIntegerYColumn("東京圏", 東京圏::contains, MonthlyNewCases::getCases, byCharacters(7), 桁区切り整数)
-        .addIdentityYTitle(CommonNumberFormat.標準)
+        .addMapTable("比較", "東京圏と大阪圏の月間新規感染者数比較", data)
+        .headerStartPosition(2, 1)
+        .addSequenceColumn("Seq", autoSizeColumn(), 標準)
+        .bodyStyler(MonthlyNewCasesMapTableView::sequenceColumnBodyStyles)
+        .endColumn()
+        .addYearMonthKeyColumn("年月", Function.identity())
+        .endColumn()
+        .addIntegerValueColumn(
+            "東京圏", 東京圏::contains, MonthlyNewCases::getCases, byCharacters(7), 桁区切り整数)
+        .addIdentityKeyHeader(標準)
         .converter(MonthlyNewCasesMapTableView::convertPrefecture)
-        .endYTitle()
-        .endYColumn()
-        .addIntegerYColumn("大阪圏", 大阪圏::contains, MonthlyNewCases::getCases, byCharacters(7), 桁区切り整数)
-        .addIdentityYTitle(CommonNumberFormat.標準)
+        .endKeyHeader()
+        .endColumn()
+        .addIntegerValueColumn(
+            "大阪圏", 大阪圏::contains, MonthlyNewCases::getCases, byCharacters(7), 桁区切り整数)
+        .addIdentityKeyHeader(標準)
         .converter(MonthlyNewCasesMapTableView::convertPrefecture)
-        .endYTitle()
-        .endYColumn()
-        .endXYTable();
+        .endKeyHeader()
+        .endColumn()
+        .endTable();
   }
 
   private static void changeStandardStyle(XSSFCellStyle standardStyle) {
     XSSFFont standardFont = standardStyle.getFont();
     standardFont.setFontName("ヒラギノ角ゴシック");
     standardFont.setFontHeightInPoints((short) 14);
+  }
+
+  private static List<XSSFCellStyle> sequenceColumnBodyStyles(
+      XSSFWorkbook workbook, NumberFormat format) {
+    final XSSFColor fillColor =
+        new XSSFColor(new Color(192, 223, 223), workbook.getStylesSource().getIndexedColors());
+
+    XSSFCellStyle oddStyle = workbook.createCellStyle();
+    oddStyle.setFillPattern(FillPatternType.NO_FILL);
+    oddStyle.setDataFormat(format.getFormat(workbook));
+
+    XSSFCellStyle evenStyle = workbook.createCellStyle();
+    evenStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+    evenStyle.setFillForegroundColor(fillColor);
+    evenStyle.setDataFormat(format.getFormat(workbook));
+
+    List<XSSFCellStyle> styles = new ArrayList<>(2);
+    styles.add(oddStyle);
+    styles.add(evenStyle);
+    return Collections.unmodifiableList(styles);
   }
 
   private static String convertPrefecture(String prefecture) {

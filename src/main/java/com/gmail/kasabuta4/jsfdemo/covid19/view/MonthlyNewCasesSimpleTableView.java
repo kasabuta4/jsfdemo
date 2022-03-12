@@ -88,15 +88,15 @@ public class MonthlyNewCasesSimpleTableView
         .captionSize(2, 4)
         .headerStartPosition(5, 1)
         .addSequenceColumn("Seq", autoSizeColumn(), 整数)
-        .endSimpleColumn()
+        .endColumn()
         .addYearMonthColumn("年月", MonthlyNewCases::getYearMonth)
-        .endSimpleColumn()
+        .endColumn()
         .addStringColumn("都道府県", MonthlyNewCases::getPrefecture, byCharacters(8))
         .converter(MonthlyNewCasesSimpleTableView::convertPrefecture)
-        .endSimpleColumn()
+        .endColumn()
         .addIntegerColumn("新規感染者数", MonthlyNewCases::getCases, byCharacters(12), 桁区切り整数)
-        .endSimpleColumn()
-        .endSimpleTable();
+        .endColumn()
+        .endTable();
   }
 
   private static String convertPrefecture(String prefecture) {

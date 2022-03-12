@@ -8,176 +8,113 @@ import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
-import org.apache.poi.ss.util.CellRangeAddress;
-import org.apache.poi.xssf.usermodel.XSSFCell;
-import org.apache.poi.xssf.usermodel.XSSFCellStyle;
-import org.apache.poi.xssf.usermodel.XSSFRow;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-public class SimpleTable<E> implements WorkSheetModel {
+public class SimpleTable<E> extends AbstractTable<SimpleTable<E>> {
 
   // required properties
-  private final WorkbookModel workbookModel;
-  private final String sheetName;
-  private final String caption;
   private final List<E> data;
-  private final List<SimpleColumn<E, E, ?>> columns = new ArrayList<>();
+  private final List<SimpleColumn<SimpleTable<E>, E, ?>> columns = new ArrayList<>();
 
-  // optional properties
-  private int captionRowIndex = 0;
-  private int captionColumnIndex = 0;
-  private int captionRows = 1;
-  private int captionColumns = 1;
-  private int headerStartRowIndex = 1;
-  private int headerStartColumnIndex = 0;
-  private SimpleColumn<E, Integer, Integer> sequenceColumn = null;
-  private Stylers.Simple captionStyler = Stylers.forTableCaption();
-
-  // temporary variables used during building workbook
-  private XSSFSheet worksheet;
-  private XSSFCellStyle captionStyle;
-
-  SimpleTable(WorkbookModel workbookModel, String sheetName, String caption, List<E> data) {
-    this.workbookModel = workbookModel;
-    this.sheetName = sheetName;
-    this.caption = caption;
+  protected SimpleTable(
+      WorkbookModel workbookModel, String sheetName, String caption, List<E> data) {
+    super(workbookModel, sheetName, caption);
     this.data = data;
   }
 
-  public WorkbookModel endSimpleTable() {
-    return workbookModel;
-  }
-
-  public SimpleTable<E> captionPosition(int rowIndex, int columnIndex) {
-    captionRowIndex = rowIndex;
-    captionColumnIndex = columnIndex;
+  @Override
+  protected SimpleTable<E> self() {
     return this;
   }
 
-  public SimpleTable<E> captionSize(int rows, int columns) {
-    captionRows = rows;
-    captionColumns = columns;
-    return this;
-  }
-
-  public SimpleTable<E> headerStartPosition(int rowIndex, int columnIndex) {
-    headerStartRowIndex = rowIndex;
-    headerStartColumnIndex = columnIndex;
-    return this;
-  }
-
-  public SimpleTable<E> captionStyler(Stylers.Simple captionStyler) {
-    this.captionStyler = captionStyler;
-    return this;
-  }
-
-  public SimpleColumn<E, Integer, Integer> addSequenceColumn(
-      String header, ColumnWidthConfigurator columnWidthConfigurator, NumberFormat format) {
-    return sequenceColumn =
-        new SimpleColumn<>(this, header, Function.identity(), columnWidthConfigurator, format);
-  }
-
-  public SimpleColumn<E, E, String> addStringColumn(
+  public SimpleColumn<SimpleTable<E>, E, String> addStringColumn(
       String header,
       Function<E, String> property,
       ColumnWidthConfigurator columnWidthConfigurator) {
-    SimpleColumn<E, E, String> columnModel =
+    SimpleColumn<SimpleTable<E>, E, String> columnModel =
         new SimpleColumn<>(this, header, property, columnWidthConfigurator, 標準);
     columns.add(columnModel);
     return columnModel;
   }
 
-  public SimpleColumn<E, E, Integer> addIntegerColumn(
+  public SimpleColumn<SimpleTable<E>, E, Integer> addIntegerColumn(
       String header,
       Function<E, Integer> property,
       ColumnWidthConfigurator columnWidthConfigurator,
       NumberFormat format) {
-    SimpleColumn<E, E, Integer> columnModel =
+    SimpleColumn<SimpleTable<E>, E, Integer> columnModel =
         new SimpleColumn<>(this, header, property, columnWidthConfigurator, format);
     columns.add(columnModel);
     return columnModel;
   }
 
-  public SimpleColumn<E, E, Double> addDoubleColumn(
+  public SimpleColumn<SimpleTable<E>, E, Double> addDoubleColumn(
       String header,
       Function<E, Double> property,
       ColumnWidthConfigurator columnWidthConfigurator,
       NumberFormat format) {
-    SimpleColumn<E, E, Double> columnModel =
+    SimpleColumn<SimpleTable<E>, E, Double> columnModel =
         new SimpleColumn<>(this, header, property, columnWidthConfigurator, format);
     columns.add(columnModel);
     return columnModel;
   }
 
-  public SimpleColumn<E, E, YearMonth> addYearMonthColumn(
+  public SimpleColumn<SimpleTable<E>, E, YearMonth> addYearMonthColumn(
       String header, Function<E, YearMonth> property) {
-    SimpleColumn<E, E, YearMonth> columnModel =
+    SimpleColumn<SimpleTable<E>, E, YearMonth> columnModel =
         new SimpleColumn<>(this, header, property, byCharacters(7), 年月);
     columns.add(columnModel);
     return columnModel;
   }
 
-  public XSSFSheet build(XSSFWorkbook workbook) {
-    initStyles(workbook);
-    initWorksheet(workbook);
-    writeCaption();
-    writeHeader();
-    writeBody();
-    configureColumnWidth();
-    return worksheet;
+  @Override
+  protected void initStyles(XSSFWorkbook workbook) {
+    super.initStyles(workbook);
+    initColumnsStyles(workbook);
   }
 
-  private void initStyles(XSSFWorkbook workbook) {
-    captionStyle = captionStyler.createStyle(workbook);
-    if (sequenceColumn != null) sequenceColumn.initStyles(workbook);
-    for (SimpleColumn<E, E, ?> column : columns) column.initStyles(workbook);
+  private void initColumnsStyles(XSSFWorkbook workbook) {
+    for (SimpleColumn<SimpleTable<E>, E, ?> column : columns) column.initStyles(workbook);
   }
 
-  private void initWorksheet(XSSFWorkbook workbook) {
-    worksheet = workbook.createSheet(this.sheetName);
+  @Override
+  protected void writeHeader() {
+    super.writeHeader();
+    writeColumnsHeader();
   }
 
-  private void writeCaption() {
-    XSSFRow row = worksheet.createRow(captionRowIndex);
-    XSSFCell cell = row.createCell(captionColumnIndex);
-    cell.setCellStyle(captionStyle);
-    XSSFCellUtil.setCellValue(cell, caption);
-    if (captionRows > 1 || captionColumns > 1)
-      worksheet.addMergedRegion(
-          new CellRangeAddress(
-              captionRowIndex,
-              captionRowIndex + captionRows - 1,
-              captionColumnIndex,
-              captionColumnIndex + captionColumns - 1));
-  }
-
-  private void writeHeader() {
-    XSSFRow row = worksheet.createRow(headerStartRowIndex);
-    if (sequenceColumn != null) sequenceColumn.writeHeader(row.createCell(headerStartColumnIndex));
+  private void writeColumnsHeader() {
     for (int i = 0; i < columns.size(); i++)
-      columns.get(i).writeHeader(row.createCell(columnIndex(i)));
+      columns.get(i).writeHeader(worksheet, headerStartRowIndex, columnIndex(i), 0);
   }
 
-  private void writeBody() {
-    for (int i = 0; i < data.size(); i++) {
-      E entity = data.get(i);
-      XSSFRow row = worksheet.createRow(headerStartRowIndex + 1 + i);
-      if (sequenceColumn != null)
-        sequenceColumn.writeBody(i + 1, row.createCell(headerStartColumnIndex), i);
-      for (int j = 0; j < columns.size(); j++)
-        columns.get(j).writeBody(entity, row.createCell(columnIndex(j)), i);
-    }
+  @Override
+  protected void writeBody() {
+    for (int dataIndex = 0; dataIndex < data.size(); dataIndex++) writeRecord(dataIndex);
   }
 
-  private void configureColumnWidth() {
-    if (sequenceColumn != null)
-      sequenceColumn.configureColumnWidth(worksheet, headerStartColumnIndex);
+  @Override
+  protected void writeRecord(int dataIndex) {
+    super.writeRecord(dataIndex);
+    writeColumnsToRecord(dataIndex);
+  }
+
+  private void writeColumnsToRecord(int dataIndex) {
+    for (int i = 0; i < columns.size(); i++)
+      columns
+          .get(i)
+          .writeBodyRecord(
+              data.get(dataIndex), dataIndex, worksheet, toRowIndex(dataIndex), columnIndex(i));
+  }
+
+  @Override
+  protected void configureColumnWidth() {
+    super.configureColumnWidth();
+    configureColumnsWidth();
+  }
+
+  private void configureColumnsWidth() {
     for (int i = 0; i < columns.size(); i++)
       columns.get(i).configureColumnWidth(worksheet, columnIndex(i));
-  }
-
-  private int columnIndex(int i) {
-    return headerStartColumnIndex + (sequenceColumn == null ? 0 : 1) + i;
   }
 }

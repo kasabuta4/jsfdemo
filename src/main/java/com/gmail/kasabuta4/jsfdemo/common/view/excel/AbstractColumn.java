@@ -9,28 +9,28 @@ import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-public class XColumn<X, Y, E, V> {
+public abstract class AbstractColumn<C extends AbstractColumn, T extends WorkSheetModel, E, V> {
 
   // required properties
-  private final XYTable<X, Y, E> table;
-  private final String header;
-  private final Function<X, V> propertyGetter;
+  private final T table;
+  protected final String header;
+  protected final Function<E, V> propertyGetter;
   private final ColumnWidthConfigurator columnWidthConfigurator;
   private final NumberFormat format;
 
   // optional properties
-  private Function<V, ?> converter = Function.identity();
+  protected Function<V, ?> converter = Function.identity();
   private Stylers.Simple headerStyler = Stylers.forTableHeader();
   private Stylers.FormattableList bodyStyler = Stylers.forFormattableTableBody();
 
   // temporary variables used during building workbook
-  private XSSFCellStyle headerStyle;
-  private List<XSSFCellStyle> bodyStyles;
+  protected XSSFCellStyle headerStyle;
+  protected List<XSSFCellStyle> bodyStyles;
 
-  XColumn(
-      XYTable<X, Y, E> table,
+  protected AbstractColumn(
+      T table,
       String header,
-      Function<X, V> propertyGetter,
+      Function<E, V> propertyGetter,
       ColumnWidthConfigurator columnWidthConfigurator,
       NumberFormat format) {
     this.table = table;
@@ -40,46 +40,50 @@ public class XColumn<X, Y, E, V> {
     this.format = format;
   }
 
-  public XYTable<X, Y, E> endXColumn() {
+  protected abstract C self();
+
+  public T endColumn() {
     return table;
   }
 
-  public XColumn<X, Y, E, V> converter(Function<V, ?> converter) {
+  public C converter(Function<V, ?> converter) {
     this.converter = converter;
-    return this;
+    return self();
   }
 
-  public XColumn<X, Y, E, V> headerStyler(Stylers.Simple headerStyler) {
+  public C headerStyler(Stylers.Simple headerStyler) {
     this.headerStyler = headerStyler;
-    return this;
+    return self();
   }
 
-  public XColumn<X, Y, E, V> bodyStyler(Stylers.FormattableList bodyStyler) {
+  public C bodyStyler(Stylers.FormattableList bodyStyler) {
     this.bodyStyler = bodyStyler;
-    return this;
+    return self();
   }
 
-  void initStyles(XSSFWorkbook workbook) {
+  protected void initStyles(XSSFWorkbook workbook) {
     headerStyle = headerStyler.createStyle(workbook);
     bodyStyles = bodyStyler.createStyles(workbook, format);
   }
 
-  void writeHeader(XSSFSheet sheet, int rowIndex, int columnIndex, int maxColumnTitles) {
+  protected void writeHeader(XSSFSheet sheet, int rowIndex, int columnIndex, int keyHeaderCount) {
     XSSFRow row = sheet.getRow(rowIndex);
     XSSFCell cell = row.createCell(columnIndex);
     cell.setCellStyle(headerStyle);
     XSSFCellUtil.setCellValue(cell, header);
-    if (maxColumnTitles > 0)
+    if (keyHeaderCount > 0)
       sheet.addMergedRegion(
-          new CellRangeAddress(rowIndex, rowIndex + maxColumnTitles, columnIndex, columnIndex));
+          new CellRangeAddress(rowIndex, rowIndex + keyHeaderCount, columnIndex, columnIndex));
   }
 
-  void writeBody(X x, XSSFCell cell, int rowIndex) {
-    cell.setCellStyle(bodyStyles.get(rowIndex % bodyStyles.size()));
-    XSSFCellUtil.setCellValue(cell, propertyGetter.andThen(converter).apply(x));
+  protected void writeBodyRecord(
+      E entity, int dataIndex, XSSFSheet sheet, int rowIndex, int columnIndex) {
+    XSSFCell cell = sheet.getRow(rowIndex).createCell(columnIndex);
+    cell.setCellStyle(bodyStyles.get(dataIndex % bodyStyles.size()));
+    XSSFCellUtil.setCellValue(cell, propertyGetter.andThen(converter).apply(entity));
   }
 
-  void configureColumnWidth(XSSFSheet worksheet, int columnIndex) {
+  protected void configureColumnWidth(XSSFSheet worksheet, int columnIndex) {
     columnWidthConfigurator.configure(worksheet, columnIndex);
   }
 }

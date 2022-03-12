@@ -3,12 +3,13 @@ package com.gmail.kasabuta4.jsfdemo.common.view.excel;
 import java.util.function.Function;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-public class YTitle<X, Y, E, V, P> {
+public class KeyHeader<MapColumn, Y, P> {
 
   // required properties
-  private final YColumn<X, Y, E, V> yColumn;
+  private final MapColumn mapColumn;
   private final Function<Y, P> propertyGetter;
   private final NumberFormat format;
 
@@ -19,22 +20,22 @@ public class YTitle<X, Y, E, V, P> {
   // temporary variables used during building workbook
   private XSSFCellStyle style;
 
-  YTitle(YColumn<X, Y, E, V> yColumn, Function<Y, P> propertyGetter, NumberFormat format) {
-    this.yColumn = yColumn;
+  KeyHeader(MapColumn mapColumn, Function<Y, P> propertyGetter, NumberFormat format) {
+    this.mapColumn = mapColumn;
     this.propertyGetter = propertyGetter;
     this.format = format;
   }
 
-  public YColumn<X, Y, E, V> endYTitle() {
-    return yColumn;
+  public MapColumn endKeyHeader() {
+    return mapColumn;
   }
 
-  public YTitle<X, Y, E, V, P> converter(Function<P, ?> converter) {
+  public KeyHeader<MapColumn, Y, P> converter(Function<P, ?> converter) {
     this.converter = converter;
     return this;
   }
 
-  public YTitle<X, Y, E, V, P> styler(Stylers.Formattable styler) {
+  public KeyHeader<MapColumn, Y, P> styler(Stylers.Formattable styler) {
     this.styler = styler;
     return this;
   }
@@ -44,6 +45,12 @@ public class YTitle<X, Y, E, V, P> {
   }
 
   void writeHeader(XSSFCell cell, Y y) {
+    cell.setCellStyle(style);
+    XSSFCellUtil.setCellValue(cell, propertyGetter.andThen(converter).apply(y));
+  }
+
+  void writeKeyHeader(Y y, XSSFSheet sheet, int rowIndex, int columnIndex) {
+    XSSFCell cell = sheet.getRow(rowIndex).createCell(columnIndex);
     cell.setCellStyle(style);
     XSSFCellUtil.setCellValue(cell, propertyGetter.andThen(converter).apply(y));
   }
