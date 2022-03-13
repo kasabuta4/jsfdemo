@@ -45,16 +45,20 @@ public class KeyHeader<MapColumn, Y, P> {
     style = styler.createStyle(workbook, format);
   }
 
-  void writeHeader(XSSFCell cell, Y y) {
+  void writeHeader(XSSFCell cell, Y columnKey) {
     cell.setCellStyle(style);
-    XSSFCellUtil.setCellValue(cell, propertyGetter.andThen(converter).apply(y));
+    XSSFCellUtil.setCellValue(cell, property(columnKey));
   }
 
-  void writeKeyHeader(List<Y> keys, XSSFSheet sheet, int rowIndex, int columnIndex) {
-    for (int i = 0; i < keys.size(); i++) {
+  void writeKeyHeader(List<Y> columnKeys, XSSFSheet sheet, int rowIndex, int columnIndex) {
+    for (int i = 0; i < columnKeys.size(); i++) {
       XSSFCell cell = sheet.getRow(rowIndex).createCell(columnIndex + i);
       cell.setCellStyle(style);
-      XSSFCellUtil.setCellValue(cell, propertyGetter.andThen(converter).apply(keys.get(i)));
+      XSSFCellUtil.setCellValue(cell, property(columnKeys.get(i)));
     }
+  }
+
+  private Object property(Y columnKey) {
+    return propertyGetter.andThen(converter).apply(columnKey);
   }
 }

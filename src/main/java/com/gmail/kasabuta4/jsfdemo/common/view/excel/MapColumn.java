@@ -89,8 +89,7 @@ public class MapColumn<T extends WorkSheetModel, Y, E, V>
     for (int i = 0; i < keys.size(); i++) {
       XSSFCell cell = sheet.getRow(rowIndex).createCell(columnIndex + i);
       cell.setCellStyle(bodyStyles.get(dataIndex % bodyStyles.size()));
-      XSSFCellUtil.setCellValue(
-          cell, propertyGetter.andThen(converter).apply(value.get(keys.get(i))));
+      XSSFCellUtil.setCellValue(cell, property(value.get(keys.get(i))));
     }
   }
 

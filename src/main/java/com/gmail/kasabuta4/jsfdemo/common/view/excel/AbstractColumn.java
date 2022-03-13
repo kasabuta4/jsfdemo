@@ -12,12 +12,12 @@ public abstract class AbstractColumn<C extends AbstractColumn, T extends WorkShe
   // required properties
   private final T table;
   protected final String header;
-  protected final Function<E, V> propertyGetter;
+  private final Function<E, V> propertyGetter;
   private final ColumnWidthConfigurator columnWidthConfigurator;
   private final NumberFormat format;
 
   // optional properties
-  protected Function<V, ?> converter = Function.identity();
+  private Function<V, ?> converter = Function.identity();
   private Stylers.Simple headerStyler = Stylers.forTableHeader();
   private Stylers.FormattableList bodyStyler = Stylers.forFormattableTableBody();
 
@@ -75,10 +75,14 @@ public abstract class AbstractColumn<C extends AbstractColumn, T extends WorkShe
       E entity, int dataIndex, XSSFSheet sheet, int rowIndex, int columnIndex) {
     XSSFCell cell = sheet.getRow(rowIndex).createCell(columnIndex);
     cell.setCellStyle(bodyStyles.get(dataIndex % bodyStyles.size()));
-    XSSFCellUtil.setCellValue(cell, propertyGetter.andThen(converter).apply(entity));
+    XSSFCellUtil.setCellValue(cell, property(entity));
   }
 
   protected void configureColumnWidth(XSSFSheet worksheet, int columnIndex) {
     columnWidthConfigurator.configure(worksheet, columnIndex);
+  }
+
+  protected Object property(E entity) {
+    return propertyGetter.andThen(converter).apply(entity);
   }
 }
