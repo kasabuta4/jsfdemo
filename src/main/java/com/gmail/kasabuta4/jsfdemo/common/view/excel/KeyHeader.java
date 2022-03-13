@@ -1,5 +1,6 @@
 package com.gmail.kasabuta4.jsfdemo.common.view.excel;
 
+import java.util.List;
 import java.util.function.Function;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
@@ -49,9 +50,11 @@ public class KeyHeader<MapColumn, Y, P> {
     XSSFCellUtil.setCellValue(cell, propertyGetter.andThen(converter).apply(y));
   }
 
-  void writeKeyHeader(Y y, XSSFSheet sheet, int rowIndex, int columnIndex) {
-    XSSFCell cell = sheet.getRow(rowIndex).createCell(columnIndex);
-    cell.setCellStyle(style);
-    XSSFCellUtil.setCellValue(cell, propertyGetter.andThen(converter).apply(y));
+  void writeKeyHeader(List<Y> keys, XSSFSheet sheet, int rowIndex, int columnIndex) {
+    for (int i = 0; i < keys.size(); i++) {
+      XSSFCell cell = sheet.getRow(rowIndex).createCell(columnIndex + i);
+      cell.setCellStyle(style);
+      XSSFCellUtil.setCellValue(cell, propertyGetter.andThen(converter).apply(keys.get(i)));
+    }
   }
 }

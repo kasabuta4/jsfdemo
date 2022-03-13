@@ -116,7 +116,7 @@ public abstract class AbstractTable<T extends AbstractTable> implements WorkShee
   private void writeSequenceColumnHeader() {
     if (sequenceColumn != null)
       sequenceColumn.writeHeader(
-          worksheet, headerStartRowIndex, headerStartColumnIndex, getHeaderRowCount() - 1);
+          worksheet, headerStartRowIndex, headerStartColumnIndex, getHeaderRowCount());
   }
 
   protected abstract void writeBody();
@@ -127,12 +127,12 @@ public abstract class AbstractTable<T extends AbstractTable> implements WorkShee
   }
 
   private void createRowForRecord(int dataIndex) {
-    worksheet.createRow(headerStartRowIndex + getHeaderRowCount() + dataIndex);
+    worksheet.createRow(toRowIndex(dataIndex));
   }
 
   private void writeSequenceColumnToRecord(int dataIndex) {
     if (sequenceColumn != null)
-      sequenceColumn.writeBodyRecord(
+      sequenceColumn.writeRecord(
           dataIndex + 1, dataIndex, worksheet, toRowIndex(dataIndex), headerStartColumnIndex);
   }
 

@@ -103,17 +103,17 @@ public class MapTable<X, Y, E> extends AbstractTable<MapTable<X, Y, E>> {
   }
 
   private void writeKeyColumnsHeader() {
-    int keyHeaderCount = getHeaderRowCount() - 1;
+    int headerRowCount = getHeaderRowCount();
     for (int i = 0; i < keyColumns.size(); i++)
-      keyColumns.get(i).writeHeader(worksheet, headerStartRowIndex, columnIndex(i), keyHeaderCount);
+      keyColumns.get(i).writeHeader(worksheet, headerStartRowIndex, columnIndex(i), headerRowCount);
   }
 
   private void writeValueColumnsHeader() {
-    int keyHeaderCount = getHeaderRowCount() - 1;
+    int headerRowCount = getHeaderRowCount();
     for (int i = 0, columnIndex = columnIndex(keyColumns.size());
         i < valueColumns.size();
         columnIndex += valueColumns.get(i++).getKeys().size())
-      valueColumns.get(i).writeHeader(worksheet, headerStartRowIndex, columnIndex, keyHeaderCount);
+      valueColumns.get(i).writeHeader(worksheet, headerStartRowIndex, columnIndex, headerRowCount);
   }
 
   @Override
@@ -130,20 +130,18 @@ public class MapTable<X, Y, E> extends AbstractTable<MapTable<X, Y, E>> {
 
   private void writeKeyColumnsToRecord(int dataIndex) {
     X x = rowKeys.get(dataIndex);
+    int rowIndex = toRowIndex(dataIndex);
     for (int i = 0; i < keyColumns.size(); i++)
-      keyColumns
-          .get(i)
-          .writeBodyRecord(x, dataIndex, worksheet, toRowIndex(dataIndex), columnIndex(i));
+      keyColumns.get(i).writeRecord(x, dataIndex, worksheet, rowIndex, columnIndex(i));
   }
 
   private void writeValueColumnsToRecord(int dataIndex) {
     X x = rowKeys.get(dataIndex);
+    int rowIndex = toRowIndex(dataIndex);
     for (int i = 0, columnIndex = columnIndex(keyColumns.size());
         i < valueColumns.size();
         columnIndex += valueColumns.get(i++).getKeys().size())
-      valueColumns
-          .get(i)
-          .writeBodyRecord(data.get(x), dataIndex, worksheet, toRowIndex(dataIndex), columnIndex);
+      valueColumns.get(i).writeRecord(data.get(x), dataIndex, worksheet, rowIndex, columnIndex);
   }
 
   @Override

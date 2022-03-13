@@ -50,8 +50,9 @@ public class SimpleTable<E> extends AbstractTable<SimpleTable<E>> {
   }
 
   private void writeColumnsHeader() {
+    int headerRowCount = getHeaderRowCount();
     for (int i = 0; i < columns.size(); i++)
-      columns.get(i).writeHeader(worksheet, headerStartRowIndex, columnIndex(i), 0);
+      columns.get(i).writeHeader(worksheet, headerStartRowIndex, columnIndex(i), headerRowCount);
   }
 
   @Override
@@ -66,11 +67,10 @@ public class SimpleTable<E> extends AbstractTable<SimpleTable<E>> {
   }
 
   private void writeColumnsToRecord(int dataIndex) {
+    E entity = data.get(dataIndex);
+    int rowIndex = toRowIndex(dataIndex);
     for (int i = 0; i < columns.size(); i++)
-      columns
-          .get(i)
-          .writeBodyRecord(
-              data.get(dataIndex), dataIndex, worksheet, toRowIndex(dataIndex), columnIndex(i));
+      columns.get(i).writeRecord(entity, dataIndex, worksheet, rowIndex, columnIndex(i));
   }
 
   @Override

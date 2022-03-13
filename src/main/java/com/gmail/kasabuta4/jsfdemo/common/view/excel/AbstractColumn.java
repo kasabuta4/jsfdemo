@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.function.Function;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
-import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
@@ -65,15 +64,14 @@ public abstract class AbstractColumn<C extends AbstractColumn, T extends WorkShe
     bodyStyles = bodyStyler.createStyles(workbook, format);
   }
 
-  protected void writeHeader(XSSFSheet sheet, int rowIndex, int columnIndex, int keyHeaderCount) {
-    XSSFRow row = sheet.getRow(rowIndex);
-    XSSFCell cell = row.createCell(columnIndex);
+  protected void writeHeader(XSSFSheet sheet, int rowIndex, int columnIndex, int headerRowCount) {
+    XSSFCell cell = sheet.getRow(rowIndex).createCell(columnIndex);
     cell.setCellStyle(headerStyle);
     XSSFCellUtil.setCellValue(cell, header);
-    XSSFCellUtil.mergeCell(cell, keyHeaderCount + 1, 1);
+    XSSFCellUtil.mergeCell(cell, headerRowCount, 1);
   }
 
-  protected void writeBodyRecord(
+  protected void writeRecord(
       E entity, int dataIndex, XSSFSheet sheet, int rowIndex, int columnIndex) {
     XSSFCell cell = sheet.getRow(rowIndex).createCell(columnIndex);
     cell.setCellStyle(bodyStyles.get(dataIndex % bodyStyles.size()));

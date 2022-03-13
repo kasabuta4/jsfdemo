@@ -55,11 +55,11 @@ public class MapColumn<T extends WorkSheetModel, Y, E, V>
   }
 
   @Override
-  protected void writeHeader(XSSFSheet sheet, int rowIndex, int columnIndex, int keyHeaderCount) {
+  protected void writeHeader(XSSFSheet sheet, int rowIndex, int columnIndex, int headerRowCount) {
     if (!keys.isEmpty()) {
       writeMapColumnHeader(sheet, rowIndex, columnIndex);
       writeKeyHeader(sheet, rowIndex, columnIndex);
-      mergeKeyHeaderCell(sheet, rowIndex, columnIndex, keyHeaderCount);
+      mergeKeyHeaderCell(sheet, rowIndex, columnIndex, headerRowCount);
     }
   }
 
@@ -73,25 +73,24 @@ public class MapColumn<T extends WorkSheetModel, Y, E, V>
 
   private void writeKeyHeader(XSSFSheet sheet, int rowIndex, int columnIndex) {
     for (int i = 0; i < keyHeaders.size(); i++)
-      for (int j = 0; j < keys.size(); j++)
-        keyHeaders.get(i).writeKeyHeader(keys.get(j), sheet, rowIndex + 1 + i, columnIndex + j);
+      keyHeaders.get(i).writeKeyHeader(keys, sheet, rowIndex + 1 + i, columnIndex);
   }
 
   private void mergeKeyHeaderCell(
-      XSSFSheet sheet, int rowIndex, int columnIndex, int keyHeaderCount) {
+      XSSFSheet sheet, int rowIndex, int columnIndex, int headerRowCount) {
     for (int i = 0; i < keys.size(); i++) {
       XSSFCell cell = sheet.getRow(rowIndex + keyHeaders.size()).getCell(columnIndex + i);
-      XSSFCellUtil.mergeCell(cell, keyHeaderCount - keyHeaders.size() + 1, 1);
+      XSSFCellUtil.mergeCell(cell, headerRowCount - keyHeaders.size(), 1);
     }
   }
 
-  protected void writeBodyRecord(
-      Map<Y, E> map, int dataIndex, XSSFSheet sheet, int rowIndex, int columnIndex) {
+  protected void writeRecord(
+      Map<Y, E> value, int dataIndex, XSSFSheet sheet, int rowIndex, int columnIndex) {
     for (int i = 0; i < keys.size(); i++) {
       XSSFCell cell = sheet.getRow(rowIndex).createCell(columnIndex + i);
       cell.setCellStyle(bodyStyles.get(dataIndex % bodyStyles.size()));
       XSSFCellUtil.setCellValue(
-          cell, propertyGetter.andThen(converter).apply(map.get(keys.get(i))));
+          cell, propertyGetter.andThen(converter).apply(value.get(keys.get(i))));
     }
   }
 
