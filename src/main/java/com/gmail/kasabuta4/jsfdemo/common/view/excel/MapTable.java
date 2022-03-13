@@ -164,7 +164,7 @@ public class MapTable<X, Y, E> extends AbstractTable<MapTable<X, Y, E>> {
   }
 
   @Override
-  protected int getHeaderRowCount() {
+  protected int calculateHeaderRowCount() {
     return valueColumns.stream()
             .mapToInt(columnGroup -> columnGroup.getKeyHeaders().size())
             .max()

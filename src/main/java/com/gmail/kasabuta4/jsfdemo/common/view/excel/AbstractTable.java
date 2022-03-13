@@ -22,9 +22,10 @@ public abstract class AbstractTable<T extends AbstractTable> implements WorkShee
   protected int headerStartRowIndex = 1;
   protected int headerStartColumnIndex = 0;
   private Stylers.Simple captionStyler = Stylers.forTableCaption();
-  protected SimpleColumn<T, Integer, Integer> sequenceColumn = null;
+  private SimpleColumn<T, Integer, Integer> sequenceColumn = null;
 
   // temporary variables used during building workbook
+  private int headerRowCount = 1;
   protected XSSFSheet worksheet;
   private XSSFCellStyle captionStyle;
 
@@ -70,6 +71,7 @@ public abstract class AbstractTable<T extends AbstractTable> implements WorkShee
   }
 
   public XSSFSheet build(XSSFWorkbook workbook) {
+    initHeaderRowCount();
     initStyles(workbook);
     initWorksheet(workbook);
     writeCaption();
@@ -77,6 +79,10 @@ public abstract class AbstractTable<T extends AbstractTable> implements WorkShee
     writeBody();
     configureColumnWidth();
     return worksheet;
+  }
+
+  private void initHeaderRowCount() {
+    headerRowCount = calculateHeaderRowCount();
   }
 
   protected void initStyles(XSSFWorkbook workbook) {
@@ -145,8 +151,12 @@ public abstract class AbstractTable<T extends AbstractTable> implements WorkShee
       sequenceColumn.configureColumnWidth(worksheet, headerStartColumnIndex);
   }
 
-  protected int getHeaderRowCount() {
+  protected int calculateHeaderRowCount() {
     return 1;
+  }
+
+  protected int getHeaderRowCount() {
+    return headerRowCount;
   }
 
   protected int toRowIndex(int dataIndex) {
