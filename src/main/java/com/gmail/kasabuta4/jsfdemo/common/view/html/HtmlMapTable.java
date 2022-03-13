@@ -35,7 +35,7 @@ public class HtmlMapTable<X, Y, E> extends HtmlAbstractTable<HtmlMapTable<X, Y, 
     return this;
   }
 
-  public <V> HtmlSimpleColumn<HtmlMapTable<X, Y, E>, X, V> addXColumn(
+  public <V> HtmlSimpleColumn<HtmlMapTable<X, Y, E>, X, V> addKeyColumn(
       String header, Function<X, V> propertyGetter) {
     HtmlSimpleColumn<HtmlMapTable<X, Y, E>, X, V> xColumn =
         new HtmlSimpleColumn<>(this, header, propertyGetter);
@@ -43,14 +43,14 @@ public class HtmlMapTable<X, Y, E> extends HtmlAbstractTable<HtmlMapTable<X, Y, 
     return xColumn;
   }
 
-  public HtmlSimpleColumn<HtmlMapTable<X, Y, E>, X, X> addIdentityXColumn(String header) {
+  public HtmlSimpleColumn<HtmlMapTable<X, Y, E>, X, X> addIdentityKeyColumn(String header) {
     HtmlSimpleColumn<HtmlMapTable<X, Y, E>, X, X> xColumn =
         new HtmlSimpleColumn<>(this, header, Function.identity());
     keyColumns.add(xColumn);
     return xColumn;
   }
 
-  public <V> HtmlMapColumn<HtmlMapTable<X, Y, E>, Y, E, V> addYColumn(
+  public <V> HtmlMapColumn<HtmlMapTable<X, Y, E>, Y, E, V> addValueColumn(
       String header, Function<E, V> propertyGetter, Predicate<Y> yFilter) {
     HtmlMapColumn<HtmlMapTable<X, Y, E>, Y, E, V> yColumn =
         new HtmlMapColumn<>(this, header, propertyGetter, columnKeys, yFilter);
