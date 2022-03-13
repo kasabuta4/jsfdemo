@@ -2,6 +2,7 @@ package com.gmail.kasabuta4.jsfdemo.covid19.view;
 
 import static com.gmail.kasabuta4.jsfdemo.common.view.excel.ColumnWidthConfigurators.autoSizeColumn;
 import static com.gmail.kasabuta4.jsfdemo.common.view.excel.ColumnWidthConfigurators.byCharacters;
+import static com.gmail.kasabuta4.jsfdemo.common.view.excel.CommonNumberFormat.年月;
 import static com.gmail.kasabuta4.jsfdemo.common.view.excel.CommonNumberFormat.桁区切り整数;
 import static com.gmail.kasabuta4.jsfdemo.common.view.excel.CommonNumberFormat.標準;
 import static java.util.Collections.unmodifiableMap;
@@ -136,16 +137,14 @@ public class MonthlyNewCasesMapTableView
         .addSequenceColumn("Seq", autoSizeColumn(), 標準)
         .bodyStyler(MonthlyNewCasesMapTableView::sequenceColumnBodyStyles)
         .endColumn()
-        .addYearMonthKeyColumn("年月", Function.identity())
+        .addKeyColumn("年月", Function.identity(), byCharacters(7), 年月)
         .endColumn()
-        .addIntegerValueColumn(
-            "東京圏", 東京圏::contains, MonthlyNewCases::getCases, byCharacters(7), 桁区切り整数)
+        .addValueColumn("東京圏", MonthlyNewCases::getCases, byCharacters(7), 桁区切り整数, 東京圏::contains)
         .addIdentityKeyHeader(標準)
         .converter(MonthlyNewCasesMapTableView::convertPrefecture)
         .endKeyHeader()
         .endColumn()
-        .addIntegerValueColumn(
-            "大阪圏", 大阪圏::contains, MonthlyNewCases::getCases, byCharacters(7), 桁区切り整数)
+        .addValueColumn("大阪圏", MonthlyNewCases::getCases, byCharacters(7), 桁区切り整数, 大阪圏::contains)
         .addIdentityKeyHeader(標準)
         .converter(MonthlyNewCasesMapTableView::convertPrefecture)
         .endKeyHeader()

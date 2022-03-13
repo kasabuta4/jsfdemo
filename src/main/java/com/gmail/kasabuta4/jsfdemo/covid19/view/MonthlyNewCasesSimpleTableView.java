@@ -2,8 +2,10 @@ package com.gmail.kasabuta4.jsfdemo.covid19.view;
 
 import static com.gmail.kasabuta4.jsfdemo.common.view.excel.ColumnWidthConfigurators.autoSizeColumn;
 import static com.gmail.kasabuta4.jsfdemo.common.view.excel.ColumnWidthConfigurators.byCharacters;
+import static com.gmail.kasabuta4.jsfdemo.common.view.excel.CommonNumberFormat.年月;
 import static com.gmail.kasabuta4.jsfdemo.common.view.excel.CommonNumberFormat.整数;
 import static com.gmail.kasabuta4.jsfdemo.common.view.excel.CommonNumberFormat.桁区切り整数;
+import static com.gmail.kasabuta4.jsfdemo.common.view.excel.CommonNumberFormat.標準;
 import static java.util.Collections.unmodifiableMap;
 
 import com.gmail.kasabuta4.jsfdemo.common.facade.SimpleSearchFacade;
@@ -98,12 +100,12 @@ public class MonthlyNewCasesSimpleTableView
         .headerStartPosition(5, 1)
         .addSequenceColumn("Seq", autoSizeColumn(), 整数)
         .endColumn()
-        .addYearMonthColumn("年月", MonthlyNewCases::getYearMonth)
+        .addColumn("年月", MonthlyNewCases::getYearMonth, byCharacters(7), 年月)
         .endColumn()
-        .addStringColumn("都道府県", MonthlyNewCases::getPrefecture, byCharacters(8))
+        .addColumn("都道府県", MonthlyNewCases::getPrefecture, byCharacters(8), 標準)
         .converter(MonthlyNewCasesSimpleTableView::convertPrefecture)
         .endColumn()
-        .addIntegerColumn("新規感染者数", MonthlyNewCases::getCases, byCharacters(12), 桁区切り整数)
+        .addColumn("新規感染者数", MonthlyNewCases::getCases, byCharacters(12), 桁区切り整数)
         .endColumn()
         .endTable();
   }

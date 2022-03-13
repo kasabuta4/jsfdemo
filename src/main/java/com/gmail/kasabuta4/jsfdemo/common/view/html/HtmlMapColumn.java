@@ -26,8 +26,13 @@ public class HtmlMapColumn<T extends HtmlAbstractTable, Y, E, V>
   }
 
   public HtmlKeyHeader<HtmlMapColumn<T, Y, E, V>, Y, Y> addIdentityKeyHeader() {
-    HtmlKeyHeader<HtmlMapColumn<T, Y, E, V>, Y, Y> keyHeader =
-        new HtmlKeyHeader<>(this, Function.identity());
+    return addKeyHeader(Function.identity());
+  }
+
+  public <P> HtmlKeyHeader<HtmlMapColumn<T, Y, E, V>, Y, P> addKeyHeader(
+      Function<Y, P> propertyGetter) {
+    HtmlKeyHeader<HtmlMapColumn<T, Y, E, V>, Y, P> keyHeader =
+        new HtmlKeyHeader<>(this, propertyGetter);
     keyHeaders.add(keyHeader);
     return keyHeader;
   }

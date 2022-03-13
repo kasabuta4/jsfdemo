@@ -1,7 +1,5 @@
 package com.gmail.kasabuta4.jsfdemo.common.view.excel;
 
-import static com.gmail.kasabuta4.jsfdemo.common.view.excel.ColumnWidthConfigurators.byCharacters;
-import static com.gmail.kasabuta4.jsfdemo.common.view.excel.CommonNumberFormat.年月;
 import static java.util.stream.Collectors.toList;
 
 import java.util.ArrayList;
@@ -38,21 +36,38 @@ public class MapTable<X, Y, E> extends AbstractTable<MapTable<X, Y, E>> {
     return this;
   }
 
-  public <V> SimpleColumn<MapTable<X, Y, E>, X, V> addYearMonthKeyColumn(
-      String header, Function<X, V> propertyGetter) {
+  public SimpleColumn<MapTable<X, Y, E>, X, X> addIdentityKeyColumn(
+      String header, ColumnWidthConfigurator columnWidthConfigurator, NumberFormat format) {
+    return addKeyColumn(header, Function.identity(), columnWidthConfigurator, format);
+  }
+
+  public <V> SimpleColumn<MapTable<X, Y, E>, X, V> addKeyColumn(
+      String header,
+      Function<X, V> propertyGetter,
+      ColumnWidthConfigurator columnWidthConfigurator,
+      NumberFormat format) {
     SimpleColumn<MapTable<X, Y, E>, X, V> keyColumn =
-        new SimpleColumn<>(this, header, propertyGetter, byCharacters(7), 年月);
+        new SimpleColumn<>(this, header, propertyGetter, columnWidthConfigurator, format);
     keyColumns.add(keyColumn);
     return keyColumn;
   }
 
-  public MapColumn<MapTable<X, Y, E>, Y, E, Integer> addIntegerValueColumn(
+  public <V> MapColumn<MapTable<X, Y, E>, Y, E, E> addIdentityValueColumn(
       String header,
-      Predicate<Y> columnKeyFilter,
-      Function<E, Integer> propertyGetter,
       ColumnWidthConfigurator columnWidthConfigurator,
-      NumberFormat format) {
-    MapColumn<MapTable<X, Y, E>, Y, E, Integer> valueColumn =
+      NumberFormat format,
+      Predicate<Y> columnKeyFilter) {
+    return addValueColumn(
+        header, Function.identity(), columnWidthConfigurator, format, columnKeyFilter);
+  }
+
+  public <V> MapColumn<MapTable<X, Y, E>, Y, E, V> addValueColumn(
+      String header,
+      Function<E, V> propertyGetter,
+      ColumnWidthConfigurator columnWidthConfigurator,
+      NumberFormat format,
+      Predicate<Y> columnKeyFilter) {
+    MapColumn<MapTable<X, Y, E>, Y, E, V> valueColumn =
         new MapColumn<>(
             this,
             header,

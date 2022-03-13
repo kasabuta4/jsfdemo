@@ -37,8 +37,13 @@ public class MapColumn<T extends WorkSheetModel, Y, E, V>
   }
 
   public KeyHeader<MapColumn<T, Y, E, V>, Y, Y> addIdentityKeyHeader(NumberFormat format) {
-    KeyHeader<MapColumn<T, Y, E, V>, Y, Y> keyHeader =
-        new KeyHeader<>(this, Function.identity(), format);
+    return addKeyHeader(Function.identity(), format);
+  }
+
+  public <P> KeyHeader<MapColumn<T, Y, E, V>, Y, P> addKeyHeader(
+      Function<Y, P> propertyGetter, NumberFormat format) {
+    KeyHeader<MapColumn<T, Y, E, V>, Y, P> keyHeader =
+        new KeyHeader<>(this, propertyGetter, format);
     keyHeaders.add(keyHeader);
     return keyHeader;
   }

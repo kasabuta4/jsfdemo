@@ -1,10 +1,5 @@
 package com.gmail.kasabuta4.jsfdemo.common.view.excel;
 
-import static com.gmail.kasabuta4.jsfdemo.common.view.excel.ColumnWidthConfigurators.byCharacters;
-import static com.gmail.kasabuta4.jsfdemo.common.view.excel.CommonNumberFormat.年月;
-import static com.gmail.kasabuta4.jsfdemo.common.view.excel.CommonNumberFormat.標準;
-
-import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
@@ -27,42 +22,13 @@ public class SimpleTable<E> extends AbstractTable<SimpleTable<E>> {
     return this;
   }
 
-  public SimpleColumn<SimpleTable<E>, E, String> addStringColumn(
+  public <V> SimpleColumn<SimpleTable<E>, E, V> addColumn(
       String header,
-      Function<E, String> property,
-      ColumnWidthConfigurator columnWidthConfigurator) {
-    SimpleColumn<SimpleTable<E>, E, String> columnModel =
-        new SimpleColumn<>(this, header, property, columnWidthConfigurator, 標準);
-    columns.add(columnModel);
-    return columnModel;
-  }
-
-  public SimpleColumn<SimpleTable<E>, E, Integer> addIntegerColumn(
-      String header,
-      Function<E, Integer> property,
+      Function<E, V> property,
       ColumnWidthConfigurator columnWidthConfigurator,
       NumberFormat format) {
-    SimpleColumn<SimpleTable<E>, E, Integer> columnModel =
+    SimpleColumn<SimpleTable<E>, E, V> columnModel =
         new SimpleColumn<>(this, header, property, columnWidthConfigurator, format);
-    columns.add(columnModel);
-    return columnModel;
-  }
-
-  public SimpleColumn<SimpleTable<E>, E, Double> addDoubleColumn(
-      String header,
-      Function<E, Double> property,
-      ColumnWidthConfigurator columnWidthConfigurator,
-      NumberFormat format) {
-    SimpleColumn<SimpleTable<E>, E, Double> columnModel =
-        new SimpleColumn<>(this, header, property, columnWidthConfigurator, format);
-    columns.add(columnModel);
-    return columnModel;
-  }
-
-  public SimpleColumn<SimpleTable<E>, E, YearMonth> addYearMonthColumn(
-      String header, Function<E, YearMonth> property) {
-    SimpleColumn<SimpleTable<E>, E, YearMonth> columnModel =
-        new SimpleColumn<>(this, header, property, byCharacters(7), 年月);
     columns.add(columnModel);
     return columnModel;
   }
