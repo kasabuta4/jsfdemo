@@ -7,7 +7,7 @@ import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-public abstract class AbstractColumn<C extends AbstractColumn, T extends WorkSheetModel, E, V> {
+public abstract class AbstractColumn<C extends AbstractColumn, T extends AbstractTable, E, V> {
 
   // required properties
   private final T table;

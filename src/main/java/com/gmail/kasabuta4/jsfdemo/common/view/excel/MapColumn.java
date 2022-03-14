@@ -12,7 +12,7 @@ import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-public class MapColumn<T extends WorkSheetModel, Y, E, V>
+public class MapColumn<T extends AbstractTable, Y, E, V>
     extends AbstractColumn<MapColumn<T, Y, E, V>, T, E, V> {
 
   // required properties
