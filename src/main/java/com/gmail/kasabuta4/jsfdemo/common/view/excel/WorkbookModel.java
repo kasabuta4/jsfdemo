@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -12,14 +13,20 @@ public class WorkbookModel {
 
   // required properties
   private final String fileName;
-  private final List<WorkSheetModel> worksheetModels = new ArrayList<>();
+  private final Function<XSSFWorkbook, Map<String, XSSFCellStyle>> styleMapProducer;
+  private final List<AbstractTable> tables = new ArrayList<>();
   private final XSSFWorkbook workbook = new XSSFWorkbook();
 
   // optional properties
-  private Consumer<XSSFCellStyle> standardStyleChanger = WorkbookModel::changeStandardStyle;
+  private Consumer<XSSFCellStyle> standardStyleChanger = WorkbookModel::defaultStandardStyle;
 
-  public WorkbookModel(String fileName) {
+  // temporary variables used during building workbook
+  private Map<String, XSSFCellStyle> styleMap;
+
+  public WorkbookModel(
+      String fileName, Function<XSSFWorkbook, Map<String, XSSFCellStyle>> styleMapProducer) {
     this.fileName = fileName;
+    this.styleMapProducer = styleMapProducer;
   }
 
   public WorkbookModel standardStyleChanger(Consumer<XSSFCellStyle> standardStyleChanger) {
@@ -27,22 +34,22 @@ public class WorkbookModel {
     return this;
   }
 
-  public <E> SimpleTable<E> addSimpleTable(String sheetName, String title, List<E> data) {
-    SimpleTable<E> table = new SimpleTable<>(this, sheetName, title, data);
-    worksheetModels.add(table);
+  public <E> SimpleTable<E> addSimpleTable(String sheetName, List<E> data) {
+    SimpleTable<E> table = new SimpleTable<>(this, sheetName, data);
+    tables.add(table);
     return table;
   }
 
-  public <R, C, E> MapTable<R, C, E> addMapTable(
-      String sheetName, String title, Map<R, Map<C, E>> data) {
-    MapTable<R, C, E> table = new MapTable<>(this, sheetName, title, data);
-    worksheetModels.add(table);
+  public <R, C, E> MapTable<R, C, E> addMapTable(String sheetName, Map<R, Map<C, E>> data) {
+    MapTable<R, C, E> table = new MapTable<>(this, sheetName, data);
+    tables.add(table);
     return table;
   }
 
   public XSSFWorkbook build() {
-    standardStyleChanger.accept(workbook.getStylesSource().getStyleAt(0));
-    worksheetModels.stream().forEach(worksheetModel -> worksheetModel.build(workbook));
+    changeStandardStyle();
+    initStyleMap();
+    tables.stream().forEach(table -> table.build(workbook));
     return workbook;
   }
 
@@ -50,7 +57,21 @@ public class WorkbookModel {
     return fileName;
   }
 
-  private static void changeStandardStyle(XSSFCellStyle standardStyle) {
+  XSSFCellStyle styleOf(String styleKey) {
+    if (styleMap != null && styleMap.containsKey(styleKey)) return styleMap.get(styleKey);
+    return workbook.getStylesSource().getStyleAt(0);
+  }
+
+  private void changeStandardStyle() {
+    if (standardStyleChanger != null)
+      standardStyleChanger.accept(workbook.getStylesSource().getStyleAt(0));
+  }
+
+  private void initStyleMap() {
+    if (styleMapProducer != null) styleMap = styleMapProducer.apply(workbook);
+  }
+
+  private static void defaultStandardStyle(XSSFCellStyle standardStyle) {
     XSSFFont standardFont = standardStyle.getFont();
     standardFont.setFontName("ヒラギノ明朝 ProN");
   }

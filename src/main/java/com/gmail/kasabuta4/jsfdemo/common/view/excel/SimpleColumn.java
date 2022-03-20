@@ -6,12 +6,8 @@ public class SimpleColumn<T extends AbstractTable, E, V>
     extends AbstractColumn<SimpleColumn<T, E, V>, T, E, V> {
 
   protected SimpleColumn(
-      T table,
-      String header,
-      Function<E, V> property,
-      ColumnWidthConfigurator columnWidthConfigurator,
-      NumberFormat format) {
-    super(table, header, property, columnWidthConfigurator, format);
+      T table, String header, Function<E, V> property, ColumnWidth columnWidthConfigurator) {
+    super(table, header, property, columnWidthConfigurator);
   }
 
   @Override

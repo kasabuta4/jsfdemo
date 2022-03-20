@@ -1,38 +1,36 @@
 package com.gmail.kasabuta4.jsfdemo.common.view.excel;
 
+import static java.util.stream.Collectors.toList;
+
+import java.util.List;
 import java.util.function.Function;
-import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
-import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-public abstract class AbstractTable<T extends AbstractTable> implements WorkSheetModel {
+public abstract class AbstractTable<T extends AbstractTable> {
 
   // required properties
-  private final WorkbookModel workbookModel;
+  protected final WorkbookModel workbookModel;
   private final String sheetName;
-  private final String caption;
 
   // optional properties
-  private int captionRowIndex = 0;
-  private int captionColumnIndex = 0;
-  private int captionRows = 1;
-  private int captionColumns = 1;
-  protected int headerStartRowIndex = 1;
-  protected int headerStartColumnIndex = 0;
-  private Stylers.Simple captionStyler = Stylers.forTableCaption();
+  private String headerStyleKey = "header";
+  private List<String> bodyStyleKeys;
+  private Caption<T> caption = null;
   private SimpleColumn<T, Integer, Integer> sequenceColumn = null;
 
   // temporary variables used during building workbook
+  protected int captionRowCount;
+  private int columnsCount;
   private int headerRowCount = 1;
   protected XSSFSheet worksheet;
-  private XSSFCellStyle captionStyle;
+  XSSFCellStyle headerStyle;
+  List<XSSFCellStyle> bodyStyles;
 
-  protected AbstractTable(WorkbookModel workbookModel, String sheetName, String caption) {
+  protected AbstractTable(WorkbookModel workbookModel, String sheetName) {
     this.workbookModel = workbookModel;
     this.sheetName = sheetName;
-    this.caption = caption;
   }
 
   protected abstract T self();
@@ -41,38 +39,31 @@ public abstract class AbstractTable<T extends AbstractTable> implements WorkShee
     return workbookModel;
   }
 
-  public T captionPosition(int rowIndex, int columnIndex) {
-    captionRowIndex = rowIndex;
-    captionColumnIndex = columnIndex;
+  public T headerStyleKey(String headerStyleKey) {
+    this.headerStyleKey = headerStyleKey;
     return self();
   }
 
-  public T captionSize(int rows, int columns) {
-    captionRows = rows;
-    captionColumns = columns;
+  public T bodyStyleKeys(List<String> bodyStyleKeys) {
+    this.bodyStyleKeys = bodyStyleKeys;
     return self();
   }
 
-  public T headerStartPosition(int rowIndex, int columnIndex) {
-    headerStartRowIndex = rowIndex;
-    headerStartColumnIndex = columnIndex;
-    return self();
-  }
-
-  public T captionStyler(Stylers.Simple captionStyler) {
-    this.captionStyler = captionStyler;
-    return self();
+  public Caption<T> addCaption(String caption) {
+    return this.caption = new Caption<>(self(), caption);
   }
 
   public SimpleColumn<T, Integer, Integer> addSequenceColumn(
-      String header, ColumnWidthConfigurator columnWidthConfigurator, NumberFormat format) {
+      String header, ColumnWidth columnWidthConfigurator) {
     return sequenceColumn =
-        new SimpleColumn<>(self(), header, Function.identity(), columnWidthConfigurator, format);
+        new SimpleColumn<>(self(), header, Function.identity(), columnWidthConfigurator);
   }
 
   public XSSFSheet build(XSSFWorkbook workbook) {
+    initCaptionRowCount();
+    initColumnsCount();
     initHeaderRowCount();
-    initStyles(workbook);
+    initStyles();
     initWorksheet(workbook);
     writeCaption();
     writeHeader();
@@ -81,21 +72,27 @@ public abstract class AbstractTable<T extends AbstractTable> implements WorkShee
     return worksheet;
   }
 
+  protected WorkbookModel getWorkbookModel() {
+    return workbookModel;
+  }
+
+  private void initCaptionRowCount() {
+    captionRowCount = caption == null ? 0 : caption.rowCount();
+  }
+
+  private void initColumnsCount() {
+    columnsCount = calculateColumnsCount();
+  }
+
   private void initHeaderRowCount() {
     headerRowCount = calculateHeaderRowCount();
   }
 
-  protected void initStyles(XSSFWorkbook workbook) {
-    initCaptionStyle(workbook);
-    initSequenceColumnStyles(workbook);
-  }
-
-  private void initCaptionStyle(XSSFWorkbook workbook) {
-    captionStyle = captionStyler.createStyle(workbook);
-  }
-
-  private void initSequenceColumnStyles(XSSFWorkbook workbook) {
-    if (sequenceColumn != null) sequenceColumn.initStyles(workbook);
+  protected void initStyles() {
+    headerStyle = workbookModel.styleOf(headerStyleKey);
+    bodyStyles = bodyStyleKeys.stream().map(workbookModel::styleOf).collect(toList());
+    if (caption != null) caption.initStyles();
+    if (sequenceColumn != null) sequenceColumn.initStyles();
   }
 
   protected void initWorksheet(XSSFWorkbook workbook) {
@@ -103,11 +100,7 @@ public abstract class AbstractTable<T extends AbstractTable> implements WorkShee
   }
 
   protected void writeCaption() {
-    XSSFRow row = worksheet.createRow(captionRowIndex);
-    XSSFCell cell = row.createCell(captionColumnIndex);
-    cell.setCellStyle(captionStyle);
-    XSSFCellUtil.setCellValue(cell, caption);
-    XSSFCellUtil.mergeCell(cell, captionRows, captionColumns);
+    if (caption != null) caption.writeCaption(worksheet);
   }
 
   protected void writeHeader() {
@@ -116,13 +109,12 @@ public abstract class AbstractTable<T extends AbstractTable> implements WorkShee
   }
 
   private void createHeaderRows() {
-    for (int i = 0; i < getHeaderRowCount(); i++) worksheet.createRow(headerStartRowIndex + i);
+    for (int i = 0; i < getHeaderRowCount(); i++) worksheet.createRow(captionRowCount + i);
   }
 
   private void writeSequenceColumnHeader() {
     if (sequenceColumn != null)
-      sequenceColumn.writeHeader(
-          worksheet, headerStartRowIndex, headerStartColumnIndex, getHeaderRowCount());
+      sequenceColumn.writeHeader(worksheet, captionRowCount, 0, getHeaderRowCount());
   }
 
   protected abstract void writeBody();
@@ -138,8 +130,7 @@ public abstract class AbstractTable<T extends AbstractTable> implements WorkShee
 
   private void writeSequenceColumnToRecord(int dataIndex) {
     if (sequenceColumn != null)
-      sequenceColumn.writeRecord(
-          dataIndex + 1, dataIndex, worksheet, toRowIndex(dataIndex), headerStartColumnIndex);
+      sequenceColumn.writeRecord(dataIndex + 1, dataIndex, worksheet, toRowIndex(dataIndex), 0);
   }
 
   protected void configureColumnWidth() {
@@ -147,8 +138,15 @@ public abstract class AbstractTable<T extends AbstractTable> implements WorkShee
   }
 
   private void configureSequenceColumnWidth() {
-    if (sequenceColumn != null)
-      sequenceColumn.configureColumnWidth(worksheet, headerStartColumnIndex);
+    if (sequenceColumn != null) sequenceColumn.configureColumnWidth(worksheet, 0);
+  }
+
+  protected int calculateColumnsCount() {
+    return sequenceColumn == null ? 0 : 1;
+  }
+
+  int getColumnsCount() {
+    return columnsCount;
   }
 
   protected int calculateHeaderRowCount() {
@@ -160,10 +158,10 @@ public abstract class AbstractTable<T extends AbstractTable> implements WorkShee
   }
 
   protected int toRowIndex(int dataIndex) {
-    return headerStartRowIndex + getHeaderRowCount() + dataIndex;
+    return captionRowCount + getHeaderRowCount() + dataIndex;
   }
 
   protected int columnIndex(int i) {
-    return headerStartColumnIndex + (sequenceColumn == null ? 0 : 1) + i;
+    return (sequenceColumn == null ? 0 : 1) + i;
   }
 }

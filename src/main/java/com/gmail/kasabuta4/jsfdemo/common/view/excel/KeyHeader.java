@@ -5,26 +5,23 @@ import java.util.function.Function;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 public class KeyHeader<MapColumn, Y, P> {
 
   // required properties
   private final MapColumn mapColumn;
   private final Function<Y, P> propertyGetter;
-  private final NumberFormat format;
 
   // optional properties
   private Function<P, ?> converter = Function.identity();
-  private Stylers.Formattable styler = Stylers.forFormattableTableHeader();
+  private String styleKey;
 
   // temporary variables used during building workbook
   private XSSFCellStyle style;
 
-  KeyHeader(MapColumn mapColumn, Function<Y, P> propertyGetter, NumberFormat format) {
+  KeyHeader(MapColumn mapColumn, Function<Y, P> propertyGetter) {
     this.mapColumn = mapColumn;
     this.propertyGetter = propertyGetter;
-    this.format = format;
   }
 
   public MapColumn endKeyHeader() {
@@ -36,29 +33,33 @@ public class KeyHeader<MapColumn, Y, P> {
     return this;
   }
 
-  public KeyHeader<MapColumn, Y, P> styler(Stylers.Formattable styler) {
-    this.styler = styler;
+  public KeyHeader<MapColumn, Y, P> styleKey(String styleKey) {
+    this.styleKey = styleKey;
     return this;
   }
 
-  void initStyles(XSSFWorkbook workbook) {
-    style = styler.createStyle(workbook, format);
+  void initStyles() {
+    style = getWorkbookModel().styleOf(styleKey);
   }
 
   void writeHeader(XSSFCell cell, Y columnKey) {
     cell.setCellStyle(style);
-    XSSFCellUtil.setCellValue(cell, property(columnKey));
+    Cells.setCellValue(cell, property(columnKey));
   }
 
   void writeKeyHeader(List<Y> columnKeys, XSSFSheet sheet, int rowIndex, int columnIndex) {
     for (int i = 0; i < columnKeys.size(); i++) {
       XSSFCell cell = sheet.getRow(rowIndex).createCell(columnIndex + i);
       cell.setCellStyle(style);
-      XSSFCellUtil.setCellValue(cell, property(columnKeys.get(i)));
+      Cells.setCellValue(cell, property(columnKeys.get(i)));
     }
   }
 
   private Object property(Y columnKey) {
     return propertyGetter.andThen(converter).apply(columnKey);
+  }
+
+  protected WorkbookModel getWorkbookModel() {
+    return ((AbstractColumn) mapColumn).getWorkbookModel();
   }
 }

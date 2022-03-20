@@ -8,7 +8,7 @@ import java.util.Date;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 
-public class XSSFCellUtil {
+public class Cells {
 
   public static void setCellValue(XSSFCell cell, Object value) {
     if (value == null) {

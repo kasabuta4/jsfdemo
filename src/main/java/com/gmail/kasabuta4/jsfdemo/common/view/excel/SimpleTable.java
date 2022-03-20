@@ -3,7 +3,6 @@ package com.gmail.kasabuta4.jsfdemo.common.view.excel;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 public class SimpleTable<E> extends AbstractTable<SimpleTable<E>> {
 
@@ -11,9 +10,8 @@ public class SimpleTable<E> extends AbstractTable<SimpleTable<E>> {
   private final List<E> data;
   private final List<SimpleColumn<SimpleTable<E>, E, ?>> columns = new ArrayList<>();
 
-  protected SimpleTable(
-      WorkbookModel workbookModel, String sheetName, String caption, List<E> data) {
-    super(workbookModel, sheetName, caption);
+  protected SimpleTable(WorkbookModel workbookModel, String sheetName, List<E> data) {
+    super(workbookModel, sheetName);
     this.data = data;
   }
 
@@ -23,24 +21,17 @@ public class SimpleTable<E> extends AbstractTable<SimpleTable<E>> {
   }
 
   public <V> SimpleColumn<SimpleTable<E>, E, V> addColumn(
-      String header,
-      Function<E, V> property,
-      ColumnWidthConfigurator columnWidthConfigurator,
-      NumberFormat format) {
+      String header, Function<E, V> property, ColumnWidth columnWidthConfigurator) {
     SimpleColumn<SimpleTable<E>, E, V> columnModel =
-        new SimpleColumn<>(this, header, property, columnWidthConfigurator, format);
+        new SimpleColumn<>(this, header, property, columnWidthConfigurator);
     columns.add(columnModel);
     return columnModel;
   }
 
   @Override
-  protected void initStyles(XSSFWorkbook workbook) {
-    super.initStyles(workbook);
-    initColumnsStyles(workbook);
-  }
-
-  private void initColumnsStyles(XSSFWorkbook workbook) {
-    for (SimpleColumn<SimpleTable<E>, E, ?> column : columns) column.initStyles(workbook);
+  protected void initStyles() {
+    super.initStyles();
+    columns.stream().forEach(SimpleColumn::initStyles);
   }
 
   @Override
@@ -52,7 +43,7 @@ public class SimpleTable<E> extends AbstractTable<SimpleTable<E>> {
   private void writeColumnsHeader() {
     int headerRowCount = getHeaderRowCount();
     for (int i = 0; i < columns.size(); i++)
-      columns.get(i).writeHeader(worksheet, headerStartRowIndex, columnIndex(i), headerRowCount);
+      columns.get(i).writeHeader(worksheet, captionRowCount, columnIndex(i), headerRowCount);
   }
 
   @Override
@@ -82,5 +73,10 @@ public class SimpleTable<E> extends AbstractTable<SimpleTable<E>> {
   private void configureColumnsWidth() {
     for (int i = 0; i < columns.size(); i++)
       columns.get(i).configureColumnWidth(worksheet, columnIndex(i));
+  }
+
+  @Override
+  protected int calculateColumnsCount() {
+    return super.calculateColumnsCount() + columns.size();
   }
 }

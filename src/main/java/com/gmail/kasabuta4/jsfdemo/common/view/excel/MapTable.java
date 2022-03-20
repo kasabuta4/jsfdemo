@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.function.Predicate;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 public class MapTable<X, Y, E> extends AbstractTable<MapTable<X, Y, E>> {
 
@@ -18,9 +17,8 @@ public class MapTable<X, Y, E> extends AbstractTable<MapTable<X, Y, E>> {
   private List<SimpleColumn<MapTable<X, Y, E>, X, ?>> keyColumns = new ArrayList<>();
   private List<MapColumn<MapTable<X, Y, E>, Y, E, ?>> valueColumns = new ArrayList<>();
 
-  protected MapTable(
-      WorkbookModel workbookModel, String sheetName, String caption, Map<X, Map<Y, E>> data) {
-    super(workbookModel, sheetName, caption);
+  protected MapTable(WorkbookModel workbookModel, String sheetName, Map<X, Map<Y, E>> data) {
+    super(workbookModel, sheetName);
     this.data = data;
     this.rowKeys = data.keySet().stream().sorted().collect(toList());
     this.columnKeys =
@@ -37,62 +35,48 @@ public class MapTable<X, Y, E> extends AbstractTable<MapTable<X, Y, E>> {
   }
 
   public SimpleColumn<MapTable<X, Y, E>, X, X> addIdentityKeyColumn(
-      String header, ColumnWidthConfigurator columnWidthConfigurator, NumberFormat format) {
-    return addKeyColumn(header, Function.identity(), columnWidthConfigurator, format);
+      String header, ColumnWidth columnWidthConfigurator) {
+    return addKeyColumn(header, Function.identity(), columnWidthConfigurator);
   }
 
   public <V> SimpleColumn<MapTable<X, Y, E>, X, V> addKeyColumn(
-      String header,
-      Function<X, V> propertyGetter,
-      ColumnWidthConfigurator columnWidthConfigurator,
-      NumberFormat format) {
+      String header, Function<X, V> propertyGetter, ColumnWidth columnWidthConfigurator) {
     SimpleColumn<MapTable<X, Y, E>, X, V> keyColumn =
-        new SimpleColumn<>(this, header, propertyGetter, columnWidthConfigurator, format);
+        new SimpleColumn<>(this, header, propertyGetter, columnWidthConfigurator);
     keyColumns.add(keyColumn);
     return keyColumn;
   }
 
-  public <V> MapColumn<MapTable<X, Y, E>, Y, E, E> addIdentityValueColumn(
-      String header,
-      ColumnWidthConfigurator columnWidthConfigurator,
-      NumberFormat format,
-      Predicate<Y> columnKeyFilter) {
-    return addValueColumn(
-        header, Function.identity(), columnWidthConfigurator, format, columnKeyFilter);
+  public MapColumn<MapTable<X, Y, E>, Y, E, E> addIdentityValueColumn(
+      String header, ColumnWidth columnWidthConfigurator, Predicate<Y> columnKeyFilter) {
+    return addValueColumn(header, Function.identity(), columnWidthConfigurator, columnKeyFilter);
   }
 
   public <V> MapColumn<MapTable<X, Y, E>, Y, E, V> addValueColumn(
       String header,
       Function<E, V> propertyGetter,
-      ColumnWidthConfigurator columnWidthConfigurator,
-      NumberFormat format,
+      ColumnWidth columnWidthConfigurator,
       Predicate<Y> columnKeyFilter) {
     MapColumn<MapTable<X, Y, E>, Y, E, V> valueColumn =
         new MapColumn<>(
-            this,
-            header,
-            propertyGetter,
-            columnWidthConfigurator,
-            format,
-            columnKeys,
-            columnKeyFilter);
+            this, header, propertyGetter, columnWidthConfigurator, columnKeys, columnKeyFilter);
     valueColumns.add(valueColumn);
     return valueColumn;
   }
 
   @Override
-  protected void initStyles(XSSFWorkbook workbook) {
-    super.initStyles(workbook);
-    initKeyColumnsStyles(workbook);
-    initValueColumnsStyles(workbook);
+  protected void initStyles() {
+    super.initStyles();
+    initKeyColumnsStyles();
+    initValueColumnsStyles();
   }
 
-  private void initKeyColumnsStyles(XSSFWorkbook workbook) {
-    keyColumns.stream().forEach(keyColumn -> keyColumn.initStyles(workbook));
+  private void initKeyColumnsStyles() {
+    keyColumns.stream().forEach(SimpleColumn::initStyles);
   }
 
-  private void initValueColumnsStyles(XSSFWorkbook workbook) {
-    valueColumns.stream().forEach(valueColumn -> valueColumn.initStyles(workbook));
+  private void initValueColumnsStyles() {
+    valueColumns.stream().forEach(MapColumn::initStyles);
   }
 
   @Override
@@ -105,7 +89,7 @@ public class MapTable<X, Y, E> extends AbstractTable<MapTable<X, Y, E>> {
   private void writeKeyColumnsHeader() {
     int headerRowCount = getHeaderRowCount();
     for (int i = 0; i < keyColumns.size(); i++)
-      keyColumns.get(i).writeHeader(worksheet, headerStartRowIndex, columnIndex(i), headerRowCount);
+      keyColumns.get(i).writeHeader(worksheet, captionRowCount, columnIndex(i), headerRowCount);
   }
 
   private void writeValueColumnsHeader() {
@@ -113,7 +97,7 @@ public class MapTable<X, Y, E> extends AbstractTable<MapTable<X, Y, E>> {
     for (int i = 0, columnIndex = columnIndex(keyColumns.size());
         i < valueColumns.size();
         columnIndex += valueColumns.get(i++).getKeys().size())
-      valueColumns.get(i).writeHeader(worksheet, headerStartRowIndex, columnIndex, headerRowCount);
+      valueColumns.get(i).writeHeader(worksheet, captionRowCount, columnIndex, headerRowCount);
   }
 
   @Override
@@ -161,6 +145,13 @@ public class MapTable<X, Y, E> extends AbstractTable<MapTable<X, Y, E>> {
         i < valueColumns.size();
         columnIndex += valueColumns.get(i++).getKeys().size())
       valueColumns.get(i).configureColumnWidth(worksheet, columnIndex);
+  }
+
+  @Override
+  protected int calculateColumnsCount() {
+    return super.calculateColumnsCount()
+        + keyColumns.size()
+        + valueColumns.stream().map(MapColumn::getKeys).mapToInt(List::size).sum();
   }
 
   @Override
