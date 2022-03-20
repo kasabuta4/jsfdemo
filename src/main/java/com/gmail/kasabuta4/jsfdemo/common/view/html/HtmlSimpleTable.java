@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
-public class HtmlSimpleTable<E> extends HtmlAbstractTable<HtmlSimpleTable<E>> {
+public class HtmlSimpleTable<E> extends HtmlAbstractTable<HtmlSimpleTable<E>, E> {
 
   // required properties
   private final List<E> data;

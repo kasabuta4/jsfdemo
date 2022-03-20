@@ -1,9 +1,10 @@
 package com.gmail.kasabuta4.jsfdemo.common.view.html;
 
+import java.util.Map;
 import java.util.function.Function;
 
 public abstract class HtmlAbstractColumn<
-    C extends HtmlAbstractColumn, T extends HtmlAbstractTable, E, V> {
+    C extends HtmlAbstractColumn, T extends HtmlAbstractTable, E, V, X> {
 
   // required properties
   protected final T table;
@@ -15,6 +16,8 @@ public abstract class HtmlAbstractColumn<
   private String columnClass;
   private String headerCellClass;
   private String bodyCellClass;
+  private Function<X, Object> highlightFunction;
+  private Map<Object, String> highlightClasses;
 
   protected HtmlAbstractColumn(T table, String header, Function<E, V> propertyGetter) {
     this.table = table;
@@ -48,6 +51,12 @@ public abstract class HtmlAbstractColumn<
     return self();
   }
 
+  public C highlight(Function<X, Object> highlightFunction, Map<Object, String> highlightClasses) {
+    this.highlightFunction = highlightFunction;
+    this.highlightClasses = highlightClasses;
+    return self();
+  }
+
   public String getHeader() {
     return header;
   }
@@ -64,7 +73,17 @@ public abstract class HtmlAbstractColumn<
     return headerCellClass;
   }
 
-  public String getBodyCellClass() {
-    return bodyCellClass;
+  public String bodyCellClass(X x) {
+    String highlightClass = highlightClass(x);
+    if (bodyCellClass == null && highlightClass == null) return null;
+    else if (highlightClass == null) return bodyCellClass;
+    else if (bodyCellClass == null) return highlightClass;
+    else return String.join(" ", bodyCellClass, highlightClass);
+  }
+
+  private String highlightClass(X x) {
+    return (highlightFunction == null || highlightClasses == null)
+        ? null
+        : highlightClasses.get(highlightFunction.apply(x));
   }
 }

@@ -72,6 +72,7 @@ public class MonthlyNewCasesSimpleTableView
     return new HtmlSimpleTable<>(result)
         .caption("Covid-19 Monthly New Cases")
         .tableClass("monthlyNewCases")
+        .highlight(MonthlyNewCasesSimpleTableView::注目都道府県, 注目都道府県HighlightClasses())
         .addSequenceColumn("Seq")
         .headerColumn(true)
         .columnClass("seqColumn")
@@ -89,6 +90,7 @@ public class MonthlyNewCasesSimpleTableView
         .columnClass("都道府県Column")
         .headerCellClass("都道府県Header")
         .bodyCellClass("都道府県Body")
+        .highlight(MonthlyNewCasesSimpleTableView::注目都道府県, 注目都道府県HighlightClasses())
         .endColumn()
         .addSimpleColumn("新規感染者数", MonthlyNewCases::getCases)
         .converter(HtmlConverters.桁区切り整数())
@@ -163,6 +165,12 @@ public class MonthlyNewCasesSimpleTableView
 
   private static String convertPrefecture(String prefecture) {
     return PREFECTURE_MAP.get(prefecture);
+  }
+
+  private static Map<Object, String> 注目都道府県HighlightClasses() {
+    Map<Object, String> map = new HashMap<>(1);
+    map.put(Boolean.TRUE, "watching");
+    return Collections.unmodifiableMap(map);
   }
 
   private static Map<Object, List<String>> 注目都道府県HighlightKeys() {

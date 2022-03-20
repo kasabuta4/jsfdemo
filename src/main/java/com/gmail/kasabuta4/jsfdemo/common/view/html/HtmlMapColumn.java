@@ -7,12 +7,13 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-public class HtmlMapColumn<T extends HtmlAbstractTable, Y, E, V>
-    extends HtmlAbstractColumn<HtmlMapColumn<T, Y, E, V>, T, E, V> {
+public class HtmlMapColumn<T extends HtmlAbstractTable, X, Y, E, V>
+    extends HtmlAbstractColumn<HtmlMapColumn<T, X, Y, E, V>, T, E, V, X> {
 
   // required properties
   private final List<Y> keys;
-  private final List<HtmlKeyHeader<HtmlMapColumn<T, Y, E, V>, Y, ?>> keyHeaders = new ArrayList<>();
+  private final List<HtmlKeyHeader<HtmlMapColumn<T, X, Y, E, V>, Y, ?>> keyHeaders =
+      new ArrayList<>();
 
   protected HtmlMapColumn(
       T table, String header, Function<E, V> propertyGetter, List<Y> keys, Predicate<Y> keyFilter) {
@@ -21,17 +22,17 @@ public class HtmlMapColumn<T extends HtmlAbstractTable, Y, E, V>
   }
 
   @Override
-  protected HtmlMapColumn<T, Y, E, V> self() {
+  protected HtmlMapColumn<T, X, Y, E, V> self() {
     return this;
   }
 
-  public HtmlKeyHeader<HtmlMapColumn<T, Y, E, V>, Y, Y> addIdentityKeyHeader() {
+  public HtmlKeyHeader<HtmlMapColumn<T, X, Y, E, V>, Y, Y> addIdentityKeyHeader() {
     return addKeyHeader(Function.identity());
   }
 
-  public <P> HtmlKeyHeader<HtmlMapColumn<T, Y, E, V>, Y, P> addKeyHeader(
+  public <P> HtmlKeyHeader<HtmlMapColumn<T, X, Y, E, V>, Y, P> addKeyHeader(
       Function<Y, P> propertyGetter) {
-    HtmlKeyHeader<HtmlMapColumn<T, Y, E, V>, Y, P> keyHeader =
+    HtmlKeyHeader<HtmlMapColumn<T, X, Y, E, V>, Y, P> keyHeader =
         new HtmlKeyHeader<>(this, propertyGetter);
     keyHeaders.add(keyHeader);
     return keyHeader;
@@ -45,7 +46,7 @@ public class HtmlMapColumn<T extends HtmlAbstractTable, Y, E, V>
     return keys;
   }
 
-  public List<HtmlKeyHeader<HtmlMapColumn<T, Y, E, V>, Y, ?>> getKeyHeaders() {
+  public List<HtmlKeyHeader<HtmlMapColumn<T, X, Y, E, V>, Y, ?>> getKeyHeaders() {
     return keyHeaders;
   }
 }

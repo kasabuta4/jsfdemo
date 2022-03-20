@@ -39,27 +39,27 @@
             </thead>
             <tbody>
                 <ui:repeat id="entity" var="entity" varStatus="status" value="#{cc.attrs.model.data}">
-                    <tr>
+                    <tr class="#{cc.attrs.model.bodyRecordClass(entity)}">
                         <ui:fragment id="sequenceColumn" rendered="#{not empty cc.attrs.model.sequenceColumn}">
                             <ui:fragment id="headerColumn" rendered="#{cc.attrs.model.sequenceColumn.headerColumn}">
-                                <th class="#{cc.attrs.model.sequenceColumn.bodyCellClass}">
+                                <th class="#{cc.attrs.model.sequenceColumn.bodyCellClass(entity)}">
                                     <h:outputText value="#{cc.attrs.model.sequenceColumn.property.apply(status.index + 1)}"/>
                                 </th>
                             </ui:fragment>
                             <ui:fragment id="dataColumn" rendered="#{not cc.attrs.model.sequenceColumn.headerColumn}">
-                                <td class="#{cc.attrs.model.sequenceColumn.bodyCellClass}">
+                                <td class="#{cc.attrs.model.sequenceColumn.bodyCellClass(entity)}">
                                     <h:outputText value="#{cc.attrs.model.sequenceColumn.property.apply(status.index + 1)}"/>
                                 </td>
                             </ui:fragment>
                         </ui:fragment>
                         <ui:repeat id="columns" var="column" value="#{cc.attrs.model.columns}">
                             <ui:fragment id="headerColumn" rendered="#{column.headerColumn}">
-                                <th class="#{column.bodyCellClass}">
+                                <th class="#{column.bodyCellClass(entity)}">
                                     <h:outputText value="#{column.property.apply(entity)}"/>
                                 </th>
                             </ui:fragment>
                             <ui:fragment id="dataColumn" rendered="#{not column.headerColumn}">
-                                <td class="#{column.bodyCellClass}">
+                                <td class="#{column.bodyCellClass(entity)}">
                                     <h:outputText value="#{column.property.apply(entity)}"/>
                                 </td>
                             </ui:fragment>

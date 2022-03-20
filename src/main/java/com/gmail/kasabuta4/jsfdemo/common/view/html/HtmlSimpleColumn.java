@@ -3,7 +3,7 @@ package com.gmail.kasabuta4.jsfdemo.common.view.html;
 import java.util.function.Function;
 
 public class HtmlSimpleColumn<T extends HtmlAbstractTable, E, V>
-    extends HtmlAbstractColumn<HtmlSimpleColumn<T, E, V>, T, E, V> {
+    extends HtmlAbstractColumn<HtmlSimpleColumn<T, E, V>, T, E, V, E> {
 
   // optional properties
   private boolean headerColumn = false;

@@ -64,34 +64,34 @@
             </thead>
             <tbody>
                 <ui:repeat id="rowKeys" var="rowKey" varStatus="status" value="#{cc.attrs.model.rowKeys}">
-                    <tr>
+                    <tr class="#{cc.attrs.model.bodyRecordClass(rowKey)}">
                         <ui:fragment id="tbodySequenceColumn" rendered="#{not empty cc.attrs.model.sequenceColumn}">
                             <ui:fragment id="tbodySequenceColumnHeaderCell" rendered="#{cc.attrs.model.sequenceColumn.headerColumn}">
-                                <th class="#{cc.attrs.model.sequenceColumn.bodyCellClass}">
+                                <th class="#{cc.attrs.model.sequenceColumn.bodyCellClass(rowKey)}">
                                     <h:outputText value="#{cc.attrs.model.sequenceColumn.property.apply(status.index + 1)}"/>
                                 </th>
                             </ui:fragment>
                             <ui:fragment id="tbodySequenceColumnDataCell" rendered="#{not cc.attrs.model.sequenceColumn.headerColumn}">
-                                <td class="#{cc.attrs.model.sequenceColumn.bodyCellClass}">
+                                <td class="#{cc.attrs.model.sequenceColumn.bodyCellClass(rowKey)}">
                                     <h:outputText value="#{cc.attrs.model.sequenceColumn.property.apply(status.index + 1)}"/>
                                 </td>
                             </ui:fragment>
                         </ui:fragment>
                         <ui:repeat id="tbodyKeyColumns" var="keyColumn" value="#{cc.attrs.model.keyColumns}">
                             <ui:fragment id="tbodyKeyColumnHeaderCell" rendered="#{keyColumn.headerColumn}">
-                                <th class="#{keyColumn.bodyCellClass}">
+                                <th class="#{keyColumn.bodyCellClass(rowKey)}">
                                     <h:outputText value="#{keyColumn.property.apply(rowKey)}"/>
                                 </th>
                             </ui:fragment>
                             <ui:fragment id="tbodyKeyColumnDataCell" rendered="#{not keyColumn.headerColumn}">
-                                <td class="#{keyColumn.bodyCellClass}">
+                                <td class="#{keyColumn.bodyCellClass(rowKey)}">
                                     <h:outputText value="#{keyColumn.property.apply(rowKey)}"/>
                                 </td>
                             </ui:fragment>
                         </ui:repeat>
                         <ui:repeat id="tbodyValueColumns" var="valueColumn" value="#{cc.attrs.model.valueColumns}">
                             <ui:repeat id="tbodyValueColumnKeyList" var="columnKey" value="#{valueColumn.keys}">
-                                <td class="#{valueColumn.bodyCellClass}">
+                                <td class="#{valueColumn.bodyCellClass(rowKey)}">
                                     <h:outputText value="#{valueColumn.property.apply(cc.attrs.model.data[rowKey][columnKey])}"/>
                                 </td>
                             </ui:repeat>

@@ -50,3 +50,13 @@ span.toolbar-status span.toolbar-userid {
     margin-left: 1ex;
     margin-rignt: 1ex;
 }
+
+table.monthlyNewCases > tbody > tr.watching,
+table.東京圏と大阪圏の比較 > tbody > tr.watching {
+    background-color: lightpink;
+}
+
+table.monthlyNewCases > tbody td.watching,
+table.東京圏と大阪圏の比較 > tbody td.watching {
+    color: red;
+}

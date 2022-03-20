@@ -1,13 +1,16 @@
 package com.gmail.kasabuta4.jsfdemo.common.view.html;
 
+import java.util.Map;
 import java.util.function.Function;
 
-public abstract class HtmlAbstractTable<T extends HtmlAbstractTable> {
+public abstract class HtmlAbstractTable<T extends HtmlAbstractTable, X> {
 
   // optional properties
   private String tableClass;
   private String caption;
-  private HtmlSimpleColumn<T, Integer, Integer> sequenceColumn;
+  private Function<X, Object> highlightFunction;
+  private Map<Object, String> highlightClasses;
+  private HtmlSequenceColumn<T, X> sequenceColumn;
 
   protected abstract T self();
 
@@ -21,8 +24,14 @@ public abstract class HtmlAbstractTable<T extends HtmlAbstractTable> {
     return self();
   }
 
-  public HtmlSimpleColumn<T, Integer, Integer> addSequenceColumn(String header) {
-    return sequenceColumn = new HtmlSimpleColumn<>(self(), header, Function.identity());
+  public T highlight(Function<X, Object> highlightFunction, Map<Object, String> highlightClasses) {
+    this.highlightFunction = highlightFunction;
+    this.highlightClasses = highlightClasses;
+    return self();
+  }
+
+  public HtmlSequenceColumn<T, X> addSequenceColumn(String header) {
+    return sequenceColumn = new HtmlSequenceColumn<>(self(), header);
   }
 
   public String getTableClass() {
@@ -33,11 +42,21 @@ public abstract class HtmlAbstractTable<T extends HtmlAbstractTable> {
     return caption;
   }
 
-  public HtmlSimpleColumn<T, Integer, Integer> getSequenceColumn() {
+  public HtmlSequenceColumn<T, X> getSequenceColumn() {
     return sequenceColumn;
   }
 
   public int getHeaderRowCount() {
     return 0;
+  }
+
+  public String bodyRecordClass(X x) {
+    return highlightClass(x);
+  }
+
+  private String highlightClass(X x) {
+    return (highlightFunction == null || highlightClasses == null)
+        ? null
+        : highlightClasses.get(highlightFunction.apply(x));
   }
 }

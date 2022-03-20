@@ -86,6 +86,7 @@ public class MonthlyNewCasesMapTableView
     return new HtmlMapTable<>(data)
         .caption("東京圏と大阪圏の比較")
         .tableClass("東京圏と大阪圏の比較")
+        .highlight(MonthlyNewCasesMapTableView::注目月, 注目月HighlightClasses())
         .addSequenceColumn("Seq")
         .headerColumn(true)
         .columnClass("seqColumn")
@@ -104,6 +105,7 @@ public class MonthlyNewCasesMapTableView
         .columnClass("東京圏colgroup")
         .headerCellClass("東京圏HeaderCell")
         .bodyCellClass("東京圏BodyCell")
+        .highlight(MonthlyNewCasesMapTableView::注目月, 注目月HighlightClasses())
         .addIdentityKeyHeader()
         .converter(MonthlyNewCasesMapTableView::convertPrefecture)
         .headerCellClass("東京圏都道府県HeaderCell")
@@ -200,6 +202,12 @@ public class MonthlyNewCasesMapTableView
 
   private static String convertPrefecture(String prefecture) {
     return PREFECTURE_MAP.get(prefecture);
+  }
+
+  private static Map<Object, String> 注目月HighlightClasses() {
+    Map<Object, String> map = new HashMap<>(1);
+    map.put(Boolean.TRUE, "watching");
+    return Collections.unmodifiableMap(map);
   }
 
   private static Map<Object, List<String>> 注目月HighlightKeys() {
