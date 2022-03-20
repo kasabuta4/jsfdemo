@@ -13,6 +13,7 @@ public abstract class HtmlAbstractColumn<
 
   // optional properties
   private Function<V, ?> converter = Function.identity();
+  private boolean headerColumn = false;
   private String columnClass;
   private String headerCellClass;
   private String bodyCellClass;
@@ -33,6 +34,11 @@ public abstract class HtmlAbstractColumn<
 
   public C converter(Function<V, ?> converter) {
     this.converter = converter;
+    return self();
+  }
+
+  public C headerColumn(boolean headerColumn) {
+    this.headerColumn = headerColumn;
     return self();
   }
 
@@ -63,6 +69,10 @@ public abstract class HtmlAbstractColumn<
 
   public Function<E, ?> getProperty() {
     return propertyGetter.andThen(converter);
+  }
+
+  public boolean isHeaderColumn() {
+    return headerColumn;
   }
 
   public String getColumnClass() {

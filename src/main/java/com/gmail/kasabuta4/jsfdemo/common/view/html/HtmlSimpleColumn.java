@@ -5,9 +5,6 @@ import java.util.function.Function;
 public class HtmlSimpleColumn<T extends HtmlAbstractTable, E, V>
     extends HtmlAbstractColumn<HtmlSimpleColumn<T, E, V>, T, E, V, E> {
 
-  // optional properties
-  private boolean headerColumn = false;
-
   protected HtmlSimpleColumn(T table, String header, Function<E, V> propertyGetter) {
     super(table, header, propertyGetter);
   }
@@ -15,14 +12,5 @@ public class HtmlSimpleColumn<T extends HtmlAbstractTable, E, V>
   @Override
   protected HtmlSimpleColumn<T, E, V> self() {
     return this;
-  }
-
-  public HtmlSimpleColumn<T, E, V> headerColumn(boolean headerColumn) {
-    this.headerColumn = headerColumn;
-    return this;
-  }
-
-  public boolean isHeaderColumn() {
-    return headerColumn;
   }
 }

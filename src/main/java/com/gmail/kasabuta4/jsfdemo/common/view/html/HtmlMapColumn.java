@@ -49,4 +49,9 @@ public class HtmlMapColumn<T extends HtmlAbstractTable, X, Y, E, V>
   public List<HtmlKeyHeader<HtmlMapColumn<T, X, Y, E, V>, Y, ?>> getKeyHeaders() {
     return keyHeaders;
   }
+
+  @Override
+  public boolean isHeaderColumn() {
+    return false;
+  }
 }
