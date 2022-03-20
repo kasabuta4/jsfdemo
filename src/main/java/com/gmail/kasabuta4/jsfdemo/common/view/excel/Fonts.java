@@ -1,5 +1,6 @@
 package com.gmail.kasabuta4.jsfdemo.common.view.excel;
 
+import org.apache.poi.xssf.usermodel.XSSFColor;
 import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
@@ -23,6 +24,13 @@ public class Fonts {
     resetToStandardFont(workbook, font);
     font.setBold(true);
     font.setFontHeightInPoints((short) point);
+    return font;
+  }
+
+  public static XSSFFont ofColor(XSSFWorkbook workbook, XSSFColor color) {
+    XSSFFont font = workbook.createFont();
+    resetToStandardFont(workbook, font);
+    font.setColor(color);
     return font;
   }
 

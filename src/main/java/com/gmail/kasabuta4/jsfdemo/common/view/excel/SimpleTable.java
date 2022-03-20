@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
-public class SimpleTable<E> extends AbstractTable<SimpleTable<E>> {
+public class SimpleTable<E> extends AbstractTable<SimpleTable<E>, E> {
 
   // required properties
   private final List<E> data;
@@ -54,7 +54,12 @@ public class SimpleTable<E> extends AbstractTable<SimpleTable<E>> {
   @Override
   protected void writeRecord(int dataIndex) {
     super.writeRecord(dataIndex);
+    writeSequenceColumnToRecord(dataIndex);
     writeColumnsToRecord(dataIndex);
+  }
+
+  private void writeSequenceColumnToRecord(int dataIndex) {
+    sequenceColumn.writeRecord(data.get(dataIndex), dataIndex, worksheet, toRowIndex(dataIndex), 0);
   }
 
   private void writeColumnsToRecord(int dataIndex) {

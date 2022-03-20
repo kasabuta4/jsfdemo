@@ -1,32 +1,37 @@
 package com.gmail.kasabuta4.jsfdemo.common.view.excel;
 
 import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toMap;
 
 import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-public abstract class AbstractTable<T extends AbstractTable> {
+public abstract class AbstractTable<T extends AbstractTable, E> {
 
   // required properties
   protected final WorkbookModel workbookModel;
   private final String sheetName;
 
   // optional properties
+  private Caption<T> caption = null;
+  protected SequenceColumn<T, E> sequenceColumn = null;
   private String headerStyleKey = "header";
   private List<String> bodyStyleKeys;
-  private Caption<T> caption = null;
-  private SimpleColumn<T, Integer, Integer> sequenceColumn = null;
+  private Function<E, Object> highlightFunction;
+  private Map<Object, List<String>> highlightStyleKeys;
 
   // temporary variables used during building workbook
   protected int captionRowCount;
   private int columnsCount;
   private int headerRowCount = 1;
   protected XSSFSheet worksheet;
-  XSSFCellStyle headerStyle;
-  List<XSSFCellStyle> bodyStyles;
+  private XSSFCellStyle headerStyle;
+  private List<XSSFCellStyle> bodyStyles;
+  private Map<Object, List<XSSFCellStyle>> highlightStyles;
 
   protected AbstractTable(WorkbookModel workbookModel, String sheetName) {
     this.workbookModel = workbookModel;
@@ -49,14 +54,24 @@ public abstract class AbstractTable<T extends AbstractTable> {
     return self();
   }
 
+  public T highlight(Function<E, Object> func, Map<Object, List<String>> styleKeys) {
+    this.highlightFunction = func;
+    this.highlightStyleKeys = styleKeys;
+    return self();
+  }
+
+  public T highlightStyleKeys(Map<Object, List<String>> highlightStyleKeys) {
+    this.highlightStyleKeys = highlightStyleKeys;
+    return self();
+  }
+
   public Caption<T> addCaption(String caption) {
     return this.caption = new Caption<>(self(), caption);
   }
 
-  public SimpleColumn<T, Integer, Integer> addSequenceColumn(
+  public SequenceColumn<T, E> addSequenceColumn(
       String header, ColumnWidth columnWidthConfigurator) {
-    return sequenceColumn =
-        new SimpleColumn<>(self(), header, Function.identity(), columnWidthConfigurator);
+    return sequenceColumn = new SequenceColumn<>(self(), header, columnWidthConfigurator);
   }
 
   public XSSFSheet build(XSSFWorkbook workbook) {
@@ -90,7 +105,15 @@ public abstract class AbstractTable<T extends AbstractTable> {
 
   protected void initStyles() {
     headerStyle = workbookModel.styleOf(headerStyleKey);
-    bodyStyles = bodyStyleKeys.stream().map(workbookModel::styleOf).collect(toList());
+    if (bodyStyleKeys != null)
+      bodyStyles = bodyStyleKeys.stream().map(workbookModel::styleOf).collect(toList());
+    if (highlightStyleKeys != null)
+      highlightStyles =
+          highlightStyleKeys.entrySet().stream()
+              .collect(
+                  toMap(
+                      Map.Entry::getKey,
+                      e -> e.getValue().stream().map(workbookModel::styleOf).collect(toList())));
     if (caption != null) caption.initStyles();
     if (sequenceColumn != null) sequenceColumn.initStyles();
   }
@@ -121,16 +144,10 @@ public abstract class AbstractTable<T extends AbstractTable> {
 
   protected void writeRecord(int dataIndex) {
     createRowForRecord(dataIndex);
-    writeSequenceColumnToRecord(dataIndex);
   }
 
   private void createRowForRecord(int dataIndex) {
     worksheet.createRow(toRowIndex(dataIndex));
-  }
-
-  private void writeSequenceColumnToRecord(int dataIndex) {
-    if (sequenceColumn != null)
-      sequenceColumn.writeRecord(dataIndex + 1, dataIndex, worksheet, toRowIndex(dataIndex), 0);
   }
 
   protected void configureColumnWidth() {
@@ -139,6 +156,22 @@ public abstract class AbstractTable<T extends AbstractTable> {
 
   private void configureSequenceColumnWidth() {
     if (sequenceColumn != null) sequenceColumn.configureColumnWidth(worksheet, 0);
+  }
+
+  XSSFCellStyle getHeaderStyle() {
+    return headerStyle;
+  }
+
+  List<XSSFCellStyle> getBodyStyles() {
+    return bodyStyles;
+  }
+
+  Map<Object, List<XSSFCellStyle>> getHighlightStyles() {
+    return highlightStyles;
+  }
+
+  protected Function<E, Object> getHighlightFunction() {
+    return highlightFunction;
   }
 
   protected int calculateColumnsCount() {

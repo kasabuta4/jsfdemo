@@ -20,6 +20,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
@@ -130,6 +131,7 @@ public class MonthlyNewCasesMapTableView
         .addMapTable("比較", data)
         .headerStyleKey("header")
         .bodyStyleKeys(Arrays.asList("odd", "even"))
+        .highlight(MonthlyNewCasesMapTableView::注目月, 注目月HighlightKeys())
         .addCaption("東京圏と大阪圏の月間新規感染者数比較")
         .captionStyleKey("caption")
         .endCaption()
@@ -137,9 +139,11 @@ public class MonthlyNewCasesMapTableView
         .endColumn()
         .addKeyColumn("年月", Function.identity(), byCharacters(7))
         .bodyStyleKeys(Arrays.asList("yearMonth:odd", "yearMonth:even"))
+        .highlightStyleKeys(注目月YearMonthHighlightKeys())
         .endColumn()
         .addValueColumn("東京圏", MonthlyNewCases::getCases, byCharacters(7), 東京圏::contains)
         .bodyStyleKeys(Arrays.asList("桁区切り整数:odd", "桁区切り整数:even"))
+        .highlightStyleKeys(注目月桁区切り整数HighlightKeys())
         .addIdentityKeyHeader()
         .converter(MonthlyNewCasesMapTableView::convertPrefecture)
         .endKeyHeader()
@@ -162,10 +166,12 @@ public class MonthlyNewCasesMapTableView
   }
 
   private static Map<String, XSSFCellStyle> createStyleMap(XSSFWorkbook workbook) {
-    XSSFFont captionFont = Fonts.boldOfSize(workbook, 14);
-    XSSFFont headerFont = Fonts.bold(workbook);
+    XSSFColor evenFillColor = Colors.create(workbook, 224, 255, 255);
+    XSSFColor redColor = Colors.create(workbook, 255, 0, 0);
 
-    XSSFColor evenFillColor = Colors.create(workbook, (byte) 224, (byte) 255, (byte) 255);
+    XSSFFont captionFont = Fonts.boldOfSize(workbook, 18);
+    XSSFFont headerFont = Fonts.bold(workbook);
+    XSSFFont redFont = Fonts.ofColor(workbook, redColor);
 
     XSSFCellStyle standardStyle = workbook.getStylesSource().getStyleAt(0);
 
@@ -178,11 +184,43 @@ public class MonthlyNewCasesMapTableView
     styleMap.put("yearMonth:even", CellStyles.create(workbook, "yyyy/mm", evenFillColor));
     styleMap.put("桁区切り整数:odd", CellStyles.create(workbook, "#,##0"));
     styleMap.put("桁区切り整数:even", CellStyles.create(workbook, "#,##0", evenFillColor));
+    styleMap.put("注目月:odd", CellStyles.create(workbook, redFont));
+    styleMap.put("注目月:even", CellStyles.create(workbook, redFont, evenFillColor));
+    styleMap.put("注目月:yearMonth:odd", CellStyles.create(workbook, "yyyy/mm", redFont));
+    styleMap.put(
+        "注目月:yearMonth:even", CellStyles.create(workbook, "yyyy/mm", redFont, evenFillColor));
+    styleMap.put("注目月:桁区切り整数:odd", CellStyles.create(workbook, "#,##0", redFont));
+    styleMap.put("注目月:桁区切り整数:even", CellStyles.create(workbook, "#,##0", redFont, evenFillColor));
     return Collections.unmodifiableMap(styleMap);
+  }
+
+  private static Object 注目月(YearMonth yearMonth) {
+    return yearMonth.getMonthValue() == 4 ? Boolean.TRUE : Boolean.FALSE;
   }
 
   private static String convertPrefecture(String prefecture) {
     return PREFECTURE_MAP.get(prefecture);
+  }
+
+  private static Map<Object, List<String>> 注目月HighlightKeys() {
+    Map<Object, List<String>> map = new HashMap<>(2);
+    map.put(Boolean.TRUE, Arrays.asList("注目月:odd", "注目月:even"));
+    map.put(Boolean.FALSE, Arrays.asList("odd", "even"));
+    return Collections.unmodifiableMap(map);
+  }
+
+  private static Map<Object, List<String>> 注目月YearMonthHighlightKeys() {
+    Map<Object, List<String>> map = new HashMap<>(2);
+    map.put(Boolean.TRUE, Arrays.asList("注目月:yearMonth:odd", "注目月:yearMonth:even"));
+    map.put(Boolean.FALSE, Arrays.asList("yearMonth:odd", "yearMonth:even"));
+    return Collections.unmodifiableMap(map);
+  }
+
+  private static Map<Object, List<String>> 注目月桁区切り整数HighlightKeys() {
+    Map<Object, List<String>> map = new HashMap<>(2);
+    map.put(Boolean.TRUE, Arrays.asList("注目月:桁区切り整数:odd", "注目月:桁区切り整数:even"));
+    map.put(Boolean.FALSE, Arrays.asList("桁区切り整数:odd", "桁区切り整数:even"));
+    return Collections.unmodifiableMap(map);
   }
 
   private static Map<String, String> prefectureMap() {

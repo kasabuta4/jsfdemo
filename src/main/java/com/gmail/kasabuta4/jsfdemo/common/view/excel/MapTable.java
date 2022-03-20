@@ -8,14 +8,14 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-public class MapTable<X, Y, E> extends AbstractTable<MapTable<X, Y, E>> {
+public class MapTable<X, Y, E> extends AbstractTable<MapTable<X, Y, E>, X> {
 
   // required properties
   private final Map<X, Map<Y, E>> data;
   private final List<X> rowKeys;
   private final List<Y> columnKeys;
   private List<SimpleColumn<MapTable<X, Y, E>, X, ?>> keyColumns = new ArrayList<>();
-  private List<MapColumn<MapTable<X, Y, E>, Y, E, ?>> valueColumns = new ArrayList<>();
+  private List<MapColumn<MapTable<X, Y, E>, X, Y, E, ?>> valueColumns = new ArrayList<>();
 
   protected MapTable(WorkbookModel workbookModel, String sheetName, Map<X, Map<Y, E>> data) {
     super(workbookModel, sheetName);
@@ -47,17 +47,17 @@ public class MapTable<X, Y, E> extends AbstractTable<MapTable<X, Y, E>> {
     return keyColumn;
   }
 
-  public MapColumn<MapTable<X, Y, E>, Y, E, E> addIdentityValueColumn(
+  public MapColumn<MapTable<X, Y, E>, X, Y, E, E> addIdentityValueColumn(
       String header, ColumnWidth columnWidthConfigurator, Predicate<Y> columnKeyFilter) {
     return addValueColumn(header, Function.identity(), columnWidthConfigurator, columnKeyFilter);
   }
 
-  public <V> MapColumn<MapTable<X, Y, E>, Y, E, V> addValueColumn(
+  public <V> MapColumn<MapTable<X, Y, E>, X, Y, E, V> addValueColumn(
       String header,
       Function<E, V> propertyGetter,
       ColumnWidth columnWidthConfigurator,
       Predicate<Y> columnKeyFilter) {
-    MapColumn<MapTable<X, Y, E>, Y, E, V> valueColumn =
+    MapColumn<MapTable<X, Y, E>, X, Y, E, V> valueColumn =
         new MapColumn<>(
             this, header, propertyGetter, columnWidthConfigurator, columnKeys, columnKeyFilter);
     valueColumns.add(valueColumn);
@@ -108,8 +108,14 @@ public class MapTable<X, Y, E> extends AbstractTable<MapTable<X, Y, E>> {
   @Override
   protected void writeRecord(int dataIndex) {
     super.writeRecord(dataIndex);
+    writeSequenceColumnToRecord(dataIndex);
     writeKeyColumnsToRecord(dataIndex);
     writeValueColumnsToRecord(dataIndex);
+  }
+
+  private void writeSequenceColumnToRecord(int dataIndex) {
+    sequenceColumn.writeRecord(
+        rowKeys.get(dataIndex), dataIndex, worksheet, toRowIndex(dataIndex), 0);
   }
 
   private void writeKeyColumnsToRecord(int dataIndex) {
@@ -125,7 +131,7 @@ public class MapTable<X, Y, E> extends AbstractTable<MapTable<X, Y, E>> {
     for (int i = 0, columnIndex = columnIndex(keyColumns.size());
         i < valueColumns.size();
         columnIndex += valueColumns.get(i++).getKeys().size())
-      valueColumns.get(i).writeRecord(data.get(x), dataIndex, worksheet, rowIndex, columnIndex);
+      valueColumns.get(i).writeRecord(x, data.get(x), dataIndex, worksheet, rowIndex, columnIndex);
   }
 
   @Override

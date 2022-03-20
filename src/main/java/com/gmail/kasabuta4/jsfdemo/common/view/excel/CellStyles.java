@@ -26,10 +26,35 @@ public class CellStyles {
     return style;
   }
 
+  public static XSSFCellStyle create(XSSFWorkbook workbook, XSSFFont font, XSSFColor fillColor) {
+    XSSFCellStyle style = workbook.createCellStyle();
+    style.setFont(font);
+    style.setFillForegroundColor(fillColor);
+    style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+    return style;
+  }
+
   public static XSSFCellStyle create(
       XSSFWorkbook workbook, String numberFormat, XSSFColor fillColor) {
     XSSFCellStyle style = workbook.createCellStyle();
     style.setDataFormat(workbook.createDataFormat().getFormat(numberFormat));
+    style.setFillForegroundColor(fillColor);
+    style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+    return style;
+  }
+
+  public static XSSFCellStyle create(XSSFWorkbook workbook, String numberFormat, XSSFFont font) {
+    XSSFCellStyle style = workbook.createCellStyle();
+    style.setDataFormat(workbook.createDataFormat().getFormat(numberFormat));
+    style.setFont(font);
+    return style;
+  }
+
+  public static XSSFCellStyle create(
+      XSSFWorkbook workbook, String numberFormat, XSSFFont font, XSSFColor fillColor) {
+    XSSFCellStyle style = workbook.createCellStyle();
+    style.setDataFormat(workbook.createDataFormat().getFormat(numberFormat));
+    style.setFont(font);
     style.setFillForegroundColor(fillColor);
     style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
     return style;

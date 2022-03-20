@@ -8,15 +8,16 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 
-public class MapColumn<T extends AbstractTable, Y, E, V>
-    extends AbstractColumn<MapColumn<T, Y, E, V>, T, E, V> {
+public class MapColumn<T extends AbstractTable, X, Y, E, V>
+    extends AbstractColumn<MapColumn<T, X, Y, E, V>, T, E, V, X> {
 
   // required properties
   private final List<Y> keys;
-  private final List<KeyHeader<MapColumn<T, Y, E, V>, Y, ?>> keyHeaders = new ArrayList<>();
+  private final List<KeyHeader<MapColumn<T, X, Y, E, V>, Y, ?>> keyHeaders = new ArrayList<>();
 
   protected MapColumn(
       T table,
@@ -30,16 +31,16 @@ public class MapColumn<T extends AbstractTable, Y, E, V>
   }
 
   @Override
-  protected MapColumn<T, Y, E, V> self() {
+  protected MapColumn<T, X, Y, E, V> self() {
     return this;
   }
 
-  public KeyHeader<MapColumn<T, Y, E, V>, Y, Y> addIdentityKeyHeader() {
+  public KeyHeader<MapColumn<T, X, Y, E, V>, Y, Y> addIdentityKeyHeader() {
     return addKeyHeader(Function.identity());
   }
 
-  public <P> KeyHeader<MapColumn<T, Y, E, V>, Y, P> addKeyHeader(Function<Y, P> propertyGetter) {
-    KeyHeader<MapColumn<T, Y, E, V>, Y, P> keyHeader = new KeyHeader<>(this, propertyGetter);
+  public <P> KeyHeader<MapColumn<T, X, Y, E, V>, Y, P> addKeyHeader(Function<Y, P> propertyGetter) {
+    KeyHeader<MapColumn<T, X, Y, E, V>, Y, P> keyHeader = new KeyHeader<>(this, propertyGetter);
     keyHeaders.add(keyHeader);
     return keyHeader;
   }
@@ -81,10 +82,11 @@ public class MapColumn<T extends AbstractTable, Y, E, V>
   }
 
   protected void writeRecord(
-      Map<Y, E> value, int dataIndex, XSSFSheet sheet, int rowIndex, int columnIndex) {
+      X rowKey, Map<Y, E> value, int dataIndex, XSSFSheet sheet, int rowIndex, int columnIndex) {
+    XSSFCellStyle style = findStyle(rowKey, dataIndex);
     for (int i = 0; i < keys.size(); i++) {
       XSSFCell cell = sheet.getRow(rowIndex).createCell(columnIndex + i);
-      cell.setCellStyle(bodyStyles.get(dataIndex % bodyStyles.size()));
+      if (style != null) cell.setCellStyle(style);
       Cells.setCellValue(cell, property(value.get(keys.get(i))));
     }
   }
@@ -93,7 +95,7 @@ public class MapColumn<T extends AbstractTable, Y, E, V>
     return keys;
   }
 
-  protected List<KeyHeader<MapColumn<T, Y, E, V>, Y, ?>> getKeyHeaders() {
+  protected List<KeyHeader<MapColumn<T, X, Y, E, V>, Y, ?>> getKeyHeaders() {
     return keyHeaders;
   }
 }

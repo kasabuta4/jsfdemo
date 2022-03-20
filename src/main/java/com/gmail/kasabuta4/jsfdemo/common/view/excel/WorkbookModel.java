@@ -58,8 +58,9 @@ public class WorkbookModel {
   }
 
   XSSFCellStyle styleOf(String styleKey) {
-    if (styleMap != null && styleMap.containsKey(styleKey)) return styleMap.get(styleKey);
-    return workbook.getStylesSource().getStyleAt(0);
+    if (styleKey == null || styleMap == null || !styleMap.containsKey(styleKey))
+      return workbook.getStylesSource().getStyleAt(0);
+    return styleMap.get(styleKey);
   }
 
   private void changeStandardStyle() {
