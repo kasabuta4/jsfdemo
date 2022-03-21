@@ -16,9 +16,6 @@ public class Caption<T extends AbstractTable> {
   private boolean cellMerged = true;
   private boolean hasBlankRow = true;
 
-  // temporary variables used during building workbook
-  XSSFCellStyle captionStyle;
-
   Caption(T table, String caption) {
     this.table = table;
     this.caption = caption;
@@ -43,14 +40,12 @@ public class Caption<T extends AbstractTable> {
     return this;
   }
 
-  void initStyles() {
-    captionStyle = getWorkbookModel().styleOf(captionStyleKey);
-  }
-
   void writeCaption(XSSFSheet worksheet) {
     XSSFRow row = worksheet.createRow(0);
     XSSFCell cell = row.createCell(0);
-    cell.setCellStyle(captionStyle);
+    XSSFCellStyle style =
+        captionStyleKey == null ? null : getWorkbookModel().styleOf(captionStyleKey);
+    if (style != null) cell.setCellStyle(style);
     Cells.setCellValue(cell, caption);
     if (cellMerged) Cells.mergeCell(cell, 1, table.getColumnsCount());
   }

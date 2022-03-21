@@ -1,6 +1,5 @@
 package com.gmail.kasabuta4.jsfdemo.common.view.html;
 
-import java.util.Map;
 import java.util.function.Function;
 
 public abstract class HtmlAbstractColumn<
@@ -17,8 +16,8 @@ public abstract class HtmlAbstractColumn<
   private String columnClass;
   private String headerCellClass;
   private String bodyCellClass;
-  private Function<X, Object> highlightFunction;
-  private Map<Object, String> highlightClasses;
+  private Function<X, Object> highlightPropertyGetter;
+  private Function<Object, String> highlightClassConverter;
 
   protected HtmlAbstractColumn(T table, String header, Function<E, V> propertyGetter) {
     this.table = table;
@@ -57,9 +56,16 @@ public abstract class HtmlAbstractColumn<
     return self();
   }
 
-  public C highlight(Function<X, Object> highlightFunction, Map<Object, String> highlightClasses) {
-    this.highlightFunction = highlightFunction;
-    this.highlightClasses = highlightClasses;
+  public C highlight(
+      Function<X, Object> highlightPropertyGetter,
+      Function<Object, String> highlightClassConverter) {
+    this.highlightPropertyGetter = highlightPropertyGetter;
+    this.highlightClassConverter = highlightClassConverter;
+    return self();
+  }
+
+  public C highlightClassConverter(Function<Object, String> highlightClassConverter) {
+    this.highlightClassConverter = highlightClassConverter;
     return self();
   }
 
@@ -92,8 +98,14 @@ public abstract class HtmlAbstractColumn<
   }
 
   private String highlightClass(X x) {
-    return (highlightFunction == null || highlightClasses == null)
+    return (getHighlightPropertyGetter() == null || highlightClassConverter == null)
         ? null
-        : highlightClasses.get(highlightFunction.apply(x));
+        : getHighlightPropertyGetter().andThen(highlightClassConverter).apply(x);
+  }
+
+  private Function<X, Object> getHighlightPropertyGetter() {
+    return highlightPropertyGetter == null
+        ? table.getHighlightPropertyGetter()
+        : highlightPropertyGetter;
   }
 }

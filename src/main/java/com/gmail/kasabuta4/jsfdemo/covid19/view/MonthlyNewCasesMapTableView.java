@@ -86,7 +86,8 @@ public class MonthlyNewCasesMapTableView
     return new HtmlMapTable<>(data)
         .caption("東京圏と大阪圏の比較")
         .tableClass("東京圏と大阪圏の比較")
-        .highlight(MonthlyNewCasesMapTableView::注目月, 注目月HighlightClasses())
+        .highlight(
+            MonthlyNewCasesMapTableView::注目月, MonthlyNewCasesMapTableView::注目月HighlightClasses)
         .addSequenceColumn("Seq")
         .headerColumn(true)
         .columnClass("seqColumn")
@@ -105,7 +106,8 @@ public class MonthlyNewCasesMapTableView
         .columnClass("東京圏colgroup")
         .headerCellClass("東京圏HeaderCell")
         .bodyCellClass("東京圏BodyCell")
-        .highlight(MonthlyNewCasesMapTableView::注目月, 注目月HighlightClasses())
+        .highlight(
+            MonthlyNewCasesMapTableView::注目月, MonthlyNewCasesMapTableView::注目月HighlightClasses)
         .addIdentityKeyHeader()
         .converter(MonthlyNewCasesMapTableView::convertPrefecture)
         .headerCellClass("東京圏都道府県HeaderCell")
@@ -133,7 +135,7 @@ public class MonthlyNewCasesMapTableView
         .addMapTable("比較", data)
         .headerStyleKey("header")
         .bodyStyleKeys(Arrays.asList("odd", "even"))
-        .highlight(MonthlyNewCasesMapTableView::注目月, 注目月HighlightKeys())
+        .highlight(MonthlyNewCasesMapTableView::注目月, MonthlyNewCasesMapTableView::注目月HighlightKeys)
         .addCaption("東京圏と大阪圏の月間新規感染者数比較")
         .captionStyleKey("caption")
         .endCaption()
@@ -141,11 +143,11 @@ public class MonthlyNewCasesMapTableView
         .endColumn()
         .addKeyColumn("年月", Function.identity(), byCharacters(7))
         .bodyStyleKeys(Arrays.asList("yearMonth:odd", "yearMonth:even"))
-        .highlightStyleKeys(注目月YearMonthHighlightKeys())
+        .highlightStyleConverter(MonthlyNewCasesMapTableView::注目月YearMonthHighlightKeys)
         .endColumn()
         .addValueColumn("東京圏", MonthlyNewCases::getCases, byCharacters(7), 東京圏::contains)
         .bodyStyleKeys(Arrays.asList("桁区切り整数:odd", "桁区切り整数:even"))
-        .highlightStyleKeys(注目月桁区切り整数HighlightKeys())
+        .highlightStyleConverter(MonthlyNewCasesMapTableView::注目月桁区切り整数HighlightKeys)
         .addIdentityKeyHeader()
         .converter(MonthlyNewCasesMapTableView::convertPrefecture)
         .endKeyHeader()
@@ -204,31 +206,20 @@ public class MonthlyNewCasesMapTableView
     return PREFECTURE_MAP.get(prefecture);
   }
 
-  private static Map<Object, String> 注目月HighlightClasses() {
-    Map<Object, String> map = new HashMap<>(1);
-    map.put(Boolean.TRUE, "watching");
-    return Collections.unmodifiableMap(map);
+  private static String 注目月HighlightClasses(Object o) {
+    return Boolean.TRUE.equals(o) ? "watching" : null;
   }
 
-  private static Map<Object, List<String>> 注目月HighlightKeys() {
-    Map<Object, List<String>> map = new HashMap<>(2);
-    map.put(Boolean.TRUE, Arrays.asList("注目月:odd", "注目月:even"));
-    map.put(Boolean.FALSE, Arrays.asList("odd", "even"));
-    return Collections.unmodifiableMap(map);
+  private static List<String> 注目月HighlightKeys(Object o) {
+    return Boolean.TRUE.equals(o) ? Arrays.asList("注目月:odd", "注目月:even") : null;
   }
 
-  private static Map<Object, List<String>> 注目月YearMonthHighlightKeys() {
-    Map<Object, List<String>> map = new HashMap<>(2);
-    map.put(Boolean.TRUE, Arrays.asList("注目月:yearMonth:odd", "注目月:yearMonth:even"));
-    map.put(Boolean.FALSE, Arrays.asList("yearMonth:odd", "yearMonth:even"));
-    return Collections.unmodifiableMap(map);
+  private static List<String> 注目月YearMonthHighlightKeys(Object o) {
+    return Boolean.TRUE.equals(o) ? Arrays.asList("注目月:yearMonth:odd", "注目月:yearMonth:even") : null;
   }
 
-  private static Map<Object, List<String>> 注目月桁区切り整数HighlightKeys() {
-    Map<Object, List<String>> map = new HashMap<>(2);
-    map.put(Boolean.TRUE, Arrays.asList("注目月:桁区切り整数:odd", "注目月:桁区切り整数:even"));
-    map.put(Boolean.FALSE, Arrays.asList("桁区切り整数:odd", "桁区切り整数:even"));
-    return Collections.unmodifiableMap(map);
+  private static List<String> 注目月桁区切り整数HighlightKeys(Object o) {
+    return Boolean.TRUE.equals(o) ? Arrays.asList("注目月:桁区切り整数:odd", "注目月:桁区切り整数:even") : null;
   }
 
   private static Map<String, String> prefectureMap() {

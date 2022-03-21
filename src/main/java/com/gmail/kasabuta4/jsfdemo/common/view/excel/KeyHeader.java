@@ -16,9 +16,6 @@ public class KeyHeader<MapColumn, Y, P> {
   private Function<P, ?> converter = Function.identity();
   private String styleKey;
 
-  // temporary variables used during building workbook
-  private XSSFCellStyle style;
-
   KeyHeader(MapColumn mapColumn, Function<Y, P> propertyGetter) {
     this.mapColumn = mapColumn;
     this.propertyGetter = propertyGetter;
@@ -38,19 +35,11 @@ public class KeyHeader<MapColumn, Y, P> {
     return this;
   }
 
-  void initStyles() {
-    style = getWorkbookModel().styleOf(styleKey);
-  }
-
-  void writeHeader(XSSFCell cell, Y columnKey) {
-    cell.setCellStyle(style);
-    Cells.setCellValue(cell, property(columnKey));
-  }
-
   void writeKeyHeader(List<Y> columnKeys, XSSFSheet sheet, int rowIndex, int columnIndex) {
+    XSSFCellStyle style = getStyleKey() == null ? null : getWorkbookModel().styleOf(getStyleKey());
     for (int i = 0; i < columnKeys.size(); i++) {
       XSSFCell cell = sheet.getRow(rowIndex).createCell(columnIndex + i);
-      cell.setCellStyle(style);
+      if (style != null) cell.setCellStyle(style);
       Cells.setCellValue(cell, property(columnKeys.get(i)));
     }
   }
@@ -59,7 +48,11 @@ public class KeyHeader<MapColumn, Y, P> {
     return propertyGetter.andThen(converter).apply(columnKey);
   }
 
-  protected WorkbookModel getWorkbookModel() {
+  private WorkbookModel getWorkbookModel() {
     return ((AbstractColumn) mapColumn).getWorkbookModel();
+  }
+
+  private String getStyleKey() {
+    return styleKey == null ? ((AbstractColumn) mapColumn).getHeaderStyleKey() : styleKey;
   }
 }

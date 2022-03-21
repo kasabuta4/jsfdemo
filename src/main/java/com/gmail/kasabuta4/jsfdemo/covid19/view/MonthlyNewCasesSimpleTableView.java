@@ -72,7 +72,9 @@ public class MonthlyNewCasesSimpleTableView
     return new HtmlSimpleTable<>(result)
         .caption("Covid-19 Monthly New Cases")
         .tableClass("monthlyNewCases")
-        .highlight(MonthlyNewCasesSimpleTableView::注目都道府県, 注目都道府県HighlightClasses())
+        .highlight(
+            MonthlyNewCasesSimpleTableView::注目都道府県,
+            MonthlyNewCasesSimpleTableView::注目都道府県HighlightClasses)
         .addSequenceColumn("Seq")
         .headerColumn(true)
         .columnClass("seqColumn")
@@ -90,7 +92,9 @@ public class MonthlyNewCasesSimpleTableView
         .columnClass("都道府県Column")
         .headerCellClass("都道府県Header")
         .bodyCellClass("都道府県Body")
-        .highlight(MonthlyNewCasesSimpleTableView::注目都道府県, 注目都道府県HighlightClasses())
+        .highlight(
+            MonthlyNewCasesSimpleTableView::注目都道府県,
+            MonthlyNewCasesSimpleTableView::注目都道府県HighlightClasses)
         .endColumn()
         .addSimpleColumn("新規感染者数", MonthlyNewCases::getCases)
         .converter(HtmlConverters.桁区切り整数())
@@ -106,7 +110,9 @@ public class MonthlyNewCasesSimpleTableView
         .addSimpleTable("list", result)
         .headerStyleKey("header")
         .bodyStyleKeys(Arrays.asList("odd", "even"))
-        .highlight(MonthlyNewCasesSimpleTableView::注目都道府県, 注目都道府県HighlightKeys())
+        .highlight(
+            MonthlyNewCasesSimpleTableView::注目都道府県,
+            MonthlyNewCasesSimpleTableView::注目都道府県HighlightConverter)
         .addCaption("Covid-19")
         .captionStyleKey("caption")
         .endCaption()
@@ -114,14 +120,14 @@ public class MonthlyNewCasesSimpleTableView
         .endColumn()
         .addColumn("年月", MonthlyNewCases::getYearMonth, byCharacters(7))
         .bodyStyleKeys(Arrays.asList("yearMonth:odd", "yearMonth:even"))
-        .highlightStyleKeys(注目都道府県YearMonthHighlightKeys())
+        .highlightStyleConverter(MonthlyNewCasesSimpleTableView::注目都道府県YearMonthHighlightConverter)
         .endColumn()
         .addColumn("都道府県", MonthlyNewCases::getPrefecture, byCharacters(8))
         .converter(MonthlyNewCasesSimpleTableView::convertPrefecture)
         .endColumn()
         .addColumn("新規感染者数", MonthlyNewCases::getCases, byCharacters(12))
         .bodyStyleKeys(Arrays.asList("桁区切り整数:odd", "桁区切り整数:even"))
-        .highlightStyleKeys(注目都道府県桁区切り整数HighlightKeys())
+        .highlightStyleConverter(MonthlyNewCasesSimpleTableView::注目都道府県桁区切り整数HighlightConverter)
         .endColumn()
         .endTable();
   }
@@ -167,31 +173,22 @@ public class MonthlyNewCasesSimpleTableView
     return PREFECTURE_MAP.get(prefecture);
   }
 
-  private static Map<Object, String> 注目都道府県HighlightClasses() {
-    Map<Object, String> map = new HashMap<>(1);
-    map.put(Boolean.TRUE, "watching");
-    return Collections.unmodifiableMap(map);
+  private static String 注目都道府県HighlightClasses(Object o) {
+    return Boolean.TRUE.equals(o) ? "watching" : null;
   }
 
-  private static Map<Object, List<String>> 注目都道府県HighlightKeys() {
-    Map<Object, List<String>> map = new HashMap<>(2);
-    map.put(Boolean.TRUE, Arrays.asList("注目都道府県:odd", "注目都道府県:even"));
-    map.put(Boolean.FALSE, Arrays.asList("odd", "even"));
-    return Collections.unmodifiableMap(map);
+  private static List<String> 注目都道府県HighlightConverter(Object o) {
+    return Boolean.TRUE.equals(o) ? Arrays.asList("注目都道府県:odd", "注目都道府県:even") : null;
   }
 
-  private static Map<Object, List<String>> 注目都道府県YearMonthHighlightKeys() {
-    Map<Object, List<String>> map = new HashMap<>(2);
-    map.put(Boolean.TRUE, Arrays.asList("注目都道府県:yearMonth:odd", "注目都道府県:yearMonth:even"));
-    map.put(Boolean.FALSE, Arrays.asList("yearMonth:odd", "yearMonth:even"));
-    return Collections.unmodifiableMap(map);
+  private static List<String> 注目都道府県YearMonthHighlightConverter(Object o) {
+    return Boolean.TRUE.equals(o)
+        ? Arrays.asList("注目都道府県:yearMonth:odd", "注目都道府県:yearMonth:even")
+        : null;
   }
 
-  private static Map<Object, List<String>> 注目都道府県桁区切り整数HighlightKeys() {
-    Map<Object, List<String>> map = new HashMap<>(2);
-    map.put(Boolean.TRUE, Arrays.asList("注目都道府県:桁区切り整数:odd", "注目都道府県:桁区切り整数:even"));
-    map.put(Boolean.FALSE, Arrays.asList("桁区切り整数:odd", "桁区切り整数:even"));
-    return Collections.unmodifiableMap(map);
+  private static List<String> 注目都道府県桁区切り整数HighlightConverter(Object o) {
+    return Boolean.TRUE.equals(o) ? Arrays.asList("注目都道府県:桁区切り整数:odd", "注目都道府県:桁区切り整数:even") : null;
   }
 
   private static Map<String, String> prefectureMap() {

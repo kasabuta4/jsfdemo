@@ -46,42 +46,38 @@ public class MapColumn<T extends AbstractTable, X, Y, E, V>
   }
 
   @Override
-  protected void initStyles() {
-    super.initStyles();
-    keyHeaders.stream().forEach(KeyHeader::initStyles);
-  }
-
-  @Override
   protected void writeHeader(XSSFSheet sheet, int rowIndex, int columnIndex, int headerRowCount) {
     if (!keys.isEmpty()) {
       writeMapColumnHeader(sheet, rowIndex, columnIndex);
-      writeKeyHeader(sheet, rowIndex, columnIndex);
-      mergeKeyHeaderCell(sheet, rowIndex, columnIndex, headerRowCount);
+      writeKeyHeader(sheet, rowIndex + 1, columnIndex);
+      mergeKeyHeaderCell(sheet, rowIndex + 1, columnIndex, headerRowCount);
     }
   }
 
   private void writeMapColumnHeader(XSSFSheet sheet, int rowIndex, int columnIndex) {
     XSSFRow headerRow = sheet.getRow(rowIndex);
     XSSFCell headerCell = headerRow.createCell(columnIndex);
-    headerCell.setCellStyle(headerStyle);
+    XSSFCellStyle style =
+        getHeaderStyleKey() == null ? null : getWorkbookModel().styleOf(getHeaderStyleKey());
+    if (style != null) headerCell.setCellStyle(style);
     Cells.setCellValue(headerCell, header);
     Cells.mergeCell(headerCell, 1, keys.size());
   }
 
   private void writeKeyHeader(XSSFSheet sheet, int rowIndex, int columnIndex) {
     for (int i = 0; i < keyHeaders.size(); i++)
-      keyHeaders.get(i).writeKeyHeader(keys, sheet, rowIndex + 1 + i, columnIndex);
+      keyHeaders.get(i).writeKeyHeader(keys, sheet, rowIndex + i, columnIndex);
   }
 
   private void mergeKeyHeaderCell(
       XSSFSheet sheet, int rowIndex, int columnIndex, int headerRowCount) {
     for (int i = 0; i < keys.size(); i++) {
-      XSSFCell cell = sheet.getRow(rowIndex + keyHeaders.size()).getCell(columnIndex + i);
+      XSSFCell cell = sheet.getRow(rowIndex + keyHeaders.size() - 1).getCell(columnIndex + i);
       Cells.mergeCell(cell, headerRowCount - keyHeaders.size(), 1);
     }
   }
 
-  protected void writeRecord(
+  void writeRecord(
       X rowKey, Map<Y, E> value, int dataIndex, XSSFSheet sheet, int rowIndex, int columnIndex) {
     XSSFCellStyle style = findStyle(rowKey, dataIndex);
     for (int i = 0; i < keys.size(); i++) {
@@ -91,11 +87,11 @@ public class MapColumn<T extends AbstractTable, X, Y, E, V>
     }
   }
 
-  protected List<Y> getKeys() {
+  List<Y> getKeys() {
     return keys;
   }
 
-  protected List<KeyHeader<MapColumn<T, X, Y, E, V>, Y, ?>> getKeyHeaders() {
+  List<KeyHeader<MapColumn<T, X, Y, E, V>, Y, ?>> getKeyHeaders() {
     return keyHeaders;
   }
 }

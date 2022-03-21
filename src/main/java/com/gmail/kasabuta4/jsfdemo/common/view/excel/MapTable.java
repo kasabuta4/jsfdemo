@@ -65,21 +65,6 @@ public class MapTable<X, Y, E> extends AbstractTable<MapTable<X, Y, E>, X> {
   }
 
   @Override
-  protected void initStyles() {
-    super.initStyles();
-    initKeyColumnsStyles();
-    initValueColumnsStyles();
-  }
-
-  private void initKeyColumnsStyles() {
-    keyColumns.stream().forEach(SimpleColumn::initStyles);
-  }
-
-  private void initValueColumnsStyles() {
-    valueColumns.stream().forEach(MapColumn::initStyles);
-  }
-
-  @Override
   protected void writeHeader() {
     super.writeHeader();
     writeKeyColumnsHeader();
@@ -114,8 +99,9 @@ public class MapTable<X, Y, E> extends AbstractTable<MapTable<X, Y, E>, X> {
   }
 
   private void writeSequenceColumnToRecord(int dataIndex) {
-    sequenceColumn.writeRecord(
-        rowKeys.get(dataIndex), dataIndex, worksheet, toRowIndex(dataIndex), 0);
+    if (sequenceColumn != null)
+      sequenceColumn.writeRecord(
+          rowKeys.get(dataIndex), dataIndex, worksheet, toRowIndex(dataIndex), 0);
   }
 
   private void writeKeyColumnsToRecord(int dataIndex) {

@@ -29,12 +29,6 @@ public class SimpleTable<E> extends AbstractTable<SimpleTable<E>, E> {
   }
 
   @Override
-  protected void initStyles() {
-    super.initStyles();
-    columns.stream().forEach(SimpleColumn::initStyles);
-  }
-
-  @Override
   protected void writeHeader() {
     super.writeHeader();
     writeColumnsHeader();
@@ -59,7 +53,9 @@ public class SimpleTable<E> extends AbstractTable<SimpleTable<E>, E> {
   }
 
   private void writeSequenceColumnToRecord(int dataIndex) {
-    sequenceColumn.writeRecord(data.get(dataIndex), dataIndex, worksheet, toRowIndex(dataIndex), 0);
+    if (sequenceColumn != null)
+      sequenceColumn.writeRecord(
+          data.get(dataIndex), dataIndex, worksheet, toRowIndex(dataIndex), 0);
   }
 
   private void writeColumnsToRecord(int dataIndex) {

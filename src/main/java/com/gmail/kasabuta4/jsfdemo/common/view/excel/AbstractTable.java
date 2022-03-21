@@ -1,12 +1,7 @@
 package com.gmail.kasabuta4.jsfdemo.common.view.excel;
 
-import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toMap;
-
 import java.util.List;
-import java.util.Map;
 import java.util.function.Function;
-import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
@@ -21,17 +16,14 @@ public abstract class AbstractTable<T extends AbstractTable, E> {
   protected SequenceColumn<T, E> sequenceColumn = null;
   private String headerStyleKey = "header";
   private List<String> bodyStyleKeys;
-  private Function<E, Object> highlightFunction;
-  private Map<Object, List<String>> highlightStyleKeys;
+  private Function<E, Object> highlightPropertyGetter;
+  private Function<Object, List<String>> highlightStyleKeyConverter;
 
   // temporary variables used during building workbook
   protected int captionRowCount;
   private int columnsCount;
   private int headerRowCount = 1;
   protected XSSFSheet worksheet;
-  private XSSFCellStyle headerStyle;
-  private List<XSSFCellStyle> bodyStyles;
-  private Map<Object, List<XSSFCellStyle>> highlightStyles;
 
   protected AbstractTable(WorkbookModel workbookModel, String sheetName) {
     this.workbookModel = workbookModel;
@@ -54,14 +46,14 @@ public abstract class AbstractTable<T extends AbstractTable, E> {
     return self();
   }
 
-  public T highlight(Function<E, Object> func, Map<Object, List<String>> styleKeys) {
-    this.highlightFunction = func;
-    this.highlightStyleKeys = styleKeys;
+  public T highlight(Function<E, Object> propertyGetter, Function<Object, List<String>> converter) {
+    this.highlightPropertyGetter = propertyGetter;
+    this.highlightStyleKeyConverter = converter;
     return self();
   }
 
-  public T highlightStyleKeys(Map<Object, List<String>> highlightStyleKeys) {
-    this.highlightStyleKeys = highlightStyleKeys;
+  public T highlightPropertyGetter(Function<E, Object> propertyGetter) {
+    this.highlightPropertyGetter = propertyGetter;
     return self();
   }
 
@@ -78,17 +70,12 @@ public abstract class AbstractTable<T extends AbstractTable, E> {
     initCaptionRowCount();
     initColumnsCount();
     initHeaderRowCount();
-    initStyles();
     initWorksheet(workbook);
     writeCaption();
     writeHeader();
     writeBody();
     configureColumnWidth();
     return worksheet;
-  }
-
-  protected WorkbookModel getWorkbookModel() {
-    return workbookModel;
   }
 
   private void initCaptionRowCount() {
@@ -103,26 +90,11 @@ public abstract class AbstractTable<T extends AbstractTable, E> {
     headerRowCount = calculateHeaderRowCount();
   }
 
-  protected void initStyles() {
-    headerStyle = workbookModel.styleOf(headerStyleKey);
-    if (bodyStyleKeys != null)
-      bodyStyles = bodyStyleKeys.stream().map(workbookModel::styleOf).collect(toList());
-    if (highlightStyleKeys != null)
-      highlightStyles =
-          highlightStyleKeys.entrySet().stream()
-              .collect(
-                  toMap(
-                      Map.Entry::getKey,
-                      e -> e.getValue().stream().map(workbookModel::styleOf).collect(toList())));
-    if (caption != null) caption.initStyles();
-    if (sequenceColumn != null) sequenceColumn.initStyles();
-  }
-
-  protected void initWorksheet(XSSFWorkbook workbook) {
+  private void initWorksheet(XSSFWorkbook workbook) {
     worksheet = workbook.createSheet(sheetName);
   }
 
-  protected void writeCaption() {
+  private void writeCaption() {
     if (caption != null) caption.writeCaption(worksheet);
   }
 
@@ -158,20 +130,24 @@ public abstract class AbstractTable<T extends AbstractTable, E> {
     if (sequenceColumn != null) sequenceColumn.configureColumnWidth(worksheet, 0);
   }
 
-  XSSFCellStyle getHeaderStyle() {
-    return headerStyle;
+  WorkbookModel getWorkbookModel() {
+    return workbookModel;
   }
 
-  List<XSSFCellStyle> getBodyStyles() {
-    return bodyStyles;
+  String getHeaderStyleKey() {
+    return headerStyleKey;
   }
 
-  Map<Object, List<XSSFCellStyle>> getHighlightStyles() {
-    return highlightStyles;
+  List<String> getBodyStyleKeys() {
+    return bodyStyleKeys;
   }
 
-  protected Function<E, Object> getHighlightFunction() {
-    return highlightFunction;
+  Function<E, Object> getHighlightPropertyGetter() {
+    return highlightPropertyGetter;
+  }
+
+  Function<Object, List<String>> getHighlightStyleKeyConverter() {
+    return highlightStyleKeyConverter;
   }
 
   protected int calculateColumnsCount() {

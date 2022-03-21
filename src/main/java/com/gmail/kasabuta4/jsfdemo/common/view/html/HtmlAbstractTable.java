@@ -1,32 +1,38 @@
 package com.gmail.kasabuta4.jsfdemo.common.view.html;
 
-import java.util.Map;
 import java.util.function.Function;
 
 public abstract class HtmlAbstractTable<T extends HtmlAbstractTable, X> {
 
   // optional properties
-  private String tableClass;
-  private String caption;
-  private Function<X, Object> highlightFunction;
-  private Map<Object, String> highlightClasses;
   private HtmlSequenceColumn<T, X> sequenceColumn;
+  private String caption;
+  private String tableClass;
+  private Function<X, Object> highlightPropertyGetter;
+  private Function<Object, String> highlightClassConverter;
 
   protected abstract T self();
-
-  public T tableClass(String tableClass) {
-    this.tableClass = tableClass;
-    return self();
-  }
 
   public T caption(String caption) {
     this.caption = caption;
     return self();
   }
 
-  public T highlight(Function<X, Object> highlightFunction, Map<Object, String> highlightClasses) {
-    this.highlightFunction = highlightFunction;
-    this.highlightClasses = highlightClasses;
+  public T tableClass(String tableClass) {
+    this.tableClass = tableClass;
+    return self();
+  }
+
+  public T highlight(
+      Function<X, Object> highlightPropertyGetter,
+      Function<Object, String> highlightClassConverter) {
+    this.highlightPropertyGetter = highlightPropertyGetter;
+    this.highlightClassConverter = highlightClassConverter;
+    return self();
+  }
+
+  public T highlightPropertyGetter(Function<X, Object> highlightPropertyGetter) {
+    this.highlightPropertyGetter = highlightPropertyGetter;
     return self();
   }
 
@@ -34,16 +40,16 @@ public abstract class HtmlAbstractTable<T extends HtmlAbstractTable, X> {
     return sequenceColumn = new HtmlSequenceColumn<>(self(), header);
   }
 
-  public String getTableClass() {
-    return tableClass;
+  public HtmlSequenceColumn<T, X> getSequenceColumn() {
+    return sequenceColumn;
   }
 
   public String getCaption() {
     return caption;
   }
 
-  public HtmlSequenceColumn<T, X> getSequenceColumn() {
-    return sequenceColumn;
+  public String getTableClass() {
+    return tableClass;
   }
 
   public int getHeaderRowCount() {
@@ -54,9 +60,13 @@ public abstract class HtmlAbstractTable<T extends HtmlAbstractTable, X> {
     return highlightClass(x);
   }
 
+  Function<X, Object> getHighlightPropertyGetter() {
+    return highlightPropertyGetter;
+  }
+
   private String highlightClass(X x) {
-    return (highlightFunction == null || highlightClasses == null)
+    return (highlightPropertyGetter == null || highlightClassConverter == null)
         ? null
-        : highlightClasses.get(highlightFunction.apply(x));
+        : highlightPropertyGetter.andThen(highlightClassConverter).apply(x);
   }
 }

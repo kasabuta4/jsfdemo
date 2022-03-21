@@ -1,10 +1,6 @@
 package com.gmail.kasabuta4.jsfdemo.common.view.excel;
 
-import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toMap;
-
 import java.util.List;
-import java.util.Map;
 import java.util.function.Function;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
@@ -22,13 +18,8 @@ public abstract class AbstractColumn<C extends AbstractColumn, T extends Abstrac
   private Function<V, ?> converter = Function.identity();
   private String headerStyleKey;
   private List<String> bodyStyleKeys;
-  private Function<X, Object> highlightFunction;
-  private Map<Object, List<String>> highlightStyleKeys;
-
-  // temporary variables used during building workbook
-  protected XSSFCellStyle headerStyle;
-  protected List<XSSFCellStyle> bodyStyles;
-  private Map<Object, List<XSSFCellStyle>> highlightStyles;
+  private Function<X, Object> highlightPropertyGetter;
+  private Function<Object, List<String>> highlightStyleKeyConverter;
 
   protected AbstractColumn(
       T table, String header, Function<E, V> propertyGetter, ColumnWidth columnWidthConfigurator) {
@@ -39,17 +30,6 @@ public abstract class AbstractColumn<C extends AbstractColumn, T extends Abstrac
   }
 
   protected abstract C self();
-
-  public C highlight(Function<X, Object> func, Map<Object, List<String>> styleKeys) {
-    this.highlightFunction = func;
-    this.highlightStyleKeys = styleKeys;
-    return self();
-  }
-
-  public C highlightStyleKeys(Map<Object, List<String>> highlightStyleKeys) {
-    this.highlightStyleKeys = highlightStyleKeys;
-    return self();
-  }
 
   public T endColumn() {
     return table;
@@ -70,48 +50,30 @@ public abstract class AbstractColumn<C extends AbstractColumn, T extends Abstrac
     return self();
   }
 
-  protected void initStyles() {
-    headerStyle =
-        headerStyleKey != null
-            ? getWorkbookModel().styleOf(headerStyleKey)
-            : table.getHeaderStyle();
-    bodyStyles =
-        bodyStyleKeys != null
-            ? bodyStyleKeys.stream().map(getWorkbookModel()::styleOf).collect(toList())
-            : table.getBodyStyles();
-    highlightStyles =
-        highlightStyleKeys != null
-            ? highlightStyleKeys.entrySet().stream()
-                .collect(
-                    toMap(
-                        Map.Entry::getKey,
-                        e ->
-                            e.getValue().stream()
-                                .map(getWorkbookModel()::styleOf)
-                                .collect(toList())))
-            : table.getHighlightStyles();
+  public C highlight(Function<X, Object> propertyGetter, Function<Object, List<String>> converter) {
+    this.highlightPropertyGetter = propertyGetter;
+    this.highlightStyleKeyConverter = converter;
+    return self();
+  }
+
+  public C highlightStyleConverter(Function<Object, List<String>> converter) {
+    this.highlightStyleKeyConverter = converter;
+    return self();
   }
 
   protected void writeHeader(XSSFSheet sheet, int rowIndex, int columnIndex, int headerRowCount) {
     XSSFCell cell = sheet.getRow(rowIndex).createCell(columnIndex);
-    cell.setCellStyle(headerStyle);
+    XSSFCellStyle style =
+        getHeaderStyleKey() == null ? null : getWorkbookModel().styleOf(getHeaderStyleKey());
+    if (style != null) cell.setCellStyle(style);
     Cells.setCellValue(cell, header);
     Cells.mergeCell(cell, headerRowCount, 1);
   }
 
-  protected XSSFCellStyle findStyle(X rowKey, int dataIndex) {
-    List<XSSFCellStyle> styles;
-    if (getHighlightFunction() != null && highlightStyles != null) {
-      styles = highlightStyles.get(getHighlightFunction().apply(rowKey));
-      if (styles == null) styles = bodyStyles;
-    } else {
-      styles = bodyStyles;
-    }
-    return styles == null ? null : styles.get(dataIndex % styles.size());
-  }
-
-  private Function<X, Object> getHighlightFunction() {
-    return highlightFunction == null ? table.getHighlightFunction() : highlightFunction;
+  protected XSSFCellStyle findStyle(X entity, int dataIndex) {
+    List<String> styleKeys = highlightStyleKeys(entity);
+    String styleKey = styleKeys == null ? null : styleKeys.get(dataIndex % styleKeys.size());
+    return styleKey == null ? null : getWorkbookModel().styleOf(styleKey);
   }
 
   protected void configureColumnWidth(XSSFSheet worksheet, int columnIndex) {
@@ -122,7 +84,36 @@ public abstract class AbstractColumn<C extends AbstractColumn, T extends Abstrac
     return propertyGetter.andThen(converter).apply(entity);
   }
 
-  protected WorkbookModel getWorkbookModel() {
+  List<String> highlightStyleKeys(X entity) {
+    if (getHighlightPropertyGetter() == null || getHighlightStyleKeyConverter() == null)
+      return getBodyStyleKeys();
+
+    List<String> styleKeys =
+        getHighlightPropertyGetter().andThen(getHighlightStyleKeyConverter()).apply(entity);
+    return styleKeys == null ? getBodyStyleKeys() : styleKeys;
+  }
+
+  WorkbookModel getWorkbookModel() {
     return table.getWorkbookModel();
+  }
+
+  String getHeaderStyleKey() {
+    return headerStyleKey == null ? table.getHeaderStyleKey() : headerStyleKey;
+  }
+
+  List<String> getBodyStyleKeys() {
+    return bodyStyleKeys == null ? table.getBodyStyleKeys() : bodyStyleKeys;
+  }
+
+  Function<X, Object> getHighlightPropertyGetter() {
+    return highlightPropertyGetter == null
+        ? table.getHighlightPropertyGetter()
+        : highlightPropertyGetter;
+  }
+
+  Function<Object, List<String>> getHighlightStyleKeyConverter() {
+    return highlightStyleKeyConverter == null
+        ? table.getHighlightStyleKeyConverter()
+        : highlightStyleKeyConverter;
   }
 }
