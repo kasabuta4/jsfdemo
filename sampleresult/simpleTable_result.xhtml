@@ -1,0 +1,2888 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<html xmlns="http://www.w3.org/1999/xhtml"><head id="j_idt2"><link type="text/css" rel="stylesheet" href="/jsfdemo/faces/javax.faces.resource/theme.css?ln=primefaces-saga&amp;v=10.0.0" /><link type="text/css" rel="stylesheet" href="/jsfdemo/faces/javax.faces.resource/primeicons/primeicons.css?ln=primefaces&amp;v=10.0.0" /><link type="text/css" rel="stylesheet" href="/jsfdemo/faces/javax.faces.resource/common.css?ln=css" /><script type="text/javascript">
+            var jsfdemo = jsfdemo || {};
+            jsfdemo.toolbar = jsfdemo.toolbar || {};
+            jsfdemo.toolbar.clock = function() {
+                var option = {year: 'numeric', month: '2-digit', day: '2-digit',
+                        weekday: 'short', hour: '2-digit', minute: '2-digit', second: '2-digit'};
+                var formatter = new Intl.DateTimeFormat([], option);
+                var clockElement;
+                var interval;
+                var update = function() {
+                    clockElement.innerHTML = formatter.format(new Date());
+                };
+                return {
+                    init: function() {
+                        clockElement = document.querySelector(
+                            'div.toolbar-root > span.toolbar-status > span.toolbar-clock');
+                    },
+                    play: function() {
+                        interval = window.setInterval(update, 100);
+                    },
+                    pause: function() {
+                        window.clearInterval(interval);
+                    }
+                };
+            }();
+            window.addEventListener('load', jsfdemo.toolbar.clock.init);
+            window.addEventListener('pageshow', jsfdemo.toolbar.clock.play);
+            window.addEventListener('pagehide', jsfdemo.toolbar.clock.pause);
+        </script><script type="text/javascript">if(window.PrimeFaces){PrimeFaces.settings.locale='ja_JP';PrimeFaces.settings.viewId='/simpleTable/result.xhtml';PrimeFaces.settings.contextPath='/jsfdemo';PrimeFaces.settings.cookiesSecure=false;PrimeFaces.settings.projectStage='Development';}</script>
+        <title>Covid-19 Newly Confirmed Cases Monthly - Result</title></head><body><span id="j_idt6"><script language="javascript" type="text/javascript">//<![CDATA[
+function faceletsDebug(URL) {day = new Date();id = day.getTime();eval("page" + id + " = window.open(URL, '" + id + "', 'toolbar=0,scrollbars=1,location=0,statusbar=0,menubar=0,resizable=1,width=800,height=600,left = 240,top = 212');"); };(function() { if (typeof jsfFaceletsDebug === 'undefined') { var jsfFaceletsDebug = false; } if (!jsfFaceletsDebug) {var faceletsOrigKeyup = document.onkeyup;document.onkeyup = function(e) { if (window.event) e = window.event; if (String.fromCharCode(e.keyCode) == 'D' & e.shiftKey & e.ctrlKey) faceletsDebug('/jsfdemo/faces/simpleTable/result.xhtml?facelets.ui.DebugOutput=1645908526515'); jsfFaceletsDebug = true; if (faceletsOrigKeyup) faceletsOrigKeyup(e); };
+}})();//]]>
+</script></span>
+        <div class="toolbar-root toolbar-normal">
+            <span class="toolbar-title">
+                JSF Demo
+            </span>
+            <span class="toolbar-status">
+                <span class="toolbar-clock"></span>
+                <span class="toolbar-userid"><a id="toolbar:changePassword" name="toolbar:changePassword" href="/jsfdemo/faces/user/change_password.xhtml"><span id="toolbar:userId">JDUSER1</span></a>
+                </span>
+            </span>
+        </div>
+        <table class="monthlyNewCases">
+                <caption>Covid-19 Monthly New Cases</caption>
+            <colgroup>
+                    <col class="seqColumn" />
+                    <col class="yearMonthColumn" />
+                    <col class="都道府県Column" />
+                    <col class="新規感染者数Column" />
+            </colgroup>
+            <thead>
+                <tr>
+                        <th class="seqHeader">Seq
+                        </th>
+                        <th class="yearMonthHeader">年月
+                        </th>
+                        <th class="都道府県Header">都道府県
+                        </th>
+                        <th class="新規感染者数Header">新規感染者数
+                        </th>
+                </tr>
+            </thead>
+            <tbody>
+                    <tr>
+                                <th class="seqBody">1
+                                </th>
+                                <td class="yearMonthBody">2021/03
+                                </td>
+                                <td class="都道府県Body">愛知
+                                </td>
+                                <td class="新規感染者数Body">1,505
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">2
+                                </th>
+                                <td class="yearMonthBody">2021/03
+                                </td>
+                                <td class="都道府県Body">秋田
+                                </td>
+                                <td class="新規感染者数Body">14
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">3
+                                </th>
+                                <td class="yearMonthBody">2021/03
+                                </td>
+                                <td class="都道府県Body">青森
+                                </td>
+                                <td class="新規感染者数Body">215
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">4
+                                </th>
+                                <td class="yearMonthBody">2021/03
+                                </td>
+                                <td class="都道府県Body">千葉
+                                </td>
+                                <td class="新規感染者数Body">3,243
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">5
+                                </th>
+                                <td class="yearMonthBody">2021/03
+                                </td>
+                                <td class="都道府県Body">愛媛
+                                </td>
+                                <td class="新規感染者数Body">302
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">6
+                                </th>
+                                <td class="yearMonthBody">2021/03
+                                </td>
+                                <td class="都道府県Body">福井
+                                </td>
+                                <td class="新規感染者数Body">44
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">7
+                                </th>
+                                <td class="yearMonthBody">2021/03
+                                </td>
+                                <td class="都道府県Body">福岡
+                                </td>
+                                <td class="新規感染者数Body">953
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">8
+                                </th>
+                                <td class="yearMonthBody">2021/03
+                                </td>
+                                <td class="都道府県Body">福島
+                                </td>
+                                <td class="新規感染者数Body">552
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">9
+                                </th>
+                                <td class="yearMonthBody">2021/03
+                                </td>
+                                <td class="都道府県Body">岐阜
+                                </td>
+                                <td class="新規感染者数Body">225
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">10
+                                </th>
+                                <td class="yearMonthBody">2021/03
+                                </td>
+                                <td class="都道府県Body">群馬
+                                </td>
+                                <td class="新規感染者数Body">505
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">11
+                                </th>
+                                <td class="yearMonthBody">2021/03
+                                </td>
+                                <td class="都道府県Body">広島
+                                </td>
+                                <td class="新規感染者数Body">147
+                                </td>
+                    </tr>
+                    <tr class="watching">
+                                <th class="seqBody">12
+                                </th>
+                                <td class="yearMonthBody">2021/03
+                                </td>
+                                <td class="都道府県Body watching">北海道
+                                </td>
+                                <td class="新規感染者数Body">1,901
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">13
+                                </th>
+                                <td class="yearMonthBody">2021/03
+                                </td>
+                                <td class="都道府県Body">兵庫
+                                </td>
+                                <td class="新規感染者数Body">2,093
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">14
+                                </th>
+                                <td class="yearMonthBody">2021/03
+                                </td>
+                                <td class="都道府県Body">茨城
+                                </td>
+                                <td class="新規感染者数Body">987
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">15
+                                </th>
+                                <td class="yearMonthBody">2021/03
+                                </td>
+                                <td class="都道府県Body">石川
+                                </td>
+                                <td class="新規感染者数Body">60
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">16
+                                </th>
+                                <td class="yearMonthBody">2021/03
+                                </td>
+                                <td class="都道府県Body">岩手
+                                </td>
+                                <td class="新規感染者数Body">67
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">17
+                                </th>
+                                <td class="yearMonthBody">2021/03
+                                </td>
+                                <td class="都道府県Body">香川
+                                </td>
+                                <td class="新規感染者数Body">86
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">18
+                                </th>
+                                <td class="yearMonthBody">2021/03
+                                </td>
+                                <td class="都道府県Body">鹿児島
+                                </td>
+                                <td class="新規感染者数Body">69
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">19
+                                </th>
+                                <td class="yearMonthBody">2021/03
+                                </td>
+                                <td class="都道府県Body">神奈川
+                                </td>
+                                <td class="新規感染者数Body">3,172
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">20
+                                </th>
+                                <td class="yearMonthBody">2021/03
+                                </td>
+                                <td class="都道府県Body">高知
+                                </td>
+                                <td class="新規感染者数Body">33
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">21
+                                </th>
+                                <td class="yearMonthBody">2021/03
+                                </td>
+                                <td class="都道府県Body">熊本
+                                </td>
+                                <td class="新規感染者数Body">64
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">22
+                                </th>
+                                <td class="yearMonthBody">2021/03
+                                </td>
+                                <td class="都道府県Body">京都
+                                </td>
+                                <td class="新規感染者数Body">454
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">23
+                                </th>
+                                <td class="yearMonthBody">2021/03
+                                </td>
+                                <td class="都道府県Body">三重
+                                </td>
+                                <td class="新規感染者数Body">225
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">24
+                                </th>
+                                <td class="yearMonthBody">2021/03
+                                </td>
+                                <td class="都道府県Body">宮城
+                                </td>
+                                <td class="新規感染者数Body">2,416
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">25
+                                </th>
+                                <td class="yearMonthBody">2021/03
+                                </td>
+                                <td class="都道府県Body">宮崎
+                                </td>
+                                <td class="新規感染者数Body">15
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">26
+                                </th>
+                                <td class="yearMonthBody">2021/03
+                                </td>
+                                <td class="都道府県Body">長野
+                                </td>
+                                <td class="新規感染者数Body">432
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">27
+                                </th>
+                                <td class="yearMonthBody">2021/03
+                                </td>
+                                <td class="都道府県Body">長崎
+                                </td>
+                                <td class="新規感染者数Body">22
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">28
+                                </th>
+                                <td class="yearMonthBody">2021/03
+                                </td>
+                                <td class="都道府県Body">奈良
+                                </td>
+                                <td class="新規感染者数Body">401
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">29
+                                </th>
+                                <td class="yearMonthBody">2021/03
+                                </td>
+                                <td class="都道府県Body">新潟
+                                </td>
+                                <td class="新規感染者数Body">382
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">30
+                                </th>
+                                <td class="yearMonthBody">2021/03
+                                </td>
+                                <td class="都道府県Body">大分
+                                </td>
+                                <td class="新規感染者数Body">16
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">31
+                                </th>
+                                <td class="yearMonthBody">2021/03
+                                </td>
+                                <td class="都道府県Body">岡山
+                                </td>
+                                <td class="新規感染者数Body">209
+                                </td>
+                    </tr>
+                    <tr class="watching">
+                                <th class="seqBody">32
+                                </th>
+                                <td class="yearMonthBody">2021/03
+                                </td>
+                                <td class="都道府県Body watching">沖縄
+                                </td>
+                                <td class="新規感染者数Body">1,289
+                                </td>
+                    </tr>
+                    <tr class="watching">
+                                <th class="seqBody">33
+                                </th>
+                                <td class="yearMonthBody">2021/03
+                                </td>
+                                <td class="都道府県Body watching">大阪
+                                </td>
+                                <td class="新規感染者数Body">5,080
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">34
+                                </th>
+                                <td class="yearMonthBody">2021/03
+                                </td>
+                                <td class="都道府県Body">佐賀
+                                </td>
+                                <td class="新規感染者数Body">132
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">35
+                                </th>
+                                <td class="yearMonthBody">2021/03
+                                </td>
+                                <td class="都道府県Body">埼玉
+                                </td>
+                                <td class="新規感染者数Body">3,484
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">36
+                                </th>
+                                <td class="yearMonthBody">2021/03
+                                </td>
+                                <td class="都道府県Body">滋賀
+                                </td>
+                                <td class="新規感染者数Body">303
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">37
+                                </th>
+                                <td class="yearMonthBody">2021/03
+                                </td>
+                                <td class="都道府県Body">島根
+                                </td>
+                                <td class="新規感染者数Body">3
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">38
+                                </th>
+                                <td class="yearMonthBody">2021/03
+                                </td>
+                                <td class="都道府県Body">静岡
+                                </td>
+                                <td class="新規感染者数Body">577
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">39
+                                </th>
+                                <td class="yearMonthBody">2021/03
+                                </td>
+                                <td class="都道府県Body">栃木
+                                </td>
+                                <td class="新規感染者数Body">545
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">40
+                                </th>
+                                <td class="yearMonthBody">2021/03
+                                </td>
+                                <td class="都道府県Body">徳島
+                                </td>
+                                <td class="新規感染者数Body">83
+                                </td>
+                    </tr>
+                    <tr class="watching">
+                                <th class="seqBody">41
+                                </th>
+                                <td class="yearMonthBody">2021/03
+                                </td>
+                                <td class="都道府県Body watching">東京
+                                </td>
+                                <td class="新規感染者数Body">9,310
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">42
+                                </th>
+                                <td class="yearMonthBody">2021/03
+                                </td>
+                                <td class="都道府県Body">鳥取
+                                </td>
+                                <td class="新規感染者数Body">50
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">43
+                                </th>
+                                <td class="yearMonthBody">2021/03
+                                </td>
+                                <td class="都道府県Body">富山
+                                </td>
+                                <td class="新規感染者数Body">35
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">44
+                                </th>
+                                <td class="yearMonthBody">2021/03
+                                </td>
+                                <td class="都道府県Body">和歌山
+                                </td>
+                                <td class="新規感染者数Body">124
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">45
+                                </th>
+                                <td class="yearMonthBody">2021/03
+                                </td>
+                                <td class="都道府県Body">山形
+                                </td>
+                                <td class="新規感染者数Body">410
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">46
+                                </th>
+                                <td class="yearMonthBody">2021/03
+                                </td>
+                                <td class="都道府県Body">山口
+                                </td>
+                                <td class="新規感染者数Body">36
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">47
+                                </th>
+                                <td class="yearMonthBody">2021/03
+                                </td>
+                                <td class="都道府県Body">山梨
+                                </td>
+                                <td class="新規感染者数Body">30
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">48
+                                </th>
+                                <td class="yearMonthBody">2021/04
+                                </td>
+                                <td class="都道府県Body">愛知
+                                </td>
+                                <td class="新規感染者数Body">6,087
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">49
+                                </th>
+                                <td class="yearMonthBody">2021/04
+                                </td>
+                                <td class="都道府県Body">秋田
+                                </td>
+                                <td class="新規感染者数Body">172
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">50
+                                </th>
+                                <td class="yearMonthBody">2021/04
+                                </td>
+                                <td class="都道府県Body">青森
+                                </td>
+                                <td class="新規感染者数Body">545
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">51
+                                </th>
+                                <td class="yearMonthBody">2021/04
+                                </td>
+                                <td class="都道府県Body">千葉
+                                </td>
+                                <td class="新規感染者数Body">3,500
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">52
+                                </th>
+                                <td class="yearMonthBody">2021/04
+                                </td>
+                                <td class="都道府県Body">愛媛
+                                </td>
+                                <td class="新規感染者数Body">967
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">53
+                                </th>
+                                <td class="yearMonthBody">2021/04
+                                </td>
+                                <td class="都道府県Body">福井
+                                </td>
+                                <td class="新規感染者数Body">286
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">54
+                                </th>
+                                <td class="yearMonthBody">2021/04
+                                </td>
+                                <td class="都道府県Body">福岡
+                                </td>
+                                <td class="新規感染者数Body">4,418
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">55
+                                </th>
+                                <td class="yearMonthBody">2021/04
+                                </td>
+                                <td class="都道府県Body">福島
+                                </td>
+                                <td class="新規感染者数Body">874
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">56
+                                </th>
+                                <td class="yearMonthBody">2021/04
+                                </td>
+                                <td class="都道府県Body">岐阜
+                                </td>
+                                <td class="新規感染者数Body">913
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">57
+                                </th>
+                                <td class="yearMonthBody">2021/04
+                                </td>
+                                <td class="都道府県Body">群馬
+                                </td>
+                                <td class="新規感染者数Body">1,007
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">58
+                                </th>
+                                <td class="yearMonthBody">2021/04
+                                </td>
+                                <td class="都道府県Body">広島
+                                </td>
+                                <td class="新規感染者数Body">843
+                                </td>
+                    </tr>
+                    <tr class="watching">
+                                <th class="seqBody">59
+                                </th>
+                                <td class="yearMonthBody">2021/04
+                                </td>
+                                <td class="都道府県Body watching">北海道
+                                </td>
+                                <td class="新規感染者数Body">3,176
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">60
+                                </th>
+                                <td class="yearMonthBody">2021/04
+                                </td>
+                                <td class="都道府県Body">兵庫
+                                </td>
+                                <td class="新規感染者数Body">11,480
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">61
+                                </th>
+                                <td class="yearMonthBody">2021/04
+                                </td>
+                                <td class="都道府県Body">茨城
+                                </td>
+                                <td class="新規感染者数Body">1,404
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">62
+                                </th>
+                                <td class="yearMonthBody">2021/04
+                                </td>
+                                <td class="都道府県Body">石川
+                                </td>
+                                <td class="新規感染者数Body">556
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">63
+                                </th>
+                                <td class="yearMonthBody">2021/04
+                                </td>
+                                <td class="都道府県Body">岩手
+                                </td>
+                                <td class="新規感染者数Body">291
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">64
+                                </th>
+                                <td class="yearMonthBody">2021/04
+                                </td>
+                                <td class="都道府県Body">香川
+                                </td>
+                                <td class="新規感染者数Body">423
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">65
+                                </th>
+                                <td class="yearMonthBody">2021/04
+                                </td>
+                                <td class="都道府県Body">鹿児島
+                                </td>
+                                <td class="新規感染者数Body">293
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">66
+                                </th>
+                                <td class="yearMonthBody">2021/04
+                                </td>
+                                <td class="都道府県Body">神奈川
+                                </td>
+                                <td class="新規感染者数Body">5,465
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">67
+                                </th>
+                                <td class="yearMonthBody">2021/04
+                                </td>
+                                <td class="都道府県Body">高知
+                                </td>
+                                <td class="新規感染者数Body">124
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">68
+                                </th>
+                                <td class="yearMonthBody">2021/04
+                                </td>
+                                <td class="都道府県Body">熊本
+                                </td>
+                                <td class="新規感染者数Body">645
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">69
+                                </th>
+                                <td class="yearMonthBody">2021/04
+                                </td>
+                                <td class="都道府県Body">京都
+                                </td>
+                                <td class="新規感染者数Body">2,998
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">70
+                                </th>
+                                <td class="yearMonthBody">2021/04
+                                </td>
+                                <td class="都道府県Body">三重
+                                </td>
+                                <td class="新規感染者数Body">1,012
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">71
+                                </th>
+                                <td class="yearMonthBody">2021/04
+                                </td>
+                                <td class="都道府県Body">宮城
+                                </td>
+                                <td class="新規感染者数Body">2,010
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">72
+                                </th>
+                                <td class="yearMonthBody">2021/04
+                                </td>
+                                <td class="都道府県Body">宮崎
+                                </td>
+                                <td class="新規感染者数Body">246
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">73
+                                </th>
+                                <td class="yearMonthBody">2021/04
+                                </td>
+                                <td class="都道府県Body">長野
+                                </td>
+                                <td class="新規感染者数Body">1,058
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">74
+                                </th>
+                                <td class="yearMonthBody">2021/04
+                                </td>
+                                <td class="都道府県Body">長崎
+                                </td>
+                                <td class="新規感染者数Body">443
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">75
+                                </th>
+                                <td class="yearMonthBody">2021/04
+                                </td>
+                                <td class="都道府県Body">奈良
+                                </td>
+                                <td class="新規感染者数Body">2,360
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">76
+                                </th>
+                                <td class="yearMonthBody">2021/04
+                                </td>
+                                <td class="都道府県Body">新潟
+                                </td>
+                                <td class="新規感染者数Body">825
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">77
+                                </th>
+                                <td class="yearMonthBody">2021/04
+                                </td>
+                                <td class="都道府県Body">大分
+                                </td>
+                                <td class="新規感染者数Body">546
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">78
+                                </th>
+                                <td class="yearMonthBody">2021/04
+                                </td>
+                                <td class="都道府県Body">岡山
+                                </td>
+                                <td class="新規感染者数Body">1,253
+                                </td>
+                    </tr>
+                    <tr class="watching">
+                                <th class="seqBody">79
+                                </th>
+                                <td class="yearMonthBody">2021/04
+                                </td>
+                                <td class="都道府県Body watching">沖縄
+                                </td>
+                                <td class="新規感染者数Body">2,975
+                                </td>
+                    </tr>
+                    <tr class="watching">
+                                <th class="seqBody">80
+                                </th>
+                                <td class="yearMonthBody">2021/04
+                                </td>
+                                <td class="都道府県Body watching">大阪
+                                </td>
+                                <td class="新規感染者数Body">28,992
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">81
+                                </th>
+                                <td class="yearMonthBody">2021/04
+                                </td>
+                                <td class="都道府県Body">佐賀
+                                </td>
+                                <td class="新規感染者数Body">415
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">82
+                                </th>
+                                <td class="yearMonthBody">2021/04
+                                </td>
+                                <td class="都道府県Body">埼玉
+                                </td>
+                                <td class="新規感染者数Body">4,976
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">83
+                                </th>
+                                <td class="yearMonthBody">2021/04
+                                </td>
+                                <td class="都道府県Body">滋賀
+                                </td>
+                                <td class="新規感染者数Body">957
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">84
+                                </th>
+                                <td class="yearMonthBody">2021/04
+                                </td>
+                                <td class="都道府県Body">島根
+                                </td>
+                                <td class="新規感染者数Body">60
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">85
+                                </th>
+                                <td class="yearMonthBody">2021/04
+                                </td>
+                                <td class="都道府県Body">静岡
+                                </td>
+                                <td class="新規感染者数Body">749
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">86
+                                </th>
+                                <td class="yearMonthBody">2021/04
+                                </td>
+                                <td class="都道府県Body">栃木
+                                </td>
+                                <td class="新規感染者数Body">713
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">87
+                                </th>
+                                <td class="yearMonthBody">2021/04
+                                </td>
+                                <td class="都道府県Body">徳島
+                                </td>
+                                <td class="新規感染者数Body">760
+                                </td>
+                    </tr>
+                    <tr class="watching">
+                                <th class="seqBody">88
+                                </th>
+                                <td class="yearMonthBody">2021/04
+                                </td>
+                                <td class="都道府県Body watching">東京
+                                </td>
+                                <td class="新規感染者数Body">18,090
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">89
+                                </th>
+                                <td class="yearMonthBody">2021/04
+                                </td>
+                                <td class="都道府県Body">鳥取
+                                </td>
+                                <td class="新規感染者数Body">113
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">90
+                                </th>
+                                <td class="yearMonthBody">2021/04
+                                </td>
+                                <td class="都道府県Body">富山
+                                </td>
+                                <td class="新規感染者数Body">381
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">91
+                                </th>
+                                <td class="yearMonthBody">2021/04
+                                </td>
+                                <td class="都道府県Body">和歌山
+                                </td>
+                                <td class="新規感染者数Body">871
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">92
+                                </th>
+                                <td class="yearMonthBody">2021/04
+                                </td>
+                                <td class="都道府県Body">山形
+                                </td>
+                                <td class="新規感染者数Body">565
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">93
+                                </th>
+                                <td class="yearMonthBody">2021/04
+                                </td>
+                                <td class="都道府県Body">山口
+                                </td>
+                                <td class="新規感染者数Body">417
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">94
+                                </th>
+                                <td class="yearMonthBody">2021/04
+                                </td>
+                                <td class="都道府県Body">山梨
+                                </td>
+                                <td class="新規感染者数Body">244
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">95
+                                </th>
+                                <td class="yearMonthBody">2021/05
+                                </td>
+                                <td class="都道府県Body">愛知
+                                </td>
+                                <td class="新規感染者数Body">13,859
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">96
+                                </th>
+                                <td class="yearMonthBody">2021/05
+                                </td>
+                                <td class="都道府県Body">秋田
+                                </td>
+                                <td class="新規感染者数Body">300
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">97
+                                </th>
+                                <td class="yearMonthBody">2021/05
+                                </td>
+                                <td class="都道府県Body">青森
+                                </td>
+                                <td class="新規感染者数Body">776
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">98
+                                </th>
+                                <td class="yearMonthBody">2021/05
+                                </td>
+                                <td class="都道府県Body">千葉
+                                </td>
+                                <td class="新規感染者数Body">3,948
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">99
+                                </th>
+                                <td class="yearMonthBody">2021/05
+                                </td>
+                                <td class="都道府県Body">愛媛
+                                </td>
+                                <td class="新規感染者数Body">384
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">100
+                                </th>
+                                <td class="yearMonthBody">2021/05
+                                </td>
+                                <td class="都道府県Body">福井
+                                </td>
+                                <td class="新規感染者数Body">166
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">101
+                                </th>
+                                <td class="yearMonthBody">2021/05
+                                </td>
+                                <td class="都道府県Body">福岡
+                                </td>
+                                <td class="新規感染者数Body">10,688
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">102
+                                </th>
+                                <td class="yearMonthBody">2021/05
+                                </td>
+                                <td class="都道府県Body">福島
+                                </td>
+                                <td class="新規感染者数Body">1,210
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">103
+                                </th>
+                                <td class="yearMonthBody">2021/05
+                                </td>
+                                <td class="都道府県Body">岐阜
+                                </td>
+                                <td class="新規感染者数Body">2,860
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">104
+                                </th>
+                                <td class="yearMonthBody">2021/05
+                                </td>
+                                <td class="都道府県Body">群馬
+                                </td>
+                                <td class="新規感染者数Body">1,810
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">105
+                                </th>
+                                <td class="yearMonthBody">2021/05
+                                </td>
+                                <td class="都道府県Body">広島
+                                </td>
+                                <td class="新規感染者数Body">4,677
+                                </td>
+                    </tr>
+                    <tr class="watching">
+                                <th class="seqBody">106
+                                </th>
+                                <td class="yearMonthBody">2021/05
+                                </td>
+                                <td class="都道府県Body watching">北海道
+                                </td>
+                                <td class="新規感染者数Body">13,790
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">107
+                                </th>
+                                <td class="yearMonthBody">2021/05
+                                </td>
+                                <td class="都道府県Body">兵庫
+                                </td>
+                                <td class="新規感染者数Body">8,242
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">108
+                                </th>
+                                <td class="yearMonthBody">2021/05
+                                </td>
+                                <td class="都道府県Body">茨城
+                                </td>
+                                <td class="新規感染者数Body">1,593
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">109
+                                </th>
+                                <td class="yearMonthBody">2021/05
+                                </td>
+                                <td class="都道府県Body">石川
+                                </td>
+                                <td class="新規感染者数Body">1,285
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">110
+                                </th>
+                                <td class="yearMonthBody">2021/05
+                                </td>
+                                <td class="都道府県Body">岩手
+                                </td>
+                                <td class="新規感染者数Body">530
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">111
+                                </th>
+                                <td class="yearMonthBody">2021/05
+                                </td>
+                                <td class="都道府県Body">香川
+                                </td>
+                                <td class="新規感染者数Body">744
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">112
+                                </th>
+                                <td class="yearMonthBody">2021/05
+                                </td>
+                                <td class="都道府県Body">鹿児島
+                                </td>
+                                <td class="新規感染者数Body">1,204
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">113
+                                </th>
+                                <td class="yearMonthBody">2021/05
+                                </td>
+                                <td class="都道府県Body">神奈川
+                                </td>
+                                <td class="新規感染者数Body">7,986
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">114
+                                </th>
+                                <td class="yearMonthBody">2021/05
+                                </td>
+                                <td class="都道府県Body">高知
+                                </td>
+                                <td class="新規感染者数Body">430
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">115
+                                </th>
+                                <td class="yearMonthBody">2021/05
+                                </td>
+                                <td class="都道府県Body">熊本
+                                </td>
+                                <td class="新規感染者数Body">2,108
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">116
+                                </th>
+                                <td class="yearMonthBody">2021/05
+                                </td>
+                                <td class="都道府県Body">京都
+                                </td>
+                                <td class="新規感染者数Body">3,310
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">117
+                                </th>
+                                <td class="yearMonthBody">2021/05
+                                </td>
+                                <td class="都道府県Body">三重
+                                </td>
+                                <td class="新規感染者数Body">1,149
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">118
+                                </th>
+                                <td class="yearMonthBody">2021/05
+                                </td>
+                                <td class="都道府県Body">宮城
+                                </td>
+                                <td class="新規感染者数Body">812
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">119
+                                </th>
+                                <td class="yearMonthBody">2021/05
+                                </td>
+                                <td class="都道府県Body">宮崎
+                                </td>
+                                <td class="新規感染者数Body">817
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">120
+                                </th>
+                                <td class="yearMonthBody">2021/05
+                                </td>
+                                <td class="都道府県Body">長野
+                                </td>
+                                <td class="新規感染者数Body">935
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">121
+                                </th>
+                                <td class="yearMonthBody">2021/05
+                                </td>
+                                <td class="都道府県Body">長崎
+                                </td>
+                                <td class="新規感染者数Body">815
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">122
+                                </th>
+                                <td class="yearMonthBody">2021/05
+                                </td>
+                                <td class="都道府県Body">奈良
+                                </td>
+                                <td class="新規感染者数Body">1,699
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">123
+                                </th>
+                                <td class="yearMonthBody">2021/05
+                                </td>
+                                <td class="都道府県Body">新潟
+                                </td>
+                                <td class="新規感染者数Body">923
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">124
+                                </th>
+                                <td class="yearMonthBody">2021/05
+                                </td>
+                                <td class="都道府県Body">大分
+                                </td>
+                                <td class="新規感染者数Body">1,514
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">125
+                                </th>
+                                <td class="yearMonthBody">2021/05
+                                </td>
+                                <td class="都道府県Body">岡山
+                                </td>
+                                <td class="新規感染者数Body">3,394
+                                </td>
+                    </tr>
+                    <tr class="watching">
+                                <th class="seqBody">126
+                                </th>
+                                <td class="yearMonthBody">2021/05
+                                </td>
+                                <td class="都道府県Body watching">沖縄
+                                </td>
+                                <td class="新規感染者数Body">4,592
+                                </td>
+                    </tr>
+                    <tr class="watching">
+                                <th class="seqBody">127
+                                </th>
+                                <td class="yearMonthBody">2021/05
+                                </td>
+                                <td class="都道府県Body watching">大阪
+                                </td>
+                                <td class="新規感染者数Body">18,548
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">128
+                                </th>
+                                <td class="yearMonthBody">2021/05
+                                </td>
+                                <td class="都道府県Body">佐賀
+                                </td>
+                                <td class="新規感染者数Body">899
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">129
+                                </th>
+                                <td class="yearMonthBody">2021/05
+                                </td>
+                                <td class="都道府県Body">埼玉
+                                </td>
+                                <td class="新規感染者数Body">5,979
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">130
+                                </th>
+                                <td class="yearMonthBody">2021/05
+                                </td>
+                                <td class="都道府県Body">滋賀
+                                </td>
+                                <td class="新規感染者数Body">1,386
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">131
+                                </th>
+                                <td class="yearMonthBody">2021/05
+                                </td>
+                                <td class="都道府県Body">島根
+                                </td>
+                                <td class="新規感染者数Body">199
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">132
+                                </th>
+                                <td class="yearMonthBody">2021/05
+                                </td>
+                                <td class="都道府県Body">静岡
+                                </td>
+                                <td class="新規感染者数Body">1,933
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">133
+                                </th>
+                                <td class="yearMonthBody">2021/05
+                                </td>
+                                <td class="都道府県Body">栃木
+                                </td>
+                                <td class="新規感染者数Body">993
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">134
+                                </th>
+                                <td class="yearMonthBody">2021/05
+                                </td>
+                                <td class="都道府県Body">徳島
+                                </td>
+                                <td class="新規感染者数Body">336
+                                </td>
+                    </tr>
+                    <tr class="watching">
+                                <th class="seqBody">135
+                                </th>
+                                <td class="yearMonthBody">2021/05
+                                </td>
+                                <td class="都道府県Body watching">東京
+                                </td>
+                                <td class="新規感染者数Body">21,879
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">136
+                                </th>
+                                <td class="yearMonthBody">2021/05
+                                </td>
+                                <td class="都道府県Body">鳥取
+                                </td>
+                                <td class="新規感染者数Body">92
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">137
+                                </th>
+                                <td class="yearMonthBody">2021/05
+                                </td>
+                                <td class="都道府県Body">富山
+                                </td>
+                                <td class="新規感染者数Body">553
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">138
+                                </th>
+                                <td class="yearMonthBody">2021/05
+                                </td>
+                                <td class="都道府県Body">和歌山
+                                </td>
+                                <td class="新規感染者数Body">460
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">139
+                                </th>
+                                <td class="yearMonthBody">2021/05
+                                </td>
+                                <td class="都道府県Body">山形
+                                </td>
+                                <td class="新規感染者数Body">448
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">140
+                                </th>
+                                <td class="yearMonthBody">2021/05
+                                </td>
+                                <td class="都道府県Body">山口
+                                </td>
+                                <td class="新規感染者数Body">1,090
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">141
+                                </th>
+                                <td class="yearMonthBody">2021/05
+                                </td>
+                                <td class="都道府県Body">山梨
+                                </td>
+                                <td class="新規感染者数Body">338
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">142
+                                </th>
+                                <td class="yearMonthBody">2021/06
+                                </td>
+                                <td class="都道府県Body">愛知
+                                </td>
+                                <td class="新規感染者数Body">3,805
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">143
+                                </th>
+                                <td class="yearMonthBody">2021/06
+                                </td>
+                                <td class="都道府県Body">秋田
+                                </td>
+                                <td class="新規感染者数Body">120
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">144
+                                </th>
+                                <td class="yearMonthBody">2021/06
+                                </td>
+                                <td class="都道府県Body">青森
+                                </td>
+                                <td class="新規感染者数Body">148
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">145
+                                </th>
+                                <td class="yearMonthBody">2021/06
+                                </td>
+                                <td class="都道府県Body">千葉
+                                </td>
+                                <td class="新規感染者数Body">3,161
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">146
+                                </th>
+                                <td class="yearMonthBody">2021/06
+                                </td>
+                                <td class="都道府県Body">愛媛
+                                </td>
+                                <td class="新規感染者数Body">42
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">147
+                                </th>
+                                <td class="yearMonthBody">2021/06
+                                </td>
+                                <td class="都道府県Body">福井
+                                </td>
+                                <td class="新規感染者数Body">248
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">148
+                                </th>
+                                <td class="yearMonthBody">2021/06
+                                </td>
+                                <td class="都道府県Body">福岡
+                                </td>
+                                <td class="新規感染者数Body">1,433
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">149
+                                </th>
+                                <td class="yearMonthBody">2021/06
+                                </td>
+                                <td class="都道府県Body">福島
+                                </td>
+                                <td class="新規感染者数Body">299
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">150
+                                </th>
+                                <td class="yearMonthBody">2021/06
+                                </td>
+                                <td class="都道府県Body">岐阜
+                                </td>
+                                <td class="新規感染者数Body">645
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">151
+                                </th>
+                                <td class="yearMonthBody">2021/06
+                                </td>
+                                <td class="都道府県Body">群馬
+                                </td>
+                                <td class="新規感染者数Body">217
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">152
+                                </th>
+                                <td class="yearMonthBody">2021/06
+                                </td>
+                                <td class="都道府県Body">広島
+                                </td>
+                                <td class="新規感染者数Body">808
+                                </td>
+                    </tr>
+                    <tr class="watching">
+                                <th class="seqBody">153
+                                </th>
+                                <td class="yearMonthBody">2021/06
+                                </td>
+                                <td class="都道府県Body watching">北海道
+                                </td>
+                                <td class="新規感染者数Body">3,373
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">154
+                                </th>
+                                <td class="yearMonthBody">2021/06
+                                </td>
+                                <td class="都道府県Body">兵庫
+                                </td>
+                                <td class="新規感染者数Body">1,231
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">155
+                                </th>
+                                <td class="yearMonthBody">2021/06
+                                </td>
+                                <td class="都道府県Body">茨城
+                                </td>
+                                <td class="新規感染者数Body">810
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">156
+                                </th>
+                                <td class="yearMonthBody">2021/06
+                                </td>
+                                <td class="都道府県Body">石川
+                                </td>
+                                <td class="新規感染者数Body">179
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">157
+                                </th>
+                                <td class="yearMonthBody">2021/06
+                                </td>
+                                <td class="都道府県Body">岩手
+                                </td>
+                                <td class="新規感染者数Body">237
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">158
+                                </th>
+                                <td class="yearMonthBody">2021/06
+                                </td>
+                                <td class="都道府県Body">香川
+                                </td>
+                                <td class="新規感染者数Body">94
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">159
+                                </th>
+                                <td class="yearMonthBody">2021/06
+                                </td>
+                                <td class="都道府県Body">鹿児島
+                                </td>
+                                <td class="新規感染者数Body">347
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">160
+                                </th>
+                                <td class="yearMonthBody">2021/06
+                                </td>
+                                <td class="都道府県Body">神奈川
+                                </td>
+                                <td class="新規感染者数Body">5,879
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">161
+                                </th>
+                                <td class="yearMonthBody">2021/06
+                                </td>
+                                <td class="都道府県Body">高知
+                                </td>
+                                <td class="新規感染者数Body">356
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">162
+                                </th>
+                                <td class="yearMonthBody">2021/06
+                                </td>
+                                <td class="都道府県Body">熊本
+                                </td>
+                                <td class="新規感染者数Body">238
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">163
+                                </th>
+                                <td class="yearMonthBody">2021/06
+                                </td>
+                                <td class="都道府県Body">京都
+                                </td>
+                                <td class="新規感染者数Body">775
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">164
+                                </th>
+                                <td class="yearMonthBody">2021/06
+                                </td>
+                                <td class="都道府県Body">三重
+                                </td>
+                                <td class="新規感染者数Body">343
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">165
+                                </th>
+                                <td class="yearMonthBody">2021/06
+                                </td>
+                                <td class="都道府県Body">宮城
+                                </td>
+                                <td class="新規感染者数Body">274
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">166
+                                </th>
+                                <td class="yearMonthBody">2021/06
+                                </td>
+                                <td class="都道府県Body">宮崎
+                                </td>
+                                <td class="新規感染者数Body">58
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">167
+                                </th>
+                                <td class="yearMonthBody">2021/06
+                                </td>
+                                <td class="都道府県Body">長野
+                                </td>
+                                <td class="新規感染者数Body">247
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">168
+                                </th>
+                                <td class="yearMonthBody">2021/06
+                                </td>
+                                <td class="都道府県Body">長崎
+                                </td>
+                                <td class="新規感染者数Body">293
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">169
+                                </th>
+                                <td class="yearMonthBody">2021/06
+                                </td>
+                                <td class="都道府県Body">奈良
+                                </td>
+                                <td class="新規感染者数Body">439
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">170
+                                </th>
+                                <td class="yearMonthBody">2021/06
+                                </td>
+                                <td class="都道府県Body">新潟
+                                </td>
+                                <td class="新規感染者数Body">195
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">171
+                                </th>
+                                <td class="yearMonthBody">2021/06
+                                </td>
+                                <td class="都道府県Body">大分
+                                </td>
+                                <td class="新規感染者数Body">122
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">172
+                                </th>
+                                <td class="yearMonthBody">2021/06
+                                </td>
+                                <td class="都道府県Body">岡山
+                                </td>
+                                <td class="新規感染者数Body">250
+                                </td>
+                    </tr>
+                    <tr class="watching">
+                                <th class="seqBody">173
+                                </th>
+                                <td class="yearMonthBody">2021/06
+                                </td>
+                                <td class="都道府県Body watching">沖縄
+                                </td>
+                                <td class="新規感染者数Body">3,763
+                                </td>
+                    </tr>
+                    <tr class="watching">
+                                <th class="seqBody">174
+                                </th>
+                                <td class="yearMonthBody">2021/06
+                                </td>
+                                <td class="都道府県Body watching">大阪
+                                </td>
+                                <td class="新規感染者数Body">3,676
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">175
+                                </th>
+                                <td class="yearMonthBody">2021/06
+                                </td>
+                                <td class="都道府県Body">佐賀
+                                </td>
+                                <td class="新規感染者数Body">53
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">176
+                                </th>
+                                <td class="yearMonthBody">2021/06
+                                </td>
+                                <td class="都道府県Body">埼玉
+                                </td>
+                                <td class="新規感染者数Body">2,662
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">177
+                                </th>
+                                <td class="yearMonthBody">2021/06
+                                </td>
+                                <td class="都道府県Body">滋賀
+                                </td>
+                                <td class="新規感染者数Body">452
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">178
+                                </th>
+                                <td class="yearMonthBody">2021/06
+                                </td>
+                                <td class="都道府県Body">島根
+                                </td>
+                                <td class="新規感染者数Body">13
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">179
+                                </th>
+                                <td class="yearMonthBody">2021/06
+                                </td>
+                                <td class="都道府県Body">静岡
+                                </td>
+                                <td class="新規感染者数Body">924
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">180
+                                </th>
+                                <td class="yearMonthBody">2021/06
+                                </td>
+                                <td class="都道府県Body">栃木
+                                </td>
+                                <td class="新規感染者数Body">685
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">181
+                                </th>
+                                <td class="yearMonthBody">2021/06
+                                </td>
+                                <td class="都道府県Body">徳島
+                                </td>
+                                <td class="新規感染者数Body">25
+                                </td>
+                    </tr>
+                    <tr class="watching">
+                                <th class="seqBody">182
+                                </th>
+                                <td class="yearMonthBody">2021/06
+                                </td>
+                                <td class="都道府県Body watching">東京
+                                </td>
+                                <td class="新規感染者数Body">12,979
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">183
+                                </th>
+                                <td class="yearMonthBody">2021/06
+                                </td>
+                                <td class="都道府県Body">鳥取
+                                </td>
+                                <td class="新規感染者数Body">16
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">184
+                                </th>
+                                <td class="yearMonthBody">2021/06
+                                </td>
+                                <td class="都道府県Body">富山
+                                </td>
+                                <td class="新規感染者数Body">172
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">185
+                                </th>
+                                <td class="yearMonthBody">2021/06
+                                </td>
+                                <td class="都道府県Body">和歌山
+                                </td>
+                                <td class="新規感染者数Body">66
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">186
+                                </th>
+                                <td class="yearMonthBody">2021/06
+                                </td>
+                                <td class="都道府県Body">山形
+                                </td>
+                                <td class="新規感染者数Body">59
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">187
+                                </th>
+                                <td class="yearMonthBody">2021/06
+                                </td>
+                                <td class="都道府県Body">山口
+                                </td>
+                                <td class="新規感染者数Body">217
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">188
+                                </th>
+                                <td class="yearMonthBody">2021/06
+                                </td>
+                                <td class="都道府県Body">山梨
+                                </td>
+                                <td class="新規感染者数Body">551
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">189
+                                </th>
+                                <td class="yearMonthBody">2021/07
+                                </td>
+                                <td class="都道府県Body">愛知
+                                </td>
+                                <td class="新規感染者数Body">3,003
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">190
+                                </th>
+                                <td class="yearMonthBody">2021/07
+                                </td>
+                                <td class="都道府県Body">秋田
+                                </td>
+                                <td class="新規感染者数Body">145
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">191
+                                </th>
+                                <td class="yearMonthBody">2021/07
+                                </td>
+                                <td class="都道府県Body">青森
+                                </td>
+                                <td class="新規感染者数Body">198
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">192
+                                </th>
+                                <td class="yearMonthBody">2021/07
+                                </td>
+                                <td class="都道府県Body">千葉
+                                </td>
+                                <td class="新規感染者数Body">8,875
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">193
+                                </th>
+                                <td class="yearMonthBody">2021/07
+                                </td>
+                                <td class="都道府県Body">愛媛
+                                </td>
+                                <td class="新規感染者数Body">171
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">194
+                                </th>
+                                <td class="yearMonthBody">2021/07
+                                </td>
+                                <td class="都道府県Body">福井
+                                </td>
+                                <td class="新規感染者数Body">318
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">195
+                                </th>
+                                <td class="yearMonthBody">2021/07
+                                </td>
+                                <td class="都道府県Body">福岡
+                                </td>
+                                <td class="新規感染者数Body">3,848
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">196
+                                </th>
+                                <td class="yearMonthBody">2021/07
+                                </td>
+                                <td class="都道府県Body">福島
+                                </td>
+                                <td class="新規感染者数Body">875
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">197
+                                </th>
+                                <td class="yearMonthBody">2021/07
+                                </td>
+                                <td class="都道府県Body">岐阜
+                                </td>
+                                <td class="新規感染者数Body">330
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">198
+                                </th>
+                                <td class="yearMonthBody">2021/07
+                                </td>
+                                <td class="都道府県Body">群馬
+                                </td>
+                                <td class="新規感染者数Body">756
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">199
+                                </th>
+                                <td class="yearMonthBody">2021/07
+                                </td>
+                                <td class="都道府県Body">広島
+                                </td>
+                                <td class="新規感染者数Body">647
+                                </td>
+                    </tr>
+                    <tr class="watching">
+                                <th class="seqBody">200
+                                </th>
+                                <td class="yearMonthBody">2021/07
+                                </td>
+                                <td class="都道府県Body watching">北海道
+                                </td>
+                                <td class="新規感染者数Body">3,092
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">201
+                                </th>
+                                <td class="yearMonthBody">2021/07
+                                </td>
+                                <td class="都道府県Body">兵庫
+                                </td>
+                                <td class="新規感染者数Body">3,071
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">202
+                                </th>
+                                <td class="yearMonthBody">2021/07
+                                </td>
+                                <td class="都道府県Body">茨城
+                                </td>
+                                <td class="新規感染者数Body">1,917
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">203
+                                </th>
+                                <td class="yearMonthBody">2021/07
+                                </td>
+                                <td class="都道府県Body">石川
+                                </td>
+                                <td class="新規感染者数Body">1,175
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">204
+                                </th>
+                                <td class="yearMonthBody">2021/07
+                                </td>
+                                <td class="都道府県Body">岩手
+                                </td>
+                                <td class="新規感染者数Body">323
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">205
+                                </th>
+                                <td class="yearMonthBody">2021/07
+                                </td>
+                                <td class="都道府県Body">香川
+                                </td>
+                                <td class="新規感染者数Body">176
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">206
+                                </th>
+                                <td class="yearMonthBody">2021/07
+                                </td>
+                                <td class="都道府県Body">鹿児島
+                                </td>
+                                <td class="新規感染者数Body">294
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">207
+                                </th>
+                                <td class="yearMonthBody">2021/07
+                                </td>
+                                <td class="都道府県Body">神奈川
+                                </td>
+                                <td class="新規感染者数Body">15,959
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">208
+                                </th>
+                                <td class="yearMonthBody">2021/07
+                                </td>
+                                <td class="都道府県Body">高知
+                                </td>
+                                <td class="新規感染者数Body">263
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">209
+                                </th>
+                                <td class="yearMonthBody">2021/07
+                                </td>
+                                <td class="都道府県Body">熊本
+                                </td>
+                                <td class="新規感染者数Body">517
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">210
+                                </th>
+                                <td class="yearMonthBody">2021/07
+                                </td>
+                                <td class="都道府県Body">京都
+                                </td>
+                                <td class="新規感染者数Body">1,737
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">211
+                                </th>
+                                <td class="yearMonthBody">2021/07
+                                </td>
+                                <td class="都道府県Body">三重
+                                </td>
+                                <td class="新規感染者数Body">506
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">212
+                                </th>
+                                <td class="yearMonthBody">2021/07
+                                </td>
+                                <td class="都道府県Body">宮城
+                                </td>
+                                <td class="新規感染者数Body">780
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">213
+                                </th>
+                                <td class="yearMonthBody">2021/07
+                                </td>
+                                <td class="都道府県Body">宮崎
+                                </td>
+                                <td class="新規感染者数Body">145
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">214
+                                </th>
+                                <td class="yearMonthBody">2021/07
+                                </td>
+                                <td class="都道府県Body">長野
+                                </td>
+                                <td class="新規感染者数Body">258
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">215
+                                </th>
+                                <td class="yearMonthBody">2021/07
+                                </td>
+                                <td class="都道府県Body">長崎
+                                </td>
+                                <td class="新規感染者数Body">275
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">216
+                                </th>
+                                <td class="yearMonthBody">2021/07
+                                </td>
+                                <td class="都道府県Body">奈良
+                                </td>
+                                <td class="新規感染者数Body">702
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">217
+                                </th>
+                                <td class="yearMonthBody">2021/07
+                                </td>
+                                <td class="都道府県Body">新潟
+                                </td>
+                                <td class="新規感染者数Body">618
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">218
+                                </th>
+                                <td class="yearMonthBody">2021/07
+                                </td>
+                                <td class="都道府県Body">大分
+                                </td>
+                                <td class="新規感染者数Body">167
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">219
+                                </th>
+                                <td class="yearMonthBody">2021/07
+                                </td>
+                                <td class="都道府県Body">岡山
+                                </td>
+                                <td class="新規感染者数Body">595
+                                </td>
+                    </tr>
+                    <tr class="watching">
+                                <th class="seqBody">220
+                                </th>
+                                <td class="yearMonthBody">2021/07
+                                </td>
+                                <td class="都道府県Body watching">沖縄
+                                </td>
+                                <td class="新規感染者数Body">3,978
+                                </td>
+                    </tr>
+                    <tr class="watching">
+                                <th class="seqBody">221
+                                </th>
+                                <td class="yearMonthBody">2021/07
+                                </td>
+                                <td class="都道府県Body watching">大阪
+                                </td>
+                                <td class="新規感染者数Body">10,753
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">222
+                                </th>
+                                <td class="yearMonthBody">2021/07
+                                </td>
+                                <td class="都道府県Body">佐賀
+                                </td>
+                                <td class="新規感染者数Body">192
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">223
+                                </th>
+                                <td class="yearMonthBody">2021/07
+                                </td>
+                                <td class="都道府県Body">埼玉
+                                </td>
+                                <td class="新規感染者数Body">10,511
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">224
+                                </th>
+                                <td class="yearMonthBody">2021/07
+                                </td>
+                                <td class="都道府県Body">滋賀
+                                </td>
+                                <td class="新規感染者数Body">470
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">225
+                                </th>
+                                <td class="yearMonthBody">2021/07
+                                </td>
+                                <td class="都道府県Body">島根
+                                </td>
+                                <td class="新規感染者数Body">177
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">226
+                                </th>
+                                <td class="yearMonthBody">2021/07
+                                </td>
+                                <td class="都道府県Body">静岡
+                                </td>
+                                <td class="新規感染者数Body">1,575
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">227
+                                </th>
+                                <td class="yearMonthBody">2021/07
+                                </td>
+                                <td class="都道府県Body">栃木
+                                </td>
+                                <td class="新規感染者数Body">1,299
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">228
+                                </th>
+                                <td class="yearMonthBody">2021/07
+                                </td>
+                                <td class="都道府県Body">徳島
+                                </td>
+                                <td class="新規感染者数Body">132
+                                </td>
+                    </tr>
+                    <tr class="watching">
+                                <th class="seqBody">229
+                                </th>
+                                <td class="yearMonthBody">2021/07
+                                </td>
+                                <td class="都道府県Body watching">東京
+                                </td>
+                                <td class="新規感染者数Body">44,034
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">230
+                                </th>
+                                <td class="yearMonthBody">2021/07
+                                </td>
+                                <td class="都道府県Body">鳥取
+                                </td>
+                                <td class="新規感染者数Body">293
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">231
+                                </th>
+                                <td class="yearMonthBody">2021/07
+                                </td>
+                                <td class="都道府県Body">富山
+                                </td>
+                                <td class="新規感染者数Body">246
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">232
+                                </th>
+                                <td class="yearMonthBody">2021/07
+                                </td>
+                                <td class="都道府県Body">和歌山
+                                </td>
+                                <td class="新規感染者数Body">288
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">233
+                                </th>
+                                <td class="yearMonthBody">2021/07
+                                </td>
+                                <td class="都道府県Body">山形
+                                </td>
+                                <td class="新規感染者数Body">121
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">234
+                                </th>
+                                <td class="yearMonthBody">2021/07
+                                </td>
+                                <td class="都道府県Body">山口
+                                </td>
+                                <td class="新規感染者数Body">156
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">235
+                                </th>
+                                <td class="yearMonthBody">2021/07
+                                </td>
+                                <td class="都道府県Body">山梨
+                                </td>
+                                <td class="新規感染者数Body">313
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">236
+                                </th>
+                                <td class="yearMonthBody">2021/08
+                                </td>
+                                <td class="都道府県Body">愛知
+                                </td>
+                                <td class="新規感染者数Body">5,667
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">237
+                                </th>
+                                <td class="yearMonthBody">2021/08
+                                </td>
+                                <td class="都道府県Body">秋田
+                                </td>
+                                <td class="新規感染者数Body">154
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">238
+                                </th>
+                                <td class="yearMonthBody">2021/08
+                                </td>
+                                <td class="都道府県Body">青森
+                                </td>
+                                <td class="新規感染者数Body">431
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">239
+                                </th>
+                                <td class="yearMonthBody">2021/08
+                                </td>
+                                <td class="都道府県Body">千葉
+                                </td>
+                                <td class="新規感染者数Body">13,402
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">240
+                                </th>
+                                <td class="yearMonthBody">2021/08
+                                </td>
+                                <td class="都道府県Body">愛媛
+                                </td>
+                                <td class="新規感染者数Body">604
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">241
+                                </th>
+                                <td class="yearMonthBody">2021/08
+                                </td>
+                                <td class="都道府県Body">福井
+                                </td>
+                                <td class="新規感染者数Body">377
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">242
+                                </th>
+                                <td class="yearMonthBody">2021/08
+                                </td>
+                                <td class="都道府県Body">福岡
+                                </td>
+                                <td class="新規感染者数Body">9,752
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">243
+                                </th>
+                                <td class="yearMonthBody">2021/08
+                                </td>
+                                <td class="都道府県Body">福島
+                                </td>
+                                <td class="新規感染者数Body">1,421
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">244
+                                </th>
+                                <td class="yearMonthBody">2021/08
+                                </td>
+                                <td class="都道府県Body">岐阜
+                                </td>
+                                <td class="新規感染者数Body">974
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">245
+                                </th>
+                                <td class="yearMonthBody">2021/08
+                                </td>
+                                <td class="都道府県Body">群馬
+                                </td>
+                                <td class="新規感染者数Body">2,075
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">246
+                                </th>
+                                <td class="yearMonthBody">2021/08
+                                </td>
+                                <td class="都道府県Body">広島
+                                </td>
+                                <td class="新規感染者数Body">1,493
+                                </td>
+                    </tr>
+                    <tr class="watching">
+                                <th class="seqBody">247
+                                </th>
+                                <td class="yearMonthBody">2021/08
+                                </td>
+                                <td class="都道府県Body watching">北海道
+                                </td>
+                                <td class="新規感染者数Body">4,762
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">248
+                                </th>
+                                <td class="yearMonthBody">2021/08
+                                </td>
+                                <td class="都道府県Body">兵庫
+                                </td>
+                                <td class="新規感染者数Body">6,374
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">249
+                                </th>
+                                <td class="yearMonthBody">2021/08
+                                </td>
+                                <td class="都道府県Body">茨城
+                                </td>
+                                <td class="新規感染者数Body">3,504
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">250
+                                </th>
+                                <td class="yearMonthBody">2021/08
+                                </td>
+                                <td class="都道府県Body">石川
+                                </td>
+                                <td class="新規感染者数Body">1,085
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">251
+                                </th>
+                                <td class="yearMonthBody">2021/08
+                                </td>
+                                <td class="都道府県Body">岩手
+                                </td>
+                                <td class="新規感染者数Body">384
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">252
+                                </th>
+                                <td class="yearMonthBody">2021/08
+                                </td>
+                                <td class="都道府県Body">香川
+                                </td>
+                                <td class="新規感染者数Body">663
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">253
+                                </th>
+                                <td class="yearMonthBody">2021/08
+                                </td>
+                                <td class="都道府県Body">鹿児島
+                                </td>
+                                <td class="新規感染者数Body">1,185
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">254
+                                </th>
+                                <td class="yearMonthBody">2021/08
+                                </td>
+                                <td class="都道府県Body">神奈川
+                                </td>
+                                <td class="新規感染者数Body">25,148
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">255
+                                </th>
+                                <td class="yearMonthBody">2021/08
+                                </td>
+                                <td class="都道府県Body">高知
+                                </td>
+                                <td class="新規感染者数Body">201
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">256
+                                </th>
+                                <td class="yearMonthBody">2021/08
+                                </td>
+                                <td class="都道府県Body">熊本
+                                </td>
+                                <td class="新規感染者数Body">1,755
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">257
+                                </th>
+                                <td class="yearMonthBody">2021/08
+                                </td>
+                                <td class="都道府県Body">京都
+                                </td>
+                                <td class="新規感染者数Body">3,839
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">258
+                                </th>
+                                <td class="yearMonthBody">2021/08
+                                </td>
+                                <td class="都道府県Body">三重
+                                </td>
+                                <td class="新規感染者数Body">1,164
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">259
+                                </th>
+                                <td class="yearMonthBody">2021/08
+                                </td>
+                                <td class="都道府県Body">宮城
+                                </td>
+                                <td class="新規感染者数Body">1,527
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">260
+                                </th>
+                                <td class="yearMonthBody">2021/08
+                                </td>
+                                <td class="都道府県Body">宮崎
+                                </td>
+                                <td class="新規感染者数Body">515
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">261
+                                </th>
+                                <td class="yearMonthBody">2021/08
+                                </td>
+                                <td class="都道府県Body">長野
+                                </td>
+                                <td class="新規感染者数Body">842
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">262
+                                </th>
+                                <td class="yearMonthBody">2021/08
+                                </td>
+                                <td class="都道府県Body">長崎
+                                </td>
+                                <td class="新規感染者数Body">634
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">263
+                                </th>
+                                <td class="yearMonthBody">2021/08
+                                </td>
+                                <td class="都道府県Body">奈良
+                                </td>
+                                <td class="新規感染者数Body">1,260
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">264
+                                </th>
+                                <td class="yearMonthBody">2021/08
+                                </td>
+                                <td class="都道府県Body">新潟
+                                </td>
+                                <td class="新規感染者数Body">1,069
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">265
+                                </th>
+                                <td class="yearMonthBody">2021/08
+                                </td>
+                                <td class="都道府県Body">大分
+                                </td>
+                                <td class="新規感染者数Body">680
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">266
+                                </th>
+                                <td class="yearMonthBody">2021/08
+                                </td>
+                                <td class="都道府県Body">岡山
+                                </td>
+                                <td class="新規感染者数Body">1,621
+                                </td>
+                    </tr>
+                    <tr class="watching">
+                                <th class="seqBody">267
+                                </th>
+                                <td class="yearMonthBody">2021/08
+                                </td>
+                                <td class="都道府県Body watching">沖縄
+                                </td>
+                                <td class="新規感染者数Body">7,487
+                                </td>
+                    </tr>
+                    <tr class="watching">
+                                <th class="seqBody">268
+                                </th>
+                                <td class="yearMonthBody">2021/08
+                                </td>
+                                <td class="都道府県Body watching">大阪
+                                </td>
+                                <td class="新規感染者数Body">16,548
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">269
+                                </th>
+                                <td class="yearMonthBody">2021/08
+                                </td>
+                                <td class="都道府県Body">佐賀
+                                </td>
+                                <td class="新規感染者数Body">652
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">270
+                                </th>
+                                <td class="yearMonthBody">2021/08
+                                </td>
+                                <td class="都道府県Body">埼玉
+                                </td>
+                                <td class="新規感染者数Body">17,760
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">271
+                                </th>
+                                <td class="yearMonthBody">2021/08
+                                </td>
+                                <td class="都道府県Body">滋賀
+                                </td>
+                                <td class="新規感染者数Body">1,475
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">272
+                                </th>
+                                <td class="yearMonthBody">2021/08
+                                </td>
+                                <td class="都道府県Body">島根
+                                </td>
+                                <td class="新規感染者数Body">173
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">273
+                                </th>
+                                <td class="yearMonthBody">2021/08
+                                </td>
+                                <td class="都道府県Body">静岡
+                                </td>
+                                <td class="新規感染者数Body">3,054
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">274
+                                </th>
+                                <td class="yearMonthBody">2021/08
+                                </td>
+                                <td class="都道府県Body">栃木
+                                </td>
+                                <td class="新規感染者数Body">1,892
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">275
+                                </th>
+                                <td class="yearMonthBody">2021/08
+                                </td>
+                                <td class="都道府県Body">徳島
+                                </td>
+                                <td class="新規感染者数Body">135
+                                </td>
+                    </tr>
+                    <tr class="watching">
+                                <th class="seqBody">276
+                                </th>
+                                <td class="yearMonthBody">2021/08
+                                </td>
+                                <td class="都道府県Body watching">東京
+                                </td>
+                                <td class="新規感染者数Body">56,869
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">277
+                                </th>
+                                <td class="yearMonthBody">2021/08
+                                </td>
+                                <td class="都道府県Body">鳥取
+                                </td>
+                                <td class="新規感染者数Body">311
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">278
+                                </th>
+                                <td class="yearMonthBody">2021/08
+                                </td>
+                                <td class="都道府県Body">富山
+                                </td>
+                                <td class="新規感染者数Body">603
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">279
+                                </th>
+                                <td class="yearMonthBody">2021/08
+                                </td>
+                                <td class="都道府県Body">和歌山
+                                </td>
+                                <td class="新規感染者数Body">453
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">280
+                                </th>
+                                <td class="yearMonthBody">2021/08
+                                </td>
+                                <td class="都道府県Body">山形
+                                </td>
+                                <td class="新規感染者数Body">387
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">281
+                                </th>
+                                <td class="yearMonthBody">2021/08
+                                </td>
+                                <td class="都道府県Body">山口
+                                </td>
+                                <td class="新規感染者数Body">433
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">282
+                                </th>
+                                <td class="yearMonthBody">2021/08
+                                </td>
+                                <td class="都道府県Body">山梨
+                                </td>
+                                <td class="新規感染者数Body">799
+                                </td>
+                    </tr>
+            </tbody>
+        </table></body>
+</html>

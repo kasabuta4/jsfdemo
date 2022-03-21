@@ -1,0 +1,212 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<html xmlns="http://www.w3.org/1999/xhtml"><head id="j_idt2"><link type="text/css" rel="stylesheet" href="/jsfdemo/faces/javax.faces.resource/theme.css?ln=primefaces-saga&amp;v=10.0.0" /><link type="text/css" rel="stylesheet" href="/jsfdemo/faces/javax.faces.resource/primeicons/primeicons.css?ln=primefaces&amp;v=10.0.0" /><link type="text/css" rel="stylesheet" href="/jsfdemo/faces/javax.faces.resource/common.css?ln=css" /><script type="text/javascript">
+            var jsfdemo = jsfdemo || {};
+            jsfdemo.toolbar = jsfdemo.toolbar || {};
+            jsfdemo.toolbar.clock = function() {
+                var option = {year: 'numeric', month: '2-digit', day: '2-digit',
+                        weekday: 'short', hour: '2-digit', minute: '2-digit', second: '2-digit'};
+                var formatter = new Intl.DateTimeFormat([], option);
+                var clockElement;
+                var interval;
+                var update = function() {
+                    clockElement.innerHTML = formatter.format(new Date());
+                };
+                return {
+                    init: function() {
+                        clockElement = document.querySelector(
+                            'div.toolbar-root > span.toolbar-status > span.toolbar-clock');
+                    },
+                    play: function() {
+                        interval = window.setInterval(update, 100);
+                    },
+                    pause: function() {
+                        window.clearInterval(interval);
+                    }
+                };
+            }();
+            window.addEventListener('load', jsfdemo.toolbar.clock.init);
+            window.addEventListener('pageshow', jsfdemo.toolbar.clock.play);
+            window.addEventListener('pagehide', jsfdemo.toolbar.clock.pause);
+        </script><script type="text/javascript">if(window.PrimeFaces){PrimeFaces.settings.locale='ja_JP';PrimeFaces.settings.viewId='/mapTable/result.xhtml';PrimeFaces.settings.contextPath='/jsfdemo';PrimeFaces.settings.cookiesSecure=false;PrimeFaces.settings.projectStage='Development';}</script>
+        <title>Covid-19 Newly Confirmed Cases Monthly - Result</title></head><body><span id="j_idt6"><script language="javascript" type="text/javascript">//<![CDATA[
+function faceletsDebug(URL) {day = new Date();id = day.getTime();eval("page" + id + " = window.open(URL, '" + id + "', 'toolbar=0,scrollbars=1,location=0,statusbar=0,menubar=0,resizable=1,width=800,height=600,left = 240,top = 212');"); };(function() { if (typeof jsfFaceletsDebug === 'undefined') { var jsfFaceletsDebug = false; } if (!jsfFaceletsDebug) {var faceletsOrigKeyup = document.onkeyup;document.onkeyup = function(e) { if (window.event) e = window.event; if (String.fromCharCode(e.keyCode) == 'D' & e.shiftKey & e.ctrlKey) faceletsDebug('/jsfdemo/faces/mapTable/result.xhtml?facelets.ui.DebugOutput=1645908526517'); jsfFaceletsDebug = true; if (faceletsOrigKeyup) faceletsOrigKeyup(e); };
+}})();//]]>
+</script></span>
+        <div class="toolbar-root toolbar-normal">
+            <span class="toolbar-title">
+                JSF Demo
+            </span>
+            <span class="toolbar-status">
+                <span class="toolbar-clock"></span>
+                <span class="toolbar-userid"><a id="toolbar:changePassword" name="toolbar:changePassword" href="/jsfdemo/faces/user/change_password.xhtml"><span id="toolbar:userId">JDUSER1</span></a>
+                </span>
+            </span>
+        </div>
+        <table class="東京圏と大阪圏の比較">
+                <caption>東京圏と大阪圏の比較</caption>
+                <colgroup class="seqColumn"></colgroup>
+                <colgroup>
+                        <col class="yearMonthColumn" />
+                </colgroup>
+                <colgroup class="東京圏colgroup" span="4"></colgroup>
+                <colgroup class="大阪圏colgroup" span="3"></colgroup>
+            <thead>
+                <tr>
+                        <th class="seqHeader" rowspan="3">Seq
+                        </th>
+                        <th class="yearMonthHeaderCell" rowspan="3">年月
+                        </th>
+                            <th class="東京圏HeaderCell" colspan="4">東京圏
+                            </th>
+                            <th class="大阪圏HeaderCell" colspan="3">大阪圏
+                            </th>
+                </tr>
+                    <tr>
+                                    <th class="東京圏都道府県HeaderCell" rowspan="3">千葉
+                                    </th>
+                                    <th class="東京圏都道府県HeaderCell" rowspan="3">神奈川
+                                    </th>
+                                    <th class="東京圏都道府県HeaderCell" rowspan="3">埼玉
+                                    </th>
+                                    <th class="東京圏都道府県HeaderCell" rowspan="3">東京
+                                    </th>
+                                    <th class="大阪圏都道府県HeaderCell" rowspan="1">兵庫
+                                    </th>
+                                    <th class="大阪圏都道府県HeaderCell" rowspan="1">京都
+                                    </th>
+                                    <th class="大阪圏都道府県HeaderCell" rowspan="1">大阪
+                                    </th>
+                    </tr>
+                    <tr>
+                                    <th class="大阪圏PrefectureHeaderCell" rowspan="2">Hyogo
+                                    </th>
+                                    <th class="大阪圏PrefectureHeaderCell" rowspan="2">Kyoto
+                                    </th>
+                                    <th class="大阪圏PrefectureHeaderCell" rowspan="2">Osaka
+                                    </th>
+                    </tr>
+            </thead>
+            <tbody>
+                    <tr>
+                                <th class="seqBody">1
+                                </th>
+                                <th class="yearMonthBodyCell">2021/03
+                                </th>
+                                <td class="東京圏BodyCell">3,243
+                                </td>
+                                <td class="東京圏BodyCell">3,172
+                                </td>
+                                <td class="東京圏BodyCell">3,484
+                                </td>
+                                <td class="東京圏BodyCell">9,310
+                                </td>
+                                <td class="大阪圏BodyCell">2,093
+                                </td>
+                                <td class="大阪圏BodyCell">454
+                                </td>
+                                <td class="大阪圏BodyCell">5,080
+                                </td>
+                    </tr>
+                    <tr class="watching">
+                                <th class="seqBody">2
+                                </th>
+                                <th class="yearMonthBodyCell">2021/04
+                                </th>
+                                <td class="東京圏BodyCell watching">3,500
+                                </td>
+                                <td class="東京圏BodyCell watching">5,465
+                                </td>
+                                <td class="東京圏BodyCell watching">4,976
+                                </td>
+                                <td class="東京圏BodyCell watching">18,090
+                                </td>
+                                <td class="大阪圏BodyCell">11,480
+                                </td>
+                                <td class="大阪圏BodyCell">2,998
+                                </td>
+                                <td class="大阪圏BodyCell">28,992
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">3
+                                </th>
+                                <th class="yearMonthBodyCell">2021/05
+                                </th>
+                                <td class="東京圏BodyCell">3,948
+                                </td>
+                                <td class="東京圏BodyCell">7,986
+                                </td>
+                                <td class="東京圏BodyCell">5,979
+                                </td>
+                                <td class="東京圏BodyCell">21,879
+                                </td>
+                                <td class="大阪圏BodyCell">8,242
+                                </td>
+                                <td class="大阪圏BodyCell">3,310
+                                </td>
+                                <td class="大阪圏BodyCell">18,548
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">4
+                                </th>
+                                <th class="yearMonthBodyCell">2021/06
+                                </th>
+                                <td class="東京圏BodyCell">3,161
+                                </td>
+                                <td class="東京圏BodyCell">5,879
+                                </td>
+                                <td class="東京圏BodyCell">2,662
+                                </td>
+                                <td class="東京圏BodyCell">12,979
+                                </td>
+                                <td class="大阪圏BodyCell">1,231
+                                </td>
+                                <td class="大阪圏BodyCell">775
+                                </td>
+                                <td class="大阪圏BodyCell">3,676
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">5
+                                </th>
+                                <th class="yearMonthBodyCell">2021/07
+                                </th>
+                                <td class="東京圏BodyCell">8,875
+                                </td>
+                                <td class="東京圏BodyCell">15,959
+                                </td>
+                                <td class="東京圏BodyCell">10,511
+                                </td>
+                                <td class="東京圏BodyCell">44,034
+                                </td>
+                                <td class="大阪圏BodyCell">3,071
+                                </td>
+                                <td class="大阪圏BodyCell">1,737
+                                </td>
+                                <td class="大阪圏BodyCell">10,753
+                                </td>
+                    </tr>
+                    <tr>
+                                <th class="seqBody">6
+                                </th>
+                                <th class="yearMonthBodyCell">2021/08
+                                </th>
+                                <td class="東京圏BodyCell">13,402
+                                </td>
+                                <td class="東京圏BodyCell">25,148
+                                </td>
+                                <td class="東京圏BodyCell">17,760
+                                </td>
+                                <td class="東京圏BodyCell">56,869
+                                </td>
+                                <td class="大阪圏BodyCell">6,374
+                                </td>
+                                <td class="大阪圏BodyCell">3,839
+                                </td>
+                                <td class="大阪圏BodyCell">16,548
+                                </td>
+                    </tr>
+            </tbody>
+        </table></body>
+</html>
